@@ -52,3 +52,20 @@ CẬP NHẬT V7
 LƯU Ý CẬP NHẬT
 - Giải nén và thay thế đủ 3 tệp index.html, style.css, script.js cùng thư mục. Không chỉ thay riêng một tệp.
 - Nên dùng nút Sao lưu trong mục Quản lý thẻ trước khi thay thế phiên bản.
+
+NGUỒN DỰ ÁN
+- Bản nền được đối chiếu với repository: https://github.com/Natra206769/starry-cdrama-cards (nhánh main, V6).
+- Bản ZIP này chỉ tạo bộ tệp cập nhật để bạn tải về; chưa tự động commit/push lên GitHub.
+
+CẬP NHẬT APP TRÊN ĐIỆN THOẠI — THÔNG BÁO + NÚT CẬP NHẬT
+- Bản này thêm service-worker.js. Hãy tải lên GitHub Pages đủ 5 tệp ở thư mục gốc: index.html, style.css, script.js, service-worker.js và README.txt.
+- Lần đầu cài Service Worker: mở app có Internet và tải lại trang một lần nếu cần. Khi có bản mới ở các lần sau, app sẽ hiện thông báo "Có bản cập nhật mới" với nút "Cập nhật" và "Để sau".
+- Khi bấm "Cập nhật", app kích hoạt bản mới và tự tải lại một lần để áp dụng.
+- Trình duyệt cần mở app/kiểm tra mạng để nhận ra bản mới; đây không phải cập nhật từ xa khi app hoàn toàn đóng.
+- Mỗi lần phát hành một bản mới trong tương lai, hãy tăng CACHE_NAME trong service-worker.js (ví dụ v2 thành v3). Nếu service-worker.js không đổi, trình duyệt có thể không nhận ra bản mới của app shell.
+- Service Worker chỉ lưu các tệp giao diện của app. Nó không xóa, chuyển đổi hay ghi lại localStorage / IndexedDB. Khóa tiến độ vẫn là starry-cbiz-cards-v1; dữ liệu thẻ/ảnh tuỳ chỉnh vẫn nằm trong starry-cbiz-manager-db.
+- Dù vậy, trước khi thay phiên bản lớn, vẫn nên dùng chức năng Sao lưu trong game và giữ tệp JSON ở nơi an toàn.
+- Khi triển khai, hãy thay thế các file ở đúng thư mục GitHub Pages mà hiện đang chứa index.html. Với repository project site này thường là thư mục gốc nếu Pages đang xuất bản từ main/root.
+
+LƯU Ý
+- Bản ZIP này chỉ chuẩn bị bộ tệp. Nó CHƯA tự commit/push lên GitHub, nên app trên điện thoại chưa thay đổi cho tới khi bạn tải các file lên repository và Pages triển khai xong.

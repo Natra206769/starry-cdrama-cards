@@ -324,3 +324,15 @@ footer{border-top:1px solid #ffffff0d;padding:23px clamp(20px,6vw,90px);display:
 @media(max-width:850px){.main-nav{margin-left:-28px;margin-right:-28px;justify-content:flex-start;overflow-x:auto}.nav-tab{padding:10px 15px}.info-cards{gap:10px}}
 @media(max-width:650px){.main-nav{margin-left:-17px;margin-right:-17px;top:0;gap:6px;padding:9px 10px}.nav-tab{min-height:40px;padding:9px 12px;font-size:11px;gap:6px;border-radius:11px}.nav-tab span{font-size:13px}.info-page-heading{padding:29px 0 18px}.info-cards{grid-template-columns:1fr}.info-card{min-height:0;padding:17px}.rarity-overlay:before{inset:4px}}
 @media(prefers-reduced-motion:reduce){.app-page.active{animation:none}.stage:before,.stage:after,.rarity-overlay:before,.rarity-overlay:after{animation:none!important}}
+
+/* User-approved app updates */
+.app-update-banner{position:fixed;z-index:9999;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(560px,calc(100% - 28px));display:flex;align-items:center;gap:14px;padding:15px 16px;border:1px solid rgba(184,147,255,.55);border-radius:18px;background:rgba(20,18,37,.97);color:#fff;box-shadow:0 16px 48px rgba(0,0,0,.42),0 0 26px rgba(159,111,255,.18);backdrop-filter:blur(18px)}
+.app-update-copy{flex:1;min-width:0}
+.app-update-title{margin:0 0 4px;font-weight:800;font-size:.98rem;color:#fff}
+.app-update-message{margin:0;color:#d6d2e8;font-size:.84rem;line-height:1.45}
+.app-update-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.app-update-button{border:0;border-radius:12px;padding:10px 13px;font:inherit;font-weight:800;cursor:pointer;white-space:nowrap}
+.app-update-button-primary{background:linear-gradient(135deg,#d3b6ff,#a979ff);color:#21152f;box-shadow:0 4px 16px rgba(169,121,255,.25)}
+.app-update-button-secondary{background:rgba(255,255,255,.09);color:#e8e3f5}
+.app-update-button:disabled{opacity:.65;cursor:wait}
+@media(max-width:480px){.app-update-banner{align-items:flex-start;gap:10px;padding:13px;border-radius:16px}.app-update-actions{flex-direction:column;align-items:stretch}.app-update-button{padding:10px;font-size:.82rem}.app-update-message{font-size:.8rem}}

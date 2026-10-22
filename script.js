@@ -1,4 +1,4 @@
-// Starry C-Drama Cards V6 — thẻ độc lập theo phim / vai diễn / trang phục.
+// Starry C-Drama Cards V7.1 — thẻ độc lập theo phim / vai diễn / trang phục.
 let characters = [
   {id:"xiao-zhan",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Tiêu Chiến",chinese:"肖战",gender:"male",style:"Hiện đại",rarity:"SSR",quote:"Một ánh nhìn, vạn câu chuyện.",symbol:"✦",initials:"肖战",art1:"#34445c",art2:"#101522",accent:"#b8a5d0",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg/330px-Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg?width=700",photoCredit:"Pobediti丨肖战",photoLicense:"CC BY-SA 4.0",photoSource:"https://commons.wikimedia.org/wiki/File:Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg"},
   {id:"wang-yibo",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Vương Nhất Bác",chinese:"王一博",gender:"male",style:"Hiện đại",rarity:"SR",quote:"Tự do là phong cách của riêng mình.",symbol:"✧",initials:"王博",art1:"#214b57",art2:"#101a25",accent:"#6ec6c2",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg/500px-%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg?width=700",photoCredit:"Aco",photoLicense:"CC BY 2.5",photoSource:"https://commons.wikimedia.org/wiki/File:王一博.jpg"},
@@ -131,6 +131,22 @@ function collectionMatchesFilter(card){
   if(activeFilter==="favorites")return state.favorites.includes(card.id);
   return true;
 }
+// Small tactile reveal when a collection card is tapped. This is purely visual;
+// ownership, favorites, localStorage and IndexedDB are not modified by the effect.
+function animateCollectionCard(article, afterAnimation){
+  if(!article || article.dataset.tapBusy === "1")return;
+  article.dataset.tapBusy = "1";
+  article.classList.remove("is-tapped");
+  void article.offsetWidth; // restart the CSS animation on repeated taps
+  article.classList.add("is-tapped");
+  window.setTimeout(()=>{
+    article.classList.remove("is-tapped");
+    delete article.dataset.tapBusy;
+    if(article.isConnected && article.closest("#page-collection")?.classList.contains("active")){
+      if(typeof afterAnimation === "function")afterAnimation();
+    }
+  }, 360);
+}
 function renderCollection(){
   const container=$("collectionSets");if(!container)return;container.innerHTML="";
   const grouped=new Map();
@@ -158,8 +174,16 @@ function renderCollection(){
     for(const card of cards){
       const owned=(state.owned[card.id]||0)>0;const info=rarityInfo[card.rarity]||rarityInfo.R;
       const article=document.createElement("article");article.className="mini-card"+(owned?"":" is-locked");
-      if(owned){article.setAttribute("role","button");article.setAttribute("tabindex","0");article.setAttribute("aria-label","Xem thẻ "+card.name+" trong phim "+movie);article.title="Nhấn để xem thẻ "+card.name;article.addEventListener("click",()=>showCharacterDetails(card.id));article.addEventListener("keydown",event=>{if((event.key==="Enter"||event.key===" ")&&event.target===article){event.preventDefault();showCharacterDetails(card.id);}});}
-      else{article.setAttribute("aria-label","Chưa sở hữu thẻ "+card.name+" trong phim "+movie);article.title="Mở thẻ ngẫu nhiên để sưu tầm phiên bản này";article.addEventListener("click",()=>showToast("Bạn chưa sở hữu phiên bản này. Hãy mở thẻ ngẫu nhiên nhé."));}
+      if(owned){
+        article.setAttribute("role","button");article.setAttribute("tabindex","0");article.setAttribute("aria-label","Xem thẻ "+card.name+" trong phim "+movie);article.title="Nhấn để xem thẻ "+card.name;
+        const activateOwnedCard=()=>animateCollectionCard(article,()=>showCharacterDetails(card.id));
+        article.addEventListener("click",activateOwnedCard);
+        article.addEventListener("keydown",event=>{if((event.key==="Enter"||event.key===" ")&&event.target===article){event.preventDefault();activateOwnedCard();}});
+      }
+      else{
+        article.setAttribute("aria-label","Chưa sở hữu thẻ "+card.name+" trong phim "+movie);article.title="Mở thẻ ngẫu nhiên để sưu tầm phiên bản này";
+        article.addEventListener("click",()=>animateCollectionCard(article,()=>showToast("Bạn chưa sở hữu phiên bản này. Hãy mở thẻ ngẫu nhiên nhé.")));
+      }
       article.style.setProperty("--rarity",info.color);article.style.setProperty("--art1",card.art1||"#292f46");article.style.setProperty("--art2",card.art2||"#111522");article.style.setProperty("--accent",card.accent||"#a1a8c9");
       const art=document.createElement("div");art.className="mini-art";const initials=document.createElement("strong");initials.textContent=card.initials||makeInitials(card.chinese,card.name);art.appendChild(initials);setCardImage(art,card,"mini-photo","Ảnh "+card.name+" trong "+movie);article.appendChild(art);
       const countBadge=document.createElement("span");countBadge.className="mini-count";countBadge.textContent=owned?"×"+state.owned[card.id]:"✧ Chưa có";article.appendChild(countBadge);
@@ -223,7 +247,10 @@ function showAppPage(pageName){
     button.classList.toggle("active",active);
     if(active)button.setAttribute("aria-current","page");else button.removeAttribute("aria-current");
   });
-  window.scrollTo({top:0,behavior:"smooth"});
+  // Keep the overall app frame still; reset only the newly selected page's
+  // own scroll area instead of moving the browser window.
+  const activeSection=document.querySelector(`[data-app-page="${page}"]`);
+  if(activeSection)activeSection.scrollTop=0;
 }
 document.querySelectorAll(".nav-tab[data-page]").forEach(button=>button.addEventListener("click",()=>showAppPage(button.dataset.page)));
 document.querySelector(".brand")?.addEventListener("click",event=>{event.preventDefault();showAppPage("open");});

@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7
+STARRY C-DRAMA CARDS — BẢN V7.1
 ================================
 
 NÂNG CẤP CHÍNH
@@ -50,7 +50,7 @@ CẬP NHẬT V7
 - Không thay đổi khóa localStorage cũ, cấu trúc state owned/favorites, IndexedDB hay cơ chế sao lưu/khôi phục. Dữ liệu V6 hiện có tiếp tục được đọc như trước.
 
 LƯU Ý CẬP NHẬT
-- Giải nén và thay thế đủ 3 tệp index.html, style.css, script.js cùng thư mục. Không chỉ thay riêng một tệp.
+- Với bản V7.1 trở lên, hãy cập nhật đủ 5 tệp index.html, style.css, script.js, service-worker.js và README.txt trong cùng thư mục được GitHub Pages xuất bản.
 - Nên dùng nút Sao lưu trong mục Quản lý thẻ trước khi thay thế phiên bản.
 
 NGUỒN DỰ ÁN
@@ -62,10 +62,23 @@ CẬP NHẬT APP TRÊN ĐIỆN THOẠI — THÔNG BÁO + NÚT CẬP NHẬT
 - Lần đầu cài Service Worker: mở app có Internet và tải lại trang một lần nếu cần. Khi có bản mới ở các lần sau, app sẽ hiện thông báo "Có bản cập nhật mới" với nút "Cập nhật" và "Để sau".
 - Khi bấm "Cập nhật", app kích hoạt bản mới và tự tải lại một lần để áp dụng.
 - Trình duyệt cần mở app/kiểm tra mạng để nhận ra bản mới; đây không phải cập nhật từ xa khi app hoàn toàn đóng.
-- Mỗi lần phát hành một bản mới trong tương lai, hãy tăng CACHE_NAME trong service-worker.js (ví dụ v2 thành v3). Nếu service-worker.js không đổi, trình duyệt có thể không nhận ra bản mới của app shell.
+- Mỗi lần phát hành một bản mới trong tương lai, hãy tăng CACHE_NAME trong service-worker.js (ví dụ v3 thành v4). Nếu service-worker.js không đổi, trình duyệt có thể không nhận ra bản mới của app shell.
 - Service Worker chỉ lưu các tệp giao diện của app. Nó không xóa, chuyển đổi hay ghi lại localStorage / IndexedDB. Khóa tiến độ vẫn là starry-cbiz-cards-v1; dữ liệu thẻ/ảnh tuỳ chỉnh vẫn nằm trong starry-cbiz-manager-db.
 - Dù vậy, trước khi thay phiên bản lớn, vẫn nên dùng chức năng Sao lưu trong game và giữ tệp JSON ở nơi an toàn.
 - Khi triển khai, hãy thay thế các file ở đúng thư mục GitHub Pages mà hiện đang chứa index.html. Với repository project site này thường là thư mục gốc nếu Pages đang xuất bản từ main/root.
 
 LƯU Ý
 - Bản ZIP này chỉ chuẩn bị bộ tệp. Nó CHƯA tự commit/push lên GitHub, nên app trên điện thoại chưa thay đổi cho tới khi bạn tải các file lên repository và Pages triển khai xong.
+
+
+CẬP NHẬT NHỎ V7.1 — HIỆU ỨNG CHẠM THẺ & GIAO DIỆN ỔN ĐỊNH
+- Khi nhấn vào thẻ trong Bộ sưu tập, thẻ có hiệu ứng nhấn nhẹ, phát sáng và vệt sáng lướt qua trước khi mở hồ sơ. Thẻ chưa sở hữu cũng có phản hồi trực quan.
+- Khung ứng dụng không còn cuộn theo toàn bộ trang. Thanh trên và thanh điều hướng giữ cố định; chỉ nội dung của màn hình đang mở cuộn bên trong khung. Điều này giúp tránh việc giao diện rung/lắc khi vuốt dọc, trong khi Bộ sưu tập và Quản lý vẫn cuộn được khi nội dung dài.
+- Tăng cache Service Worker từ v2 lên v3 để báo cập nhật bản V7.1.
+- Không thay đổi khóa localStorage starry-cbiz-cards-v1, tên cơ sở dữ liệu IndexedDB starry-cbiz-manager-db, cấu trúc state hoặc định dạng sao lưu.
+
+CÁCH CẬP NHẬT TỪ GITHUB
+- Sao lưu bộ sưu tập trong game trước.
+- Tải lên và ghi đè index.html, style.css, script.js, service-worker.js và README.txt trong đúng thư mục được GitHub Pages xuất bản.
+- Commit changes, đợi GitHub Pages triển khai, mở app trên điện thoại có Internet. Khi app phát hiện bản V7.1, chọn “Cập nhật”. Nếu app vẫn giữ bản cũ, đóng hẳn rồi mở lại và tải lại trang một lần.
+- Gói này chỉ tạo file cập nhật; chưa tự commit/push lên GitHub.

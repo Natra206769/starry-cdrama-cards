@@ -90,12 +90,23 @@ function setCardImage(wrapper,card,imageClass,altText){
 }
 function openCard(){
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
-  const btn=$("openBtn");btn.disabled=true;$("revealHint").textContent="Ánh sao đang hội tụ…";
+  const btn=$("openBtn");btn.disabled=true;$("againBtn").hidden=true;$("revealHint").textContent="Ánh sao đang hội tụ…";
   $("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
+  const card=weightedRandom();
+  if(!card){btn.disabled=false;return;}
+  const stage=document.querySelector(".stage");
+  stage.style.setProperty("--rarity",rarityInfo[card.rarity].color);
+  const openingClasses=["opening-rarity-r","opening-rarity-sr","opening-rarity-ssr","opening-rarity-ur"];
+  stage.classList.remove(...openingClasses);
+  $("cardBack").classList.remove("charging");
+  stage.classList.add("opening-rarity-"+card.rarity.toLowerCase());
+  $("cardBack").classList.add("charging");
+  const revealDelay={R:480,SR:720,SSR:1020,UR:1420}[card.rarity]||650;
   setTimeout(()=>{
-    const card=weightedRandom();
-    if(!card){btn.disabled=false;return;}
-    lastCharacter=card;const info=rarityInfo[card.rarity];
+    $("cardBack").classList.remove("charging");
+    stage.classList.remove(...openingClasses);
+    const info=rarityInfo[card.rarity];
+    lastCharacter=card;
     $("cardRarity").textContent=info.label;$("cardRarity").style.setProperty("--rarity",info.color);
     $("cardName").textContent=card.name;$("cardChinese").textContent=card.chinese||"";
     $("cardGender").textContent=genderLabel(card.gender);$("cardStyle").textContent=card.style;
@@ -111,8 +122,8 @@ function openCard(){
     $("revealHint").textContent=isDuplicate?"Bạn đã sở hữu phiên bản này rồi!":"Một phiên bản mới gia nhập bộ sưu tập!";
     state.owned[card.id]=(state.owned[card.id]||0)+1;saveState();renderCollection();updateStats();
     $("luckLabel").textContent=card.rarity;$("luckBar").style.width=info.luck+"%";$("againBtn").hidden=false;btn.disabled=false;
-    showToast((card.rarity==="UR"?"✨ HUYỀN THOẠI! ":card.rarity==="SSR"?"✦ SIÊU HIẾM! ":"✧ ")+card.name+" · "+card.movie);
-  },420);
+    showToast((card.rarity==="UR"?"✨ HUYỀN THOẠI! ":card.rarity==="SSR"?"✦ SIÊU HIẾM! ":card.rarity==="SR"?"✧ HIẾM! ":"✧ ")+card.name+" · "+card.movie);
+  },revealDelay);
 }
 function collectionMatchesFilter(card){
   if(activeFilter==="male")return card.gender==="male";
@@ -198,8 +209,27 @@ function updateStats(){
 }
 function showToast(message){const toast=$("toast");toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2800);}
 
+
+function showAppPage(pageName){
+  const allowed=["open","collection","manager","info"];
+  const page=allowed.includes(pageName)?pageName:"open";
+  document.querySelectorAll("[data-app-page]").forEach(section=>{
+    const active=section.dataset.appPage===page;
+    section.hidden=!active;
+    section.classList.toggle("active",active);
+  });
+  document.querySelectorAll(".nav-tab[data-page]").forEach(button=>{
+    const active=button.dataset.page===page;
+    button.classList.toggle("active",active);
+    if(active)button.setAttribute("aria-current","page");else button.removeAttribute("aria-current");
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav-tab[data-page]").forEach(button=>button.addEventListener("click",()=>showAppPage(button.dataset.page)));
+document.querySelector(".brand")?.addEventListener("click",event=>{event.preventDefault();showAppPage("open");});
+
 $("openBtn").addEventListener("click",openCard);$("againBtn").addEventListener("click",openCard);
-$("emptyOpenBtn").addEventListener("click",()=>{openCard();window.scrollTo({top:0,behavior:"smooth"});});
+$("emptyOpenBtn").addEventListener("click",()=>{showAppPage("open");openCard();});
 document.querySelectorAll(".filter").forEach(button=>button.addEventListener("click",()=>{
   document.querySelectorAll(".filter").forEach(item=>item.classList.remove("active"));button.classList.add("active");activeFilter=button.dataset.filter;renderCollection();
 }));

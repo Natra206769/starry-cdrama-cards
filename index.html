@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#10121d" />
-  <title>Starry C-Drama Cards — V6</title>
+  <title>Starry C-Drama Cards — V7</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -23,6 +23,14 @@
   </header>
 
   <main>
+    <nav class="main-nav" aria-label="Điều hướng chính">
+      <button class="nav-tab active" type="button" data-page="open" aria-current="page"><span>✦</span> Mở thẻ</button>
+      <button class="nav-tab" type="button" data-page="collection"><span>▦</span> Bộ sưu tập</button>
+      <button class="nav-tab" type="button" data-page="manager"><span>✎</span> Quản lý thẻ</button>
+      <button class="nav-tab" type="button" data-page="info"><span>☷</span> Hướng dẫn & dữ liệu</button>
+    </nav>
+
+    <section class="app-page active" id="page-open" data-app-page="open">
     <section class="hero">
       <p class="eyebrow"><span></span> YOUR LITTLE C-DRAMA UNIVERSE <span></span></p>
       <h1>Mỗi lá bài, <em>một phiên bản.</em></h1>
@@ -49,6 +57,7 @@
             <div class="back-border"><div class="back-seal">✦<small>星光</small>✦</div><div class="back-corner tl"></div><div class="back-corner tr"></div><div class="back-corner bl"></div><div class="back-corner br"></div></div>
           </div>
           <article class="card character-card hidden" id="characterCard">
+            <div class="rarity-overlay" aria-hidden="true"></div>
             <div class="card-art" id="cardArt">
               <div class="art-orbit"></div><div class="art-symbol" id="artSymbol">❀</div>
               <div class="art-caption" id="artCaption">STARRY COLLECTION</div>
@@ -80,7 +89,9 @@
         <div class="tip">✦ <span>Mẹo nhỏ</span><br>Thẻ mới sẽ được lưu tự động trong bộ sưu tập trên trình duyệt của bạn.</div>
       </aside>
     </section>
+    </section>
 
+    <section class="app-page" id="page-manager" data-app-page="manager" hidden>
     <section class="manage-section" id="manager">
       <div class="section-heading manage-heading">
         <div><p class="eyebrow left-eyebrow">YOUR PERSONAL CAST</p><h2>Quản lý <em>thẻ phim</em></h2><p class="section-subtitle">Mỗi thẻ là một phiên bản riêng của diễn viên trong một phim, có ảnh, vai diễn và trang phục riêng.</p></div>
@@ -113,7 +124,9 @@
         </div>
       </div>
     </section>
+    </section>
 
+    <section class="app-page" id="page-collection" data-app-page="collection" hidden>
     <section class="collection-section" id="collection">
       <div class="section-heading">
         <div><p class="eyebrow left-eyebrow">YOUR DRAMA SETS</p><h2>Bộ sưu tập <em>phim</em></h2><p class="section-subtitle">Các thẻ cùng phim được gom thành một bộ. Tiến độ tính theo số phiên bản thẻ khác nhau đã sở hữu.</p></div>
@@ -128,9 +141,21 @@
       <div class="empty-state" id="emptyState"><div>✧</div><h3>Chưa mở thẻ nào</h3><p>Những thẻ mờ bên dưới đang chờ bạn sưu tầm. Khi sở hữu các thẻ cùng phim, tiến độ của bộ sẽ tăng lên.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
       <div class="collection-sets" id="collectionSets"></div>
     </section>
-  </main>
+    </section>
 
-  <details class="credits-section">
+    <section class="app-page" id="page-info" data-app-page="info" hidden>
+      <section class="info-page-heading">
+        <p class="eyebrow left-eyebrow">STARRY ARCHIVE</p>
+        <h2>Hướng dẫn <em>& dữ liệu</em></h2>
+        <p class="section-subtitle">Cách hoạt động, lưu trữ và sao lưu bộ sưu tập của bạn.</p>
+      </section>
+      <div class="info-cards">
+        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Mỗi lượt mở chọn một thẻ ngẫu nhiên. Thẻ đã sở hữu vẫn có thể xuất hiện lại; số lần sở hữu sẽ tăng lên.</p></article>
+        <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Chỉ thẻ đã sở hữu mới mở hồ sơ chi tiết và có thể đánh dấu yêu thích.</p></article>
+        <article class="info-card"><span>03</span><h3>Dữ liệu trên thiết bị</h3><p>Tiến độ và yêu thích được lưu ở localStorage; hồ sơ thẻ tùy chỉnh và ảnh được lưu trong IndexedDB trên trình duyệt hiện tại.</p></article>
+        <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
+      </div>
+      <details class="credits-section">
     <summary>✦ Nguồn ảnh mẫu & giấy phép sử dụng</summary>
     <p>Các ảnh được tải trực tiếp từ Wikimedia Commons. Giao diện có cắt khung ảnh bằng CSS; vui lòng mở trang nguồn để xem thông tin đầy đủ và điều kiện giấy phép.</p>
     <ul>
@@ -148,7 +173,9 @@
       <li><a href="https://commons.wikimedia.org/wiki/File:Bai_Lu.jpg" target="_blank" rel="noopener">Bạch Lộc — phim Love is Sweet</a> · iQIYI Indonesia · <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>.</li>
     </ul>
     <p class="credits-note">Ghi công tác giả theo trang Commons. Mỗi ảnh vẫn tuân theo giấy phép riêng; giấy phép áp dụng cho ảnh không đồng nghĩa diễn viên hay tác giả bảo chứng cho trò chơi này. Cần kết nối Internet để tải ảnh. Nếu máy chủ ảnh không phản hồi, thẻ sẽ tự chuyển về minh họa chữ.</p>
-  </details>
+      </details>
+    </section>
+  </main>
   <footer><span>星光卡册 · STARRY C-DRAMA CARDS</span><span>Made for C-drama lovers <b>✦</b></span></footer>
 
   <dialog class="character-dialog" id="characterDetailDialog" aria-labelledby="detailName">

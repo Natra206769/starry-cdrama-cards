@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V6
+STARRY C-DRAMA CARDS — BẢN V7
 ================================
 
 NÂNG CẤP CHÍNH
@@ -42,3 +42,13 @@ FILE
 - index.html : cấu trúc và nội dung giao diện
 - style.css  : giao diện, hiển thị theo bộ phim và responsive
 - script.js  : logic game, quản lý thẻ/ảnh, bộ sưu tập và sao lưu
+
+
+CẬP NHẬT V7
+- Tách màn hình thành các mục riêng: Mở thẻ, Bộ sưu tập, Quản lý thẻ, Hướng dẫn & dữ liệu.
+- Nâng cấp hiệu ứng mở thẻ theo độ hiếm; SSR/UR có thêm hiệu ứng ánh sáng, viền phát sáng và điểm sáng chuyển động trên mặt thẻ.
+- Không thay đổi khóa localStorage cũ, cấu trúc state owned/favorites, IndexedDB hay cơ chế sao lưu/khôi phục. Dữ liệu V6 hiện có tiếp tục được đọc như trước.
+
+LƯU Ý CẬP NHẬT
+- Giải nén và thay thế đủ 3 tệp index.html, style.css, script.js cùng thư mục. Không chỉ thay riêng một tệp.
+- Nên dùng nút Sao lưu trong mục Quản lý thẻ trước khi thay thế phiên bản.

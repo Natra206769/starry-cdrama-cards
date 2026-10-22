@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7.1
+STARRY C-DRAMA CARDS — BẢN V7.2
 ================================
 
 NÂNG CẤP CHÍNH
@@ -82,3 +82,17 @@ CÁCH CẬP NHẬT TỪ GITHUB
 - Tải lên và ghi đè index.html, style.css, script.js, service-worker.js và README.txt trong đúng thư mục được GitHub Pages xuất bản.
 - Commit changes, đợi GitHub Pages triển khai, mở app trên điện thoại có Internet. Khi app phát hiện bản V7.1, chọn “Cập nhật”. Nếu app vẫn giữ bản cũ, đóng hẳn rồi mở lại và tải lại trang một lần.
 - Gói này chỉ tạo file cập nhật; chưa tự commit/push lên GitHub.
+
+
+CẬP NHẬT NHỎ V7.2 — SỬA VIỀN TRẮNG TRÊN ĐIỆN THOẠI
+- Đặt nền tối đồng nhất cho cả html và body để các vùng an toàn, khoảng tràn/cuộn và mép viewport không lộ nền trắng mặc định của trình duyệt.
+- Đồng bộ màu thanh trình duyệt bằng theme-color và khai báo color-scheme dark.
+- Điều chỉnh lề ngang trên thiết bị có safe-area hai bên; giữ thanh đầu và thanh điều hướng tràn sát mép màn hình.
+- Tăng cache Service Worker từ v3 lên v4 để nhận diện bản phát hành V7.2.
+- Không thay đổi khóa localStorage starry-cbiz-cards-v1, tên cơ sở dữ liệu IndexedDB starry-cbiz-manager-db hay định dạng sao lưu.
+
+CẬP NHẬT V7.2
+- Trước khi thay file, nên xuất bản sao lưu JSON trong mục Quản lý thẻ.
+- Tải đè đủ 5 tệp index.html, style.css, script.js, service-worker.js và README.txt vào đúng thư mục GitHub Pages.
+- Commit changes, đợi GitHub Pages triển khai, rồi mở app trên điện thoại có Internet. Chọn nút Cập nhật nếu thông báo xuất hiện; nếu chưa thấy, đóng hẳn app, mở lại và tải lại trang một lần.
+- Gói này chỉ chuẩn bị file để bạn tự tải lên; chưa push trực tiếp lên GitHub.

@@ -443,3 +443,42 @@ body > footer { display: none !important; }
   .app-page.active { animation: none; }
   .mini-card.is-tapped, .mini-card.is-tapped::after, .character-dialog[open] { animation: none !important; }
 }
+
+
+/* V7.2 — fill the entire mobile viewport and safe-area gutters with the app background. */
+:root { color-scheme: dark; }
+html {
+  background-color: #0b0d16 !important;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  background-color: #0b0d16 !important;
+  background-image: radial-gradient(ellipse at 50% 20%, #202137 0, #10121e 40%, #0b0d16 78%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+}
+/* Safe-area colors are inherited from the dark document canvas; keep the shell edge-to-edge. */
+.topbar {
+  width: 100%;
+}
+main {
+  box-sizing: border-box;
+}
+@media (max-width: 650px) {
+  .topbar {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  main {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .main-nav {
+    margin-left: calc(-1 * max(12px, env(safe-area-inset-left, 0px)));
+    margin-right: calc(-1 * max(12px, env(safe-area-inset-right, 0px)));
+  }
+}

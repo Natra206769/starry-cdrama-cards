@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7.4
+STARRY C-DRAMA CARDS — BẢN V7.5
 ================================
 
 NÂNG CẤP CHÍNH
@@ -12,6 +12,12 @@ NÂNG CẤP CHÍNH
 - Giữ khóa localStorage cũ để tiến độ mở thẻ V5 được đọc lại. Các thẻ cũ chưa khai báo phim sẽ chuyển vào nhóm "Bộ sưu tập chân dung"; không tự đoán tên phim.
 - Ảnh người dùng chọn được nén và lưu trong IndexedDB trên trình duyệt hiện tại, không tải lên máy chủ.
 - Sao lưu/khôi phục JSON bao gồm thẻ, ảnh, trạng thái ẩn/xóa, chỉnh sửa và tiến độ sưu tầm.
+
+THAY ĐỔI V7.5
+- Tăng SP lên đúng 0,3% khi kho có cả thẻ SP và ít nhất một cấp khác; tỉ lệ này hiển thị trên giao diện.
+- Mở x10 lật thẻ cấp cao nhất trước trên thẻ chính, sau đó mới hiện lưới đủ 10 thẻ theo thứ tự cấp hiếm giảm dần.
+- Sửa viền N/R thành đường viền liền, rõ và nhất quán trên thẻ chính, bộ sưu tập, hồ sơ và lưới mở x10.
+- Khóa lưu trữ localStorage và IndexedDB không thay đổi.
 
 CÁCH CHẠY
 1. Giải nén toàn bộ file ZIP vào một thư mục.
@@ -106,7 +112,7 @@ CẬP NHẬT V7.3 — ICON STARRY, SÁU CẤP ĐỘ HIẾM VÀ BẢO TOÀN DỮ 
 - Thẻ sưu tập được gắn class theo cấp độ ở mỗi lần render, kể cả thẻ chưa sở hữu; các cấp có khung/màu/ánh sáng riêng và SP nổi bật hơn UR. Hiệu ứng tôn trọng prefers-reduced-motion.
 - Không đổi key localStorage starry-cbiz-cards-v1, tên IndexedDB starry-cbiz-manager-db, phiên bản DB, ID thẻ mẫu hay định dạng JSON sao lưu/khôi phục. Không xóa hoặc migrate dữ liệu người dùng khi khởi động.
 
-CÁCH TRIỂN KHAI V7.4
+CÁCH TRIỂN KHAI V7.5
 1. Trước khi cập nhật bản đang sử dụng, xuất bản sao lưu JSON trong mục Quản lý thẻ.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon.ico, favicon-32.png, apple-touch-icon.png và thư mục icons/ (icon-192.png, icon-512.png) vào đúng thư mục được GitHub Pages xuất bản.
 3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Gói bàn giao này chưa tự push hay cập nhật trang live.
@@ -114,7 +120,7 @@ CÁCH TRIỂN KHAI V7.4
 5. Nên kiểm tra bộ sưu tập và thử sao lưu/khôi phục trên bản live sau triển khai. Bản làm việc được cung cấp không truy cập dữ liệu trình duyệt đang có của bạn.
 
 
-CẬP NHẬT V7.4 — TITLE CASE, MỞ 10 THẺ, THẺ ẢNH LỚN VÀ HIỆU ỨNG PHÂN CẤP
+LỊCH SỬ V7.4 — TITLE CASE, MỞ 10 THẺ, THẺ ẢNH LỚN VÀ HIỆU ỨNG PHÂN CẤP
 
 1. TÊN PHIM / NHÂN VẬT / DIỄN VIÊN
 - Chuẩn hóa kiểu Title Case: chữ cái đầu của mỗi từ viết hoa.
@@ -137,3 +143,12 @@ BẢO TOÀN DỮ LIỆU VÀ CACHE
 - Giữ nguyên localStorage key starry-cbiz-cards-v1 và IndexedDB starry-cbiz-manager-db (version 1, store appData).
 - Service Worker dùng cache shell v6; chỉ các cache có tiền tố starry-cdrama-shell- cũ mới bị dọn, không xóa localStorage hoặc IndexedDB.
 - Bản nâng cấp chưa được push/triển khai tự động lên GitHub Pages.
+
+
+CẬP NHẬT V7.5 — SỬA VIỀN N/R/SR, SP 0,3%, LẬT THẺ CAO NHẤT TRƯỚC
+- Đưa viền N/R/SR về khung liền, tăng tương phản và sửa khung trong ở thẻ chính, lưới 10 thẻ, bộ sưu tập và hồ sơ chi tiết.
+- Đặt trọng số nominal tổng 1000: N 398, R 287, SR 180, SSR 102, UR 30, SP 3. Khi kho có SP và ít nhất một cấp khác, SP được giữ ở đúng 3/1000 = 0,3%; trọng số các cấp khác được phân bổ theo tỉ lệ cấu hình trong 99,7% còn lại, ngay cả khi kho thiếu một cấp. Nếu SP chưa có trong kho thì không thể rút SP; giao diện hiển thị tỉ lệ cho các cấp thực có.
+- Mở x10 sẽ lật và hiển thị thẻ có rarity cao nhất bằng giao diện thẻ đơn trước, sau đó mới mở lưới 10 thẻ theo thứ tự từ hiếm nhất đến phổ biến hơn. Tiến độ sở hữu chỉ được cộng một lần cho mỗi lượt mở, bao gồm thẻ trùng.
+- Giữ nguyên localStorage key starry-cbiz-cards-v1 và IndexedDB starry-cbiz-manager-db (version 1/store appData); không xóa, reset hoặc migration dữ liệu người dùng.
+- Service Worker cache shell chuyển sang v7 để trình duyệt nhận bộ HTML/CSS/JS mới; cơ chế yêu cầu người dùng xác nhận cập nhật vẫn được giữ.
+- Đã kiểm thử trong Chromium với dữ liệu lưu trữ giả lập: x10 hiển thị thẻ SP cao nhất trước khi mở lưới, đủ 10 kết quả và cập nhật sở hữu đúng 10 lượt; SP giữ 0,3%; viền N/R/SR liền; không có lỗi JavaScript hoặc tràn ngang tại các kích thước 320–1024 px. Chưa triển khai lên GitHub Pages.

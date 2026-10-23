@@ -1,4 +1,4 @@
-// Starry C-Drama Cards V7.4 — viết hoa tên tự động, mở đơn/thập liên và hiệu ứng hiếm đa dạng.
+// Starry C-Drama Cards V7.5 — viền hiếm được sửa, SP 0,3%, mở x10 lộ thẻ cao nhất trước.
 let characters = [
   {id:"xiao-zhan",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Tiêu Chiến",chinese:"肖战",gender:"male",style:"Hiện đại",rarity:"SSR",quote:"Một ánh nhìn, vạn câu chuyện.",symbol:"✦",initials:"肖战",art1:"#34445c",art2:"#101522",accent:"#b8a5d0",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg/330px-Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg?width=700",photoCredit:"Pobediti丨肖战",photoLicense:"CC BY-SA 4.0",photoSource:"https://commons.wikimedia.org/wiki/File:Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg"},
   {id:"wang-yibo",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Vương Nhất Bác",chinese:"王一博",gender:"male",style:"Hiện đại",rarity:"SR",quote:"Tự do là phong cách của riêng mình.",symbol:"✧",initials:"王博",art1:"#214b57",art2:"#101a25",accent:"#6ec6c2",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg/500px-%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg?width=700",photoCredit:"Aco",photoLicense:"CC BY 2.5",photoSource:"https://commons.wikimedia.org/wiki/File:王一博.jpg"},
@@ -15,16 +15,16 @@ let characters = [
 ];
 const baseCharacters = characters.map(c => ({...c}));
 /* Single source for tier order, labels, collection/reveal palettes and gacha weights.
-   Weights total 1000: N 39.9%, R 28.8%, SR 18%, SSR 10.2%, UR 3%, SP 0.1%.
-   Missing tiers are excluded and the remaining weights are normalized, preserving
-   the old R:SR:SSR:UR ratio until the user's deck contains N or SP cards. */
+   Weights total 1000: N 39.8%, R 28.7%, SR 18%, SSR 10.2%, UR 3%, SP 0.3%.
+   When SP exists in the deck, its chance is kept at exactly 0.3%; remaining tiers
+   share the remaining 99.7% in proportion to their configured weights. */
 const rarityInfo = {
-  N:  {label:"N · NORMAL",     shortLabel:"Thường",     color:"#b8c4d9", weight:399, luck:8,   revealDelay:360, effect:"n",  toastPrefix:"✧ THƯỜNG! ",     art:["#39455c","#111522","#b8c4d9"]},
-  R:  {label:"R · COMMON",     shortLabel:"Phổ biến",   color:"#aab5c9", weight:288, luck:25,  revealDelay:480, effect:"r",  toastPrefix:"✧ ",             art:["#67513f","#1c1a1b","#e6c69c"]},
+  N:  {label:"N · NORMAL",     shortLabel:"Thường",     color:"#b8c4d9", weight:398, luck:8,   revealDelay:360, effect:"n",  toastPrefix:"✧ THƯỜNG! ",     art:["#39455c","#111522","#b8c4d9"]},
+  R:  {label:"R · COMMON",     shortLabel:"Phổ biến",   color:"#aab5c9", weight:287, luck:25,  revealDelay:480, effect:"r",  toastPrefix:"✧ ",             art:["#67513f","#1c1a1b","#e6c69c"]},
   SR: {label:"SR · RARE",      shortLabel:"Hiếm",       color:"#72b6ff", weight:180, luck:50,  revealDelay:720, effect:"sr", toastPrefix:"✧ HIẾM! ",       art:["#214b57","#101a25","#6ec6c2"]},
   SSR:{label:"SSR · SUPER RARE",shortLabel:"Siêu hiếm", color:"#c18aff", weight:102, luck:78,  revealDelay:1020,effect:"ssr",toastPrefix:"✦ SIÊU HIẾM! ",  art:["#45415e","#171526","#b7a9ef"]},
   UR: {label:"UR · LEGENDARY", shortLabel:"Huyền thoại",color:"#ffca75", weight:30,  luck:94,  revealDelay:1420,effect:"ur", toastPrefix:"✨ HUYỀN THOẠI! ",art:["#5a3d29","#1b1520","#ffca75"]},
-  SP: {label:"SP · SPECIAL",   shortLabel:"Đặc biệt",   color:"#ff85d4", weight:1,   luck:100, revealDelay:1650,effect:"sp", toastPrefix:"🌟 ĐẶC BIỆT! ",  art:["#682a67","#190f2b","#ff85d4"]}
+  SP: {label:"SP · SPECIAL",   shortLabel:"Đặc biệt",   color:"#ff85d4", weight:3,   luck:100, revealDelay:1650,effect:"sp", toastPrefix:"🌟 ĐẶC BIỆT! ",  art:["#682a67","#190f2b","#ff85d4"]}
 };
 // Giữ nguyên khóa localStorage cũ để dữ liệu sở hữu V5 vẫn được đọc.
 const STORAGE_KEY = "starry-cbiz-cards-v1";
@@ -77,11 +77,25 @@ function renderRarityControls(){
 }
 renderRarityControls();
 
+function getAvailableRarityWeights(){
+  const available=Object.entries(rarityInfo).filter(([rarity])=>characters.some(card=>card.rarity===rarity));
+  if(!available.length)return [];
+  const spAvailable=available.some(([rarity])=>rarity==="SP");
+  const nonSp=available.filter(([rarity])=>rarity!=="SP");
+  const nonSpTotal=nonSp.reduce((sum,[,info])=>sum+info.weight,0);
+  if(spAvailable&&nonSpTotal>0){
+    return available.map(([rarity,info])=>({rarity,info,weight:rarity==="SP"?3:info.weight*997/nonSpTotal}));
+  }
+  // If SP is unavailable (or is the only remaining tier), normalize the pool
+  // rather than assigning probability to tiers with no cards.
+  const total=available.reduce((sum,[,info])=>sum+info.weight,0);
+  return available.map(([rarity,info])=>({rarity,info,weight:total?info.weight*1000/total:0}));
+}
 function renderRarityOdds(){
   const target=$("rarityOdds");if(!target)return;
-  const available=Object.entries(rarityInfo).filter(([rarity])=>characters.some(card=>card.rarity===rarity));
-  const total=available.reduce((sum,[,info])=>sum+info.weight,0);
-  target.textContent=total?"Tỉ lệ hiện tại: "+available.map(([rarity,info])=>rarity+" "+(info.weight/total*100).toLocaleString("vi-VN",{maximumFractionDigits:1})+"%").join(" · "):"Kho thẻ đang trống.";
+  const available=getAvailableRarityWeights();
+  const total=available.reduce((sum,item)=>sum+item.weight,0);
+  target.textContent=total?"Tỉ lệ hiện tại: "+available.map(({rarity,weight})=>rarity+" "+(weight/total*100).toLocaleString("vi-VN",{maximumFractionDigits:2})+"%").join(" · "):"Kho thẻ đang trống.";
 }
 
 function loadState(){
@@ -119,10 +133,11 @@ function normalizeCard(card,fallback={}){
 }
 function weightedRandom(){
   if(!characters.length)return null;
-  const available=Object.entries(rarityInfo).filter(([rarity])=>characters.some(card=>card.rarity===rarity));
-  const total=available.reduce((sum,[,info])=>sum+info.weight,0);
-  let roll=Math.random()*total,chosen=available[0][0];
-  for(const [rarity,info] of available){roll-=info.weight;if(roll<0){chosen=rarity;break;}}
+  const available=getAvailableRarityWeights();
+  const total=available.reduce((sum,item)=>sum+item.weight,0);
+  if(!total)return null;
+  let roll=Math.random()*total,chosen=available[0].rarity;
+  for(const item of available){roll-=item.weight;if(roll<0){chosen=item.rarity;break;}}
   const pool=characters.filter(card=>card.rarity===chosen);
   return pool[Math.floor(Math.random()*pool.length)]||null;
 }
@@ -135,6 +150,22 @@ function setCardImage(wrapper,card,imageClass,altText){
   };
   photo.onload=()=>{wrapper.classList.add(imageClass==="detail-photo"?"has-detail-photo":"has-photo");};
   wrapper.prepend(photo);
+}
+function displayMainCard(card){
+  const info=rarityInfo[card.rarity]||rarityInfo.SR;
+  lastCharacter=card;
+  $("cardRarity").textContent=info.label;$("cardRarity").style.setProperty("--rarity",info.color);
+  $("cardName").textContent=card.name;$("cardChinese").textContent=card.chinese||"";
+  $("cardGender").textContent=genderLabel(card.gender);$("cardStyle").textContent=card.style;
+  $("cardMovie").textContent=card.movie+(card.role?" · "+card.role:"");
+  $("cardQuote").textContent="“"+card.quote+"”";$("artSymbol").textContent=card.symbol||"✦";
+  $("artCaption").textContent=card.movie.toUpperCase();$("portraitInitials").textContent=card.initials||makeInitials(card.chinese,card.name);
+  const art=$("cardArt");art.style.setProperty("--art1",card.art1);art.style.setProperty("--art2",card.art2);art.style.setProperty("--accent",card.accent);
+  art.classList.remove("has-photo");art.querySelectorAll(".actor-photo").forEach(img=>img.remove());setCardImage(art,card,"actor-photo","Ảnh "+card.name+" trong "+card.movie);
+  const visibleCard=$("characterCard");visibleCard.classList.remove(...Object.values(rarityInfo).map(item=>"rarity-"+item.effect));visibleCard.classList.add("rarity-"+info.effect);
+  visibleCard.style.setProperty("--rarity",info.color);visibleCard.style.setProperty("--art1",card.art1);visibleCard.style.setProperty("--art2",card.art2);visibleCard.style.setProperty("--accent",card.accent);
+  visibleCard.classList.remove("hidden");$("cardBack").classList.add("hidden");
+  return info;
 }
 function openCard(){
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
@@ -155,19 +186,7 @@ function openCard(){
   setTimeout(()=>{
     $("cardBack").classList.remove("charging");
     stage.classList.remove(...openingClasses);
-    const info=rarityInfo[card.rarity];
-    lastCharacter=card;
-    $("cardRarity").textContent=info.label;$("cardRarity").style.setProperty("--rarity",info.color);
-    $("cardName").textContent=card.name;$("cardChinese").textContent=card.chinese||"";
-    $("cardGender").textContent=genderLabel(card.gender);$("cardStyle").textContent=card.style;
-    $("cardMovie").textContent=card.movie+(card.role?" · "+card.role:"");
-    $("cardQuote").textContent="“"+card.quote+"”";$("artSymbol").textContent=card.symbol||"✦";
-    $("artCaption").textContent=card.movie.toUpperCase();$("portraitInitials").textContent=card.initials||makeInitials(card.chinese,card.name);
-    const art=$("cardArt");art.style.setProperty("--art1",card.art1);art.style.setProperty("--art2",card.art2);art.style.setProperty("--accent",card.accent);
-    art.classList.remove("has-photo");art.querySelectorAll(".actor-photo").forEach(img=>img.remove());setCardImage(art,card,"actor-photo","Ảnh "+card.name+" trong "+card.movie);
-    const visibleCard=$("characterCard");visibleCard.classList.remove(...Object.values(rarityInfo).map(info=>"rarity-"+info.effect));visibleCard.classList.add("rarity-"+info.effect);
-    visibleCard.style.setProperty("--rarity",info.color);visibleCard.style.setProperty("--art1",card.art1);visibleCard.style.setProperty("--art2",card.art2);visibleCard.style.setProperty("--accent",card.accent);
-    visibleCard.classList.remove("hidden");$("cardBack").classList.add("hidden");
+    const info=displayMainCard(card);
     const isDuplicate=(state.owned[card.id]||0)>0;
     $("revealHint").textContent=isDuplicate?"Bạn đã sở hữu phiên bản này rồi!":"Một phiên bản mới gia nhập bộ sưu tập!";
     state.owned[card.id]=(state.owned[card.id]||0)+1;saveState();renderCollection();updateStats();
@@ -184,28 +203,38 @@ function openTenCards(){
   const pulled=Array.from({length:10},()=>weightedRandom()).filter(Boolean);
   if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});return;}
   const rarityRank={N:0,R:1,SR:2,SSR:3,UR:4,SP:5};
-  const highlight=pulled.reduce((best,card)=>(rarityRank[card.rarity]||0)>(rarityRank[best.rarity]||0)?card:best,pulled[0]);
+  // Stable sort makes the top-rarity card lead both the hero reveal and final grid.
+  const orderedPulled=pulled.map((card,index)=>({card,index})).sort((a,b)=>rarityRank[b.card.rarity]-rarityRank[a.card.rarity]||a.index-b.index).map(item=>item.card);
+  const highlight=orderedPulled[0];
+  const seen=new Map();
+  const results=orderedPulled.map(card=>{
+    const previous=(Number(state.owned[card.id])||0)+(seen.get(card.id)||0);
+    seen.set(card.id,(seen.get(card.id)||0)+1);
+    return {card,duplicate:previous>0,copyNumber:previous+1};
+  });
+  lastBatchCards=orderedPulled.slice();
   const stage=document.querySelector(".stage"),openingClasses=Object.values(rarityInfo).map(info=>"opening-rarity-"+info.effect);
   stage.style.setProperty("--rarity",rarityInfo[highlight.rarity].color);stage.classList.remove(...openingClasses);
   $("cardBack").classList.remove("charging");stage.classList.add("opening-rarity-"+highlight.rarity.toLowerCase());$("cardBack").classList.add("charging");
-  const wait=Math.min(1150,Math.max(520,rarityInfo[highlight.rarity].revealDelay));
+  const wait=Math.min(1700,Math.max(650,rarityInfo[highlight.rarity].revealDelay));
   window.setTimeout(()=>{
-    $("cardBack").classList.remove("charging");stage.classList.remove(...openingClasses);$("cardBack").classList.add("hidden");
-    const seen=new Map();
-    const results=pulled.map(card=>{
-      const previous=(Number(state.owned[card.id])||0)+(seen.get(card.id)||0);
-      seen.set(card.id,(seen.get(card.id)||0)+1);
-      return {card,duplicate:previous>0,copyNumber:previous+1};
-    });
-    for(const card of pulled)state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
-    lastBatchCards=pulled.slice();saveState();renderCollection();updateStats();renderBatchResults(results);
-    const bestInfo=rarityInfo[highlight.rarity];$("luckLabel").textContent=highlight.rarity;$("luckBar").style.width=bestInfo.luck+"%";
-    $("revealHint").textContent="Đã mở 10 thẻ! Bộ sưu tập được cập nhật tự động.";
-    $("batchReveal").hidden=false;buttons.forEach(button=>{if(button)button.disabled=false;});
-    const unique=new Set(pulled.map(card=>card.id)).size;
-    $("batchSummary").textContent="Đã thêm 10 lượt mở · "+unique+" phiên bản khác nhau · tỷ lệ hiếm nhất trong lượt: "+highlight.rarity+".";
-    $("batchReveal").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
-    showToast("✦ Đã mở 10 thẻ · "+highlight.rarity+" là cấp cao nhất trong lượt này.");
+    $("cardBack").classList.remove("charging");stage.classList.remove(...openingClasses);
+    const bestInfo=displayMainCard(highlight);
+    const firstResult=results[0];
+    $("revealHint").textContent="Thẻ cao nhất trong 10 thẻ: "+highlight.rarity+" · "+highlight.name+(firstResult.duplicate?" (bản trùng).":"!")+" Đang hiển thị đầy đủ 10 thẻ…";
+    // Commit this 10-pull exactly once; displaying the highlight is only a preview of one of these ten.
+    for(const card of orderedPulled)state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
+    saveState();renderCollection();updateStats();
+    $("luckLabel").textContent=highlight.rarity;$("luckBar").style.width=bestInfo.luck+"%";
+    window.setTimeout(()=>{
+      renderBatchResults(results);
+      $("revealHint").textContent="Đã mở 10 thẻ! Bộ sưu tập được cập nhật tự động.";
+      $("batchReveal").hidden=false;buttons.forEach(button=>{if(button)button.disabled=false;});
+      const unique=new Set(orderedPulled.map(card=>card.id)).size;
+      $("batchSummary").textContent="Đã thêm 10 lượt mở · "+unique+" phiên bản khác nhau · thẻ cao nhất: "+highlight.rarity+".";
+      $("batchReveal").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+      showToast("✦ Đã mở 10 thẻ · "+highlight.rarity+" là cấp cao nhất trong lượt này.");
+    },1350);
   },wait);
 }
 function renderBatchResults(results){

@@ -650,3 +650,45 @@ main {
 .detail-delete-btn{min-height:35px;margin-top:7px;font-size:10px}
 .detail-hint{font-size:9px;line-height:1.45;margin:8px 0 0}
 @media(max-width:650px){.detail-content{padding:15px 15px 16px}.detail-content h2{font-size:24px}.detail-film-info p{grid-template-columns:84px minmax(0,1fr)}.detail-visual{height:clamp(210px,43dvh,360px);min-height:210px}}
+
+
+/* V7.5 — repair low-rarity frames: solid, visible, continuous borders in every card view. */
+.character-card.rarity-n,
+.character-card.rarity-r {
+  border-style: solid !important;
+  border-width: 1.5px !important;
+}
+.character-card.rarity-n {
+  border-color: #c5cfdf !important;
+  box-shadow: inset 0 0 0 1px #e9f0ff22, 0 8px 28px #0008, 0 20px 42px #0006 !important;
+}
+.character-card.rarity-n .rarity-overlay { opacity: .28 !important; }
+.character-card.rarity-n .rarity-overlay::before {
+  inset: 7px !important; border: 1px solid #dce6f5a6 !important; border-style: solid !important;
+  border-radius: 9px !important; outline: none !important; transform: none !important;
+  box-shadow: inset 0 0 11px #dce6f51c !important; opacity: .8 !important; animation: none !important;
+}
+.character-card.rarity-n .rarity-overlay::after { opacity: .16 !important; }
+.character-card.rarity-r {
+  border-color: #d8b77f !important;
+  box-shadow: inset 0 0 0 1px #e6c69c24, 0 8px 28px #0008, 0 20px 42px #0006 !important;
+}
+.character-card.rarity-r .rarity-overlay { opacity: .48 !important; }
+.character-card.rarity-r .rarity-overlay::before {
+  inset: 6px !important; border: 1px solid #f0d7a98c !important; border-style: solid !important;
+  border-radius: 10px !important; outline: none !important; transform: none !important;
+  box-shadow: inset 0 0 12px #edc98a15 !important; opacity: .95 !important; animation: none !important;
+}
+.mini-card.rarity-n { border: 1px solid #b8c4d9a6 !important; box-shadow: inset 0 0 0 1px #dce7ff16, 0 5px 15px #0004 !important; }
+.mini-card.rarity-n::before { inset: 5px !important; border: 1px solid #dce7ff82 !important; border-style: solid !important; opacity: .72 !important; }
+.mini-card.rarity-r { border: 1px solid #d4b37cbb !important; box-shadow: inset 0 0 0 1px #edc98a1b, 0 5px 15px #0004 !important; }
+.mini-card.rarity-r::before { inset: 5px !important; border: 1px solid #edc98a80 !important; border-style: solid !important; opacity: .78 !important; }
+.detail-visual.rarity-n::before { border-style: solid !important; border-width: 1px !important; opacity: .76 !important; }
+.detail-visual.rarity-r::before { border-style: solid !important; border-width: 1px !important; opacity: .84 !important; }
+.batch-card.rarity-n { border: 1px solid #b8c4d9c9 !important; border-style: solid !important; box-shadow: inset 0 0 20px #b8c4d911, 0 8px 22px #0006 !important; }
+.batch-card.rarity-n::before { inset: 6px !important; border: 1px solid #dce7ff85 !important; border-style: solid !important; border-radius: 8px !important; opacity: .84 !important; }
+.batch-card.rarity-r { border-color: #d4b37c !important; border-style: solid !important; }
+.batch-card.rarity-r::before { inset: 6px !important; border: 1px solid #edc98aa0 !important; border-style: solid !important; border-radius: 8px !important; opacity: .88 !important; }
+
+.character-card.rarity-sr .rarity-overlay::before { border-style: solid !important; transform: none !important; }
+.batch-card.rarity-sr::before { border-style: solid !important; }

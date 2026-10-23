@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V7.9</title>
+  <title>Starry C-Drama Cards — V8.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -40,8 +40,8 @@
     <section class="app-page active" id="page-open" data-app-page="open">
     <section class="hero">
       <p class="eyebrow"><span></span> YOUR LITTLE C-DRAMA UNIVERSE <span></span></p>
-      <h1>Mỗi lá bài, <em>một phiên bản.</em></h1>
-      <p class="intro">Sưu tầm diễn viên qua từng bộ phim, vai diễn và bộ trang phục đặc trưng.</p>
+      <h1>Mỗi lá bài, <em>một câu chuyện.</em></h1>
+      <p class="intro">Sưu tầm diễn viên qua từng bộ phim, vai diễn và phong cách riêng.</p>
     </section>
 
     <section class="gacha-layout">
@@ -150,7 +150,7 @@
     <section class="app-page" id="page-manager" data-app-page="manager" hidden>
     <section class="manage-section" id="manager">
       <div class="section-heading manage-heading">
-        <div><p class="eyebrow left-eyebrow">YOUR PERSONAL CAST</p><h2>Quản lý <em>thẻ phim</em></h2><p class="section-subtitle">Mỗi thẻ là một phiên bản riêng của diễn viên trong một phim, có ảnh, vai diễn và trang phục riêng.</p></div>
+        <div><p class="eyebrow left-eyebrow">YOUR PERSONAL CAST</p><h2>Quản lý <em>thẻ phim</em></h2><p class="section-subtitle">Mỗi thẻ ghi nhận diễn viên trong một phim, kèm vai diễn, phong cách và độ hiếm.</p></div>
         <button class="primary-btn manager-toggle" id="managerToggle" type="button">＋ Thêm thẻ</button>
       </div>
       <div class="manager-layout">
@@ -162,19 +162,18 @@
             <label>Tên tiếng Trung<input id="fieldChinese" maxlength="30" placeholder="Ví dụ: 田曦薇" /></label>
             <div class="form-field autocomplete-field wide-field"><label for="fieldMovie">Tên phim / bộ sưu tập *</label><div class="autocomplete-control"><input id="fieldMovie" maxlength="100" placeholder="Ví dụ: Trục Ngọc" required aria-autocomplete="list" aria-controls="fieldMovieSuggestions" aria-expanded="false" /><div class="field-suggestions" id="fieldMovieSuggestions" role="listbox" aria-label="Phim và bộ sưu tập đã có" hidden></div></div><small class="field-suggestion-note" id="fieldMovieSuggestionNote" aria-live="polite"></small></div>
             <div class="form-field autocomplete-field"><label for="fieldRole">Vai diễn trong phim</label><div class="autocomplete-control"><input id="fieldRole" maxlength="80" placeholder="Ví dụ: Tạ Chinh" aria-autocomplete="list" aria-controls="fieldRoleSuggestions" aria-expanded="false" /><div class="field-suggestions" id="fieldRoleSuggestions" role="listbox" aria-label="Vai diễn đã có" hidden></div></div><small class="field-suggestion-note" id="fieldRoleSuggestionNote" aria-live="polite"></small></div>
-            <label>Phiên bản trang phục *<input id="fieldCostume" maxlength="100" placeholder="Ví dụ: Hôn lễ / chiến giáp / tiên phục" required /></label>
             <label>Giới tính<select id="fieldGender"><option value="female">Nữ</option><option value="male">Nam</option><option value="other">Khác / nhóm</option></select></label>
-            <label>Phong cách<select id="fieldStyle"><option>Cổ trang</option><option>Hiện đại</option><option>Tiên hiệp</option><option>Dân quốc</option><option>Khác</option></select></label>
+            <label>Phong cách *<select id="fieldStyle" required><option value="">Chọn phong cách…</option><option>Cổ trang</option><option>Thanh xuân vườn trường</option><option>Công sở</option><option>Tiên hiệp</option><option>Dân quốc</option><option>Khác</option></select></label>
             <label>Độ hiếm<select id="fieldRarity" aria-label="Độ hiếm"></select></label>
             <label class="wide-field">Câu trích dẫn / mô tả<input id="fieldQuote" maxlength="180" placeholder="Một câu ngắn về nhân vật…" /></label>
-            <label class="wide-field">Ảnh của đúng phiên bản thẻ <span class="optional-label" id="imageRequiredLabel">(bắt buộc khi thêm)</span><input id="fieldPhoto" type="file" accept="image/*" /><small>Hãy chọn ảnh đúng tạo hình / trang phục của diễn viên trong phim này. Ảnh sẽ được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
+            <label class="wide-field">Ảnh đại diện của thẻ <span class="optional-label" id="imageRequiredLabel">(bắt buộc khi thêm)</span><input id="fieldPhoto" type="file" accept="image/*" /><small>Chọn ảnh đại diện phù hợp với diễn viên trong phim. Ảnh sẽ được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
           </div>
-          <div class="photo-preview-wrap"><div class="photo-preview" id="photoPreview"><span>Ảnh xem trước</span></div><p id="photoStatus">Ảnh gắn riêng với phiên bản thẻ này, không ảnh hưởng thẻ khác của cùng diễn viên.</p></div>
+          <div class="photo-preview-wrap"><div class="photo-preview" id="photoPreview"><span>Ảnh xem trước</span></div><p id="photoStatus">Ảnh đại diện thuộc về thẻ này, không ảnh hưởng thẻ khác của cùng diễn viên.</p></div>
           <div class="form-actions"><button class="primary-btn" type="submit" id="saveCharacterBtn">Lưu nhân vật</button><button class="secondary-btn" type="button" id="clearFormBtn">Xóa nội dung form</button></div>
-          <p class="form-footnote">Nhiều thẻ có thể dùng cùng tên diễn viên. Khác phim hoặc khác phiên bản trang phục thì hãy tạo thẻ mới, không sửa đè thẻ cũ. Thẻ cùng tên phim tự động nằm trong một bộ sưu tập.</p>
+          <p class="form-footnote">Nhiều thẻ có thể dùng cùng tên diễn viên. Khác phim, vai diễn hoặc cấp độ hiếm thì hãy tạo thẻ mới, không sửa đè thẻ cũ. Thẻ cùng tên phim tự động nằm trong một bộ sưu tập.</p>
         </form>
         <div class="manager-content">
-          <div class="manager-toolbar"><div><strong id="managerCount">12 thẻ</strong><small>Sửa để cập nhật một phiên bản; dùng “Xóa hẳn” để loại thẻ khỏi trò chơi.</small></div><div class="manager-tools"><input id="managerSearch" class="manager-search" type="search" placeholder="Tìm diễn viên / phim…" aria-label="Tìm thẻ trong danh sách" /><button class="outline-btn" id="exportBtn" type="button">↓ Sao lưu</button><button class="outline-btn" id="importBtn" type="button">↑ Khôi phục</button><input id="importFile" type="file" accept="application/json,.json" hidden /><button class="outline-btn" id="restoreDefaultsBtn" type="button">Khôi phục thẻ mẫu</button></div></div>
+          <div class="manager-toolbar"><div><strong id="managerCount">12 thẻ</strong><small>Sửa để cập nhật thông tin thẻ; dùng “Xóa hẳn” để loại thẻ khỏi trò chơi.</small></div><div class="manager-tools"><input id="managerSearch" class="manager-search" type="search" placeholder="Tìm diễn viên / phim…" aria-label="Tìm thẻ trong danh sách" /><button class="outline-btn" id="exportBtn" type="button">↓ Sao lưu</button><button class="outline-btn" id="importBtn" type="button">↑ Khôi phục</button><input id="importFile" type="file" accept="application/json,.json" hidden /><button class="outline-btn" id="restoreDefaultsBtn" type="button">Khôi phục thẻ mẫu</button></div></div>
           <div class="manager-list" id="managerList"></div>
         </div>
       </div>
@@ -184,14 +183,19 @@
     <section class="app-page" id="page-collection" data-app-page="collection" hidden>
     <section class="collection-section" id="collection">
       <div class="section-heading">
-        <div><p class="eyebrow left-eyebrow">YOUR DRAMA SETS</p><h2>Bộ sưu tập <em>phim</em></h2><p class="section-subtitle">Các thẻ cùng phim được gom thành một bộ. Tiến độ tính theo số phiên bản thẻ khác nhau đã sở hữu.</p></div>
+        <div><p class="eyebrow left-eyebrow">YOUR DRAMA SETS</p><h2>Bộ sưu tập <em>phim</em></h2><p class="section-subtitle">Các thẻ cùng phim được gom thành một bộ. Tiến độ tính theo số thẻ khác nhau đã sở hữu.</p></div>
         <button class="reset-btn" id="resetBtn" title="Xóa bộ sưu tập">↻ <span>Đặt lại</span></button>
       </div>
+      <div class="collection-tools">
+        <label class="collection-search-wrap" for="collectionSearch"><span aria-hidden="true">⌕</span><input id="collectionSearch" type="search" placeholder="Tìm tên phim, diễn viên, vai diễn…" autocomplete="off" aria-label="Tìm trong bộ sưu tập phim" /><button type="button" id="clearCollectionSearch" class="search-clear" aria-label="Xóa từ khóa tìm kiếm" hidden>×</button></label>
+        <span class="collection-result-count" id="collectionResultCount" aria-live="polite">0 phim · 0 thẻ phù hợp</span>
+      </div>
       <div class="filters" role="group" aria-label="Lọc bộ sưu tập">
-        <button class="filter active" data-filter="all">Tất cả thẻ <span id="countAll">0</span></button>
-        <button class="filter" data-filter="male">Nam</button>
-        <button class="filter" data-filter="female">Nữ</button>
-        <button class="filter" data-filter="favorites">Đã đánh dấu ♡</button>
+        <button class="filter active" data-filter="all" aria-pressed="true">Tất cả thẻ <span id="countAll">0</span></button>
+        <button class="filter" data-filter="missing" aria-pressed="false">Chưa sưu tầm</button>
+        <button class="filter" data-filter="male" aria-pressed="false">Nam</button>
+        <button class="filter" data-filter="female" aria-pressed="false">Nữ</button>
+        <button class="filter" data-filter="favorites" aria-pressed="false">Đã đánh dấu ♡</button>
       </div>
       <div class="empty-state" id="emptyState"><div>✧</div><h3>Chưa mở thẻ nào</h3><p>Những thẻ mờ bên dưới đang chờ bạn sưu tầm. Khi sở hữu các thẻ cùng phim, tiến độ của bộ sẽ tăng lên.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
       <div class="collection-sets" id="collectionSets"></div>
@@ -214,7 +218,7 @@
             <button class="leaderboard-mode" type="button" data-rank-mode="beauty" aria-pressed="false"><span>✧</span><strong>Nhan sắc</strong><small>Điểm theo phim & thẻ</small></button>
           </div>
         </div>
-        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Độ hot được tính theo số tên phim khác nhau trong kho thẻ; nhiều phiên bản trang phục cùng một phim chỉ tính một phim.</div>
+        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Độ hot được tính theo số phim khác nhau trong kho dữ liệu hệ thống; mỗi tên phim chỉ tính một lần.</div>
         <div class="leaderboard-podium" id="leaderboardPodium" aria-label="Ba vị trí dẫn đầu"></div>
         <ol class="leaderboard-list" id="leaderboardList" aria-label="Bảng xếp hạng các diễn viên"></ol>
         <div class="leaderboard-empty" id="leaderboardEmpty" hidden>
@@ -238,8 +242,8 @@
         <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Thẻ đã sở hữu mở hồ sơ đầy đủ; thẻ chưa sở hữu có thể xem trước qua mục liên kết diễn viên.</p></article>
         <article class="info-card"><span>03</span><h3>Dữ liệu trên thiết bị</h3><p>Tiến độ và yêu thích được lưu ở localStorage; hồ sơ thẻ tùy chỉnh và ảnh được lưu trong IndexedDB trên trình duyệt hiện tại.</p></article>
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
-        <article class="info-card"><span>05</span><h3>Mối liên kết</h3><p>Hồ sơ tự nối các phiên bản cùng diễn viên và các diễn viên có cùng tên phim. Hãy nhập tên phim nhất quán để tạo mạng lưới bạn diễn chính xác.</p></article>
-        <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng cả diễn viên, phim và trang phục, ứng dụng sẽ hỏi lại trước khi thêm thẻ trùng hoàn toàn.</p></article>
+        <article class="info-card"><span>05</span><h3>Mối liên kết</h3><p>Hồ sơ tự nối các thẻ của cùng diễn viên và các diễn viên có cùng tên phim. Hãy nhập tên phim nhất quán để tạo mạng lưới bạn diễn chính xác.</p></article>
+        <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng diễn viên, phim, vai diễn và độ hiếm, ứng dụng sẽ hỏi lại trước khi thêm thẻ có thông tin trùng.</p></article>
         <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Độ hot tính theo số phim khác nhau được ghi nhận trong kho dữ liệu. Điểm Nhan sắc = P / N + N, trong đó P là tổng điểm các biến thể thẻ khác nhau trong kho hiện tại và N là số phim khác nhau của diễn viên. Điểm không phụ thuộc các thẻ người chơi sở hữu.</p></article>
       </div>
       <details class="credits-section">
@@ -279,7 +283,7 @@
         <h2 id="detailName">Tên nhân vật</h2>
         <p class="detail-chinese" id="detailChinese"></p>
         <div class="detail-tags"><span id="detailGender"></span><span id="detailStyle"></span></div>
-        <div class="detail-film-info"><p><span>Phim / bộ sưu tập</span><strong id="detailMovie"></strong></p><p><span>Vai diễn</span><strong id="detailRole"></strong></p><p><span>Trang phục</span><strong id="detailCostume"></strong></p></div>
+        <div class="detail-film-info"><p><span>Phim / bộ sưu tập</span><strong id="detailMovie"></strong></p><p><span>Vai diễn</span><strong id="detailRole"></strong></p></div>
         <p class="detail-quote" id="detailQuote"></p>
         <section class="detail-relations" id="detailRelations" aria-labelledby="detailRelationsTitle">
           <div class="detail-relations-intro"><p class="detail-relations-eyebrow">STARRY CONNECTIONS</p><h3 id="detailRelationsTitle">Mối liên kết</h3><p id="detailRelationSummary">Các mối liên kết được tổng hợp từ diễn viên và tên phim trong kho thẻ.</p></div>

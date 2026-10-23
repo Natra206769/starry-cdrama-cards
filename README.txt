@@ -1,5 +1,22 @@
-STARRY C-DRAMA CARDS — BẢN V7.9
-================================
+STARRY C-DRAMA CARDS — BẢN V8.0
+
+CẬP NHẬT V8.0 — BỘ SƯU TẬP & DANH MỤC THẺ
+- Bộ sưu tập phim được sắp xếp theo bảng chữ cái tiếng Việt, không phân biệt hoa/thường; có tìm kiếm tức thời theo phim, diễn viên, tên tiếng Trung, vai diễn, phong cách và độ hiếm.
+- Thêm bộ lọc “Chưa sưu tầm” để chỉ hiển thị thẻ còn thiếu. Tiến độ mỗi phim hiển thị số thẻ đã có / tổng số và số còn thiếu.
+- Mỗi phim luôn hiển thị đủ sáu cấp N, R, SR, SSR, UR, SP với số thẻ đã có / chưa có. Số lượng đếm theo thẻ khác nhau đã sở hữu ít nhất một bản, không lấy tổng số bản trùng.
+- Bỏ trường phiên bản trang phục khỏi biểu mẫu, bộ sưu tập, hồ sơ, danh sách quản lý và logic phát hiện trùng. Khi thêm mới, thẻ trùng thông tin được kiểm tra theo diễn viên + phim + vai diễn + độ hiếm. Điểm xếp hạng coi thẻ khác nhau theo phim + vai diễn + độ hiếm trong nhóm từng diễn viên. Thẻ cũ không bị tự ý xóa và tiến độ/ID cũ được giữ nguyên.
+- Phong cách mới gồm Cổ trang, Thanh xuân vườn trường, Công sở, Tiên hiệp, Dân quốc và Khác. Giá trị “Hiện đại” tồn tại từ dữ liệu cũ không được tự phân loại; khi sửa, ứng dụng yêu cầu chọn loại phù hợp.
+- Bảng xếp hạng sử dụng toàn bộ kho thẻ hệ thống, không đọc tiến độ sở hữu hay số bản trùng. P là tổng điểm các thẻ khác nhau theo độ hiếm (N=1, R=2, SR=4, SSR=7, UR=12, SP=20); N là số phim khác nhau. Điểm Nhan sắc = P / N + N.
+- Nâng cache Service Worker lên v12 để nhận bản mới. Giữ nguyên key localStorage, tên/phiên bản IndexedDB và cơ chế xác nhận cập nhật của người dùng.
+
+CÁCH TRIỂN KHAI V8.0
+1. Trước khi cập nhật bản đang dùng, vào Quản lý thẻ → Sao lưu để xuất tệp JSON.
+2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon và thư mục icons/ tại thư mục gốc GitHub Pages.
+3. Sau khi GitHub Pages triển khai, mở app có Internet và chọn cập nhật khi thông báo xuất hiện. Nếu còn giao diện cũ, đóng hẳn app rồi mở lại/tải lại trang.
+4. Bản ZIP này chỉ cập nhật mã nguồn. Dữ liệu localStorage/IndexedDB đang nằm trên thiết bị của bạn không được gói vào ZIP; hãy sao lưu trong app trước khi cập nhật.
+
+LỊCH SỬ CÁC BẢN TRƯỚC
+======================
 
 THAY ĐỔI V7.7
 - Đồng bộ hiệu ứng và thời gian triệu hồi thẻ nổi bật trong x10 với mở đơn bằng cùng bộ rarityInfo; làm chậm hợp lý các mốc, nhất là UR/SP, và giữ spotlight lâu hơn để hiệu ứng thẻ hoàn tất.

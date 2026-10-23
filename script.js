@@ -390,8 +390,34 @@ function animateCollectionCard(article, afterAnimation){
     }
   }, 360);
 }
+function renderCollectionRaritySummary(){
+  const summary=$("collectionRaritySummary");if(!summary)return;
+  summary.replaceChildren();
+  const heading=document.createElement("div");heading.className="collection-rarity-summary-heading";
+  const title=document.createElement("strong");title.textContent="Tổng thẻ toàn bộ phim";
+  const note=document.createElement("small");note.textContent="Đã sưu tầm / tổng số thẻ khác nhau trong kho";
+  heading.append(title,note);summary.appendChild(heading);
+  const tiers=document.createElement("div");tiers.className="collection-rarity-summary-tiers";
+  for(const [rarity,info] of Object.entries(rarityInfo)){
+    const tierCards=characters.filter(card=>card.rarity===rarity);
+    // Hide rarity tiers that do not exist anywhere in the system catalog.
+    if(!tierCards.length)continue;
+    const owned=tierCards.filter(card=>(Number(state.owned[card.id])||0)>0).length;
+    const item=document.createElement("div");item.className="collection-rarity-total rarity-"+rarity.toLowerCase();
+    const label=document.createElement("strong");label.textContent=rarity;
+    const count=document.createElement("span");count.textContent=`${owned} / ${tierCards.length}`;
+    const caption=document.createElement("small");caption.textContent="đã có / tổng";
+    const track=document.createElement("span");track.className="collection-rarity-track";track.setAttribute("aria-hidden","true");
+    const fill=document.createElement("i");fill.style.width=(owned/tierCards.length*100)+"%";track.appendChild(fill);
+    item.setAttribute("aria-label",`${rarity}: đã sưu tầm ${owned} trên tổng ${tierCards.length} thẻ trong toàn bộ phim`);
+    item.append(label,count,caption,track);tiers.appendChild(item);
+  }
+  if(!tiers.children.length){const empty=document.createElement("p");empty.className="collection-rarity-summary-empty";empty.textContent="Kho thẻ chưa có dữ liệu để thống kê.";summary.appendChild(empty);return;}
+  summary.appendChild(tiers);
+}
 function renderCollection(){
   const container=$("collectionSets");if(!container)return;container.replaceChildren();
+  renderCollectionRaritySummary();
   const grouped=new Map();
   for(const card of characters){
     const movie=String(card.movie||"Bộ sưu tập chân dung").trim().replace(/\s+/g," ")||"Bộ sưu tập chân dung";
@@ -424,6 +450,7 @@ function renderCollection(){
     const stats=document.createElement("div");stats.className="film-rarity-stats";stats.setAttribute("aria-label","Thống kê đã có và còn thiếu theo độ hiếm của "+movie);
     for(const rarity of Object.keys(rarityInfo)){
       const tierCards=allCards.filter(card=>card.rarity===rarity);
+      if(!tierCards.length)continue;
       const ownedTier=tierCards.filter(card=>(Number(state.owned[card.id])||0)>0).length;
       const missingTier=tierCards.length-ownedTier;
       const stat=document.createElement("span");stat.className="film-rarity-stat rarity-"+rarity.toLowerCase();

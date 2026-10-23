@@ -1,6 +1,6 @@
-STARRY C-DRAMA CARDS — BẢN V8.0
+STARRY C-DRAMA CARDS — BẢN V8.1
 
-CẬP NHẬT V8.0 — BỘ SƯU TẬP & DANH MỤC THẺ
+CẬP NHẬT V8.1 — BỘ SƯU TẬP & DANH MỤC THẺ
 - Bộ sưu tập phim được sắp xếp theo bảng chữ cái tiếng Việt, không phân biệt hoa/thường; có tìm kiếm tức thời theo phim, diễn viên, tên tiếng Trung, vai diễn, phong cách và độ hiếm.
 - Thêm bộ lọc “Chưa sưu tầm” để chỉ hiển thị thẻ còn thiếu. Tiến độ mỗi phim hiển thị số thẻ đã có / tổng số và số còn thiếu.
 - Mỗi phim luôn hiển thị đủ sáu cấp N, R, SR, SSR, UR, SP với số thẻ đã có / chưa có. Số lượng đếm theo thẻ khác nhau đã sở hữu ít nhất một bản, không lấy tổng số bản trùng.
@@ -9,7 +9,7 @@ CẬP NHẬT V8.0 — BỘ SƯU TẬP & DANH MỤC THẺ
 - Bảng xếp hạng sử dụng toàn bộ kho thẻ hệ thống, không đọc tiến độ sở hữu hay số bản trùng. P là tổng điểm các thẻ khác nhau theo độ hiếm (N=1, R=2, SR=4, SSR=7, UR=12, SP=20); N là số phim khác nhau. Điểm Nhan sắc = P / N + N.
 - Nâng cache Service Worker lên v12 để nhận bản mới. Giữ nguyên key localStorage, tên/phiên bản IndexedDB và cơ chế xác nhận cập nhật của người dùng.
 
-CÁCH TRIỂN KHAI V8.0
+CÁCH TRIỂN KHAI V8.1
 1. Trước khi cập nhật bản đang dùng, vào Quản lý thẻ → Sao lưu để xuất tệp JSON.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon và thư mục icons/ tại thư mục gốc GitHub Pages.
 3. Sau khi GitHub Pages triển khai, mở app có Internet và chọn cập nhật khi thông báo xuất hiện. Nếu còn giao diện cũ, đóng hẳn app rồi mở lại/tải lại trang.
@@ -202,3 +202,9 @@ CẬP NHẬT V7.9 — ĐIỂM NHAN SẮC DỰA TRÊN TOÀN BỘ KHO DỮ LIỆU
 - Bảng “Độ hot” vẫn xếp theo số phim khác nhau có dữ liệu. Điểm Nhan sắc là chỉ số giải trí của game, không phải phép đo khách quan về ngoại hình.
 - Tăng Service Worker shell cache lên v11 để nhận tệp giao diện mới.
 - Không thay đổi localStorage key starry-cbiz-cards-v1, IndexedDB starry-cbiz-manager-db (version 1/store appData), schema sao lưu, hoặc cơ chế lưu tiến độ; không xóa/reset dữ liệu người dùng.
+
+
+CẬP NHẬT V8.1 — TỔNG HỢP ĐỘ HIẾM TOÀN HỆ THỐNG
+- Thêm thanh tổng hợp số thẻ đã sưu tầm / tổng số thẻ khác nhau cho từng cấp độ trên toàn bộ phim.
+- Chỉ hiển thị cấp độ có ít nhất một thẻ trong kho dữ liệu hệ thống.
+- Trong từng bộ phim, ẩn các cấp độ không có thẻ để tiết kiệm diện tích.

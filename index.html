@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V7.3</title>
+  <title>Starry C-Drama Cards — V7.4</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -76,7 +76,10 @@
           </article>
         </div>
         <p class="reveal-hint" id="revealHint">Tập trung năng lượng… ngôi sao đang chờ bạn.</p>
-        <button class="primary-btn" id="openBtn"><span>✦</span> MỞ THẺ <small>×1</small></button>
+        <div class="open-actions" aria-label="Chọn số lượng thẻ">
+          <button class="primary-btn" id="openBtn" type="button"><span>✦</span> MỞ THẺ <small>×1</small></button>
+          <button class="ten-card-btn" id="openTenBtn" type="button"><span aria-hidden="true">✦</span> MỞ 10 THẺ <small>×10</small></button>
+        </div>
         <button class="text-btn" id="againBtn" hidden>↻ Mở thêm một thẻ</button>
         <p class="small-disclaimer">Ảnh mẫu lấy từ Wikimedia Commons; bạn có thể thêm ảnh riêng ngay trong mục Quản lý thẻ phim.</p>
       </div>
@@ -90,6 +93,10 @@
         <div class="tip">✦ <span>Mẹo nhỏ</span><br>Thẻ mới sẽ được lưu tự động trong bộ sưu tập trên trình duyệt của bạn.</div>
       </aside>
     </section>
+      <section class="batch-reveal" id="batchReveal" hidden aria-live="polite" aria-label="Mười thẻ vừa mở">
+        <div class="batch-heading"><div><p class="eyebrow left-eyebrow">YOUR NEW COLLECTION</p><h2>10 thẻ <em>vừa mở</em></h2><p id="batchSummary" class="section-subtitle">Mỗi thẻ đã được thêm vào bộ sưu tập.</p></div><button class="outline-btn" id="batchCloseBtn" type="button">Ẩn kết quả</button></div>
+        <div class="batch-grid" id="batchGrid"></div>
+      </section>
     </section>
 
     <section class="app-page" id="page-manager" data-app-page="manager" hidden>
@@ -150,7 +157,7 @@
         <p class="section-subtitle">Cách hoạt động, lưu trữ và sao lưu bộ sưu tập của bạn.</p>
       </section>
       <div class="info-cards">
-        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Mỗi lượt mở chọn một thẻ ngẫu nhiên. Thẻ đã sở hữu vẫn có thể xuất hiện lại; số lần sở hữu sẽ tăng lên.</p></article>
+        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Có thể mở 1 thẻ hoặc 10 thẻ cùng lúc. Thẻ đã sở hữu vẫn có thể xuất hiện lại; số lần sở hữu sẽ tăng lên.</p></article>
         <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Chỉ thẻ đã sở hữu mới mở hồ sơ chi tiết và có thể đánh dấu yêu thích.</p></article>
         <article class="info-card"><span>03</span><h3>Dữ liệu trên thiết bị</h3><p>Tiến độ và yêu thích được lưu ở localStorage; hồ sơ thẻ tùy chỉnh và ảnh được lưu trong IndexedDB trên trình duyệt hiện tại.</p></article>
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>

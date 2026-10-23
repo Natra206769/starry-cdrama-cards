@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7.3
+STARRY C-DRAMA CARDS — BẢN V7.4
 ================================
 
 NÂNG CẤP CHÍNH
@@ -106,9 +106,34 @@ CẬP NHẬT V7.3 — ICON STARRY, SÁU CẤP ĐỘ HIẾM VÀ BẢO TOÀN DỮ 
 - Thẻ sưu tập được gắn class theo cấp độ ở mỗi lần render, kể cả thẻ chưa sở hữu; các cấp có khung/màu/ánh sáng riêng và SP nổi bật hơn UR. Hiệu ứng tôn trọng prefers-reduced-motion.
 - Không đổi key localStorage starry-cbiz-cards-v1, tên IndexedDB starry-cbiz-manager-db, phiên bản DB, ID thẻ mẫu hay định dạng JSON sao lưu/khôi phục. Không xóa hoặc migrate dữ liệu người dùng khi khởi động.
 
-CÁCH TRIỂN KHAI V7.3
+CÁCH TRIỂN KHAI V7.4
 1. Trước khi cập nhật bản đang sử dụng, xuất bản sao lưu JSON trong mục Quản lý thẻ.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon.ico, favicon-32.png, apple-touch-icon.png và thư mục icons/ (icon-192.png, icon-512.png) vào đúng thư mục được GitHub Pages xuất bản.
 3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Gói bàn giao này chưa tự push hay cập nhật trang live.
 4. Mở app có Internet và chọn “Cập nhật” nếu thông báo xuất hiện. Nếu biểu tượng lối tắt cũ không thay đổi, xóa lối tắt khỏi màn hình chính và thêm lại sau khi bản live đã cập nhật; hành vi cụ thể tùy hệ điều hành/trình duyệt.
 5. Nên kiểm tra bộ sưu tập và thử sao lưu/khôi phục trên bản live sau triển khai. Bản làm việc được cung cấp không truy cập dữ liệu trình duyệt đang có của bạn.
+
+
+CẬP NHẬT V7.4 — TITLE CASE, MỞ 10 THẺ, THẺ ẢNH LỚN VÀ HIỆU ỨNG PHÂN CẤP
+
+1. TÊN PHIM / NHÂN VẬT / DIỄN VIÊN
+- Chuẩn hóa kiểu Title Case: chữ cái đầu của mỗi từ viết hoa.
+- Áp dụng cho dữ liệu mẫu, thẻ tùy chỉnh, chỉnh sửa thẻ mẫu, bộ sưu tập và hồ sơ chi tiết.
+- Khi mở hồ sơ cũ từ IndexedDB, chỉ các trường name, movie và role được chuẩn hóa; ID, ảnh, trang phục, rarity, metadata, cờ ẩn/xóa và tiến độ không bị chủ động sửa.
+- Khi trình duyệt cho phép ghi IndexedDB, các tên cũ cũng được cập nhật lại trong bản lưu. Nếu không ghi được, giao diện vẫn dùng tên đã chuẩn hóa trong phiên này.
+
+2. MỞ 10 THẺ CÙNG LÚC
+- Nút MỞ 10 THẺ rút 10 lượt độc lập theo trọng số rarity hiện hành; thẻ trùng có thể xuất hiện.
+- Kết quả hiển thị trong lưới đồng thời; mỗi lượt được cộng vào số lượng sở hữu và tiến độ bộ sưu tập được cập nhật một lần sau khi hoàn tất.
+- Mỗi kết quả có độ hiếm, tên diễn viên, phim, vai diễn và nhãn thẻ mới/trùng.
+
+3. BỐ CỤC VÀ HIỆU ỨNG
+- Khung mở thẻ ưu tiên ảnh chân dung (khoảng 62% chiều cao thẻ); chi tiết hồ sơ hiển thị ảnh ở phần trên, thông tin ở dưới.
+- Lưới 10 thẻ đáp ứng theo chiều rộng; vùng ảnh lớn hơn vùng thông tin.
+- Tăng sự khác biệt trực quan giữa N/R/SR/SSR/UR/SP bằng khung, hạt sáng, ánh viền, chuyển động và ánh màu khác nhau.
+- Tôn trọng prefers-reduced-motion để hạn chế hoạt ảnh khi hệ điều hành yêu cầu.
+
+BẢO TOÀN DỮ LIỆU VÀ CACHE
+- Giữ nguyên localStorage key starry-cbiz-cards-v1 và IndexedDB starry-cbiz-manager-db (version 1, store appData).
+- Service Worker dùng cache shell v6; chỉ các cache có tiền tố starry-cdrama-shell- cũ mới bị dọn, không xóa localStorage hoặc IndexedDB.
+- Bản nâng cấp chưa được push/triển khai tự động lên GitHub Pages.

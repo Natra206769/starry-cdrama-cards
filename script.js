@@ -1,4 +1,4 @@
-// Starry C-Drama Cards V7.3 — thẻ độc lập theo phim / vai diễn / trang phục.
+// Starry C-Drama Cards V7.4 — viết hoa tên tự động, mở đơn/thập liên và hiệu ứng hiếm đa dạng.
 let characters = [
   {id:"xiao-zhan",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Tiêu Chiến",chinese:"肖战",gender:"male",style:"Hiện đại",rarity:"SSR",quote:"Một ánh nhìn, vạn câu chuyện.",symbol:"✦",initials:"肖战",art1:"#34445c",art2:"#101522",accent:"#b8a5d0",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg/330px-Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg?width=700",photoCredit:"Pobediti丨肖战",photoLicense:"CC BY-SA 4.0",photoSource:"https://commons.wikimedia.org/wiki/File:Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg"},
   {id:"wang-yibo",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Vương Nhất Bác",chinese:"王一博",gender:"male",style:"Hiện đại",rarity:"SR",quote:"Tự do là phong cách của riêng mình.",symbol:"✧",initials:"王博",art1:"#214b57",art2:"#101a25",accent:"#6ec6c2",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg/500px-%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg?width=700",photoCredit:"Aco",photoLicense:"CC BY 2.5",photoSource:"https://commons.wikimedia.org/wiki/File:王一博.jpg"},
@@ -34,6 +34,7 @@ const DB_STORE="appData";
 let state = loadState();
 let activeFilter = "all";
 let lastCharacter = null;
+let lastBatchCards = [];
 let managerData = {custom:[],overrides:{},hidden:[],deleted:[]};
 let pendingPhotoData = null;
 let editingId = null;
@@ -42,6 +43,18 @@ let dbPromise = null;
 let currentDetailId = null;
 let toastTimer;
 const $ = id => document.getElementById(id);
+
+// Title Case cho tên diễn viên, nhân vật/vai diễn và phim; hỗ trợ đầy đủ Unicode/tiếng Việt.
+function titleCaseName(value){
+  return String(value ?? "").trim().replace(/\s+/g," ").toLocaleLowerCase("vi").replace(/(^|[\s\-–—'’])([\p{L}])/gu,(_,separator,letter)=>separator+letter.toLocaleUpperCase("vi"));
+}
+function normalizeSavedNameFields(card){
+  if(!card || typeof card!=="object")return card;
+  for(const field of ["name","movie","role"]){
+    if(typeof card[field]==="string"&&card[field].trim())card[field]=titleCaseName(card[field]);
+  }
+  return card;
+}
 
 function renderRarityControls(){
   const select=$("fieldRarity"),legend=$("rarityLegend");
@@ -92,8 +105,9 @@ function makeArt(rarity){
 }
 function normalizeCard(card,fallback={}){
   const result={...fallback,...(card||{})};
-  result.movie=String(result.movie||"").trim()||"Bộ sưu tập chân dung";
-  result.role=String(result.role||"").trim();
+  result.name=titleCaseName(result.name||"Chưa đặt tên");
+  result.movie=titleCaseName(String(result.movie||"").trim()||"Bộ sưu tập chân dung");
+  result.role=titleCaseName(String(result.role||"").trim());
   result.costume=String(result.costume||"").trim()||"Phiên bản mặc định";
   result.quote=String(result.quote||"").trim()||"Một ngôi sao, một câu chuyện.";
   result.symbol=result.symbol||result.icon||"✦";
@@ -124,10 +138,12 @@ function setCardImage(wrapper,card,imageClass,altText){
 }
 function openCard(){
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
-  const btn=$("openBtn");btn.disabled=true;$("againBtn").hidden=true;$("revealHint").textContent="Ánh sao đang hội tụ…";
+  const btn=$("openBtn"),tenBtn=$("openTenBtn");btn.disabled=true;if(tenBtn)tenBtn.disabled=true;$("againBtn").hidden=true;
+  $("batchReveal").hidden=true;$("batchGrid").replaceChildren();lastBatchCards=[];
+  $("revealHint").textContent="Ánh sao đang hội tụ…";
   $("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   const card=weightedRandom();
-  if(!card){btn.disabled=false;return;}
+  if(!card){btn.disabled=false;if(tenBtn)tenBtn.disabled=false;return;}
   const stage=document.querySelector(".stage");
   stage.style.setProperty("--rarity",rarityInfo[card.rarity].color);
   const openingClasses=Object.values(rarityInfo).map(info=>"opening-rarity-"+info.effect);
@@ -155,10 +171,68 @@ function openCard(){
     const isDuplicate=(state.owned[card.id]||0)>0;
     $("revealHint").textContent=isDuplicate?"Bạn đã sở hữu phiên bản này rồi!":"Một phiên bản mới gia nhập bộ sưu tập!";
     state.owned[card.id]=(state.owned[card.id]||0)+1;saveState();renderCollection();updateStats();
-    $("luckLabel").textContent=card.rarity;$("luckBar").style.width=info.luck+"%";$("againBtn").hidden=false;btn.disabled=false;
+    $("luckLabel").textContent=card.rarity;$("luckBar").style.width=info.luck+"%";$("againBtn").hidden=false;btn.disabled=false;if(tenBtn)tenBtn.disabled=false;
     showToast(info.toastPrefix+card.name+" · "+card.movie);
   },revealDelay);
 }
+function openTenCards(){
+  if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
+  const buttons=[$("openBtn"),$("openTenBtn")];buttons.forEach(button=>{if(button)button.disabled=true;});
+  $("againBtn").hidden=true;$("batchReveal").hidden=true;$("batchGrid").replaceChildren();
+  $("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
+  $("revealHint").textContent="Mười lá bài đang được gọi về…";lastBatchCards=[];
+  const pulled=Array.from({length:10},()=>weightedRandom()).filter(Boolean);
+  if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});return;}
+  const rarityRank={N:0,R:1,SR:2,SSR:3,UR:4,SP:5};
+  const highlight=pulled.reduce((best,card)=>(rarityRank[card.rarity]||0)>(rarityRank[best.rarity]||0)?card:best,pulled[0]);
+  const stage=document.querySelector(".stage"),openingClasses=Object.values(rarityInfo).map(info=>"opening-rarity-"+info.effect);
+  stage.style.setProperty("--rarity",rarityInfo[highlight.rarity].color);stage.classList.remove(...openingClasses);
+  $("cardBack").classList.remove("charging");stage.classList.add("opening-rarity-"+highlight.rarity.toLowerCase());$("cardBack").classList.add("charging");
+  const wait=Math.min(1150,Math.max(520,rarityInfo[highlight.rarity].revealDelay));
+  window.setTimeout(()=>{
+    $("cardBack").classList.remove("charging");stage.classList.remove(...openingClasses);$("cardBack").classList.add("hidden");
+    const seen=new Map();
+    const results=pulled.map(card=>{
+      const previous=(Number(state.owned[card.id])||0)+(seen.get(card.id)||0);
+      seen.set(card.id,(seen.get(card.id)||0)+1);
+      return {card,duplicate:previous>0,copyNumber:previous+1};
+    });
+    for(const card of pulled)state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
+    lastBatchCards=pulled.slice();saveState();renderCollection();updateStats();renderBatchResults(results);
+    const bestInfo=rarityInfo[highlight.rarity];$("luckLabel").textContent=highlight.rarity;$("luckBar").style.width=bestInfo.luck+"%";
+    $("revealHint").textContent="Đã mở 10 thẻ! Bộ sưu tập được cập nhật tự động.";
+    $("batchReveal").hidden=false;buttons.forEach(button=>{if(button)button.disabled=false;});
+    const unique=new Set(pulled.map(card=>card.id)).size;
+    $("batchSummary").textContent="Đã thêm 10 lượt mở · "+unique+" phiên bản khác nhau · tỷ lệ hiếm nhất trong lượt: "+highlight.rarity+".";
+    $("batchReveal").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+    showToast("✦ Đã mở 10 thẻ · "+highlight.rarity+" là cấp cao nhất trong lượt này.");
+  },wait);
+}
+function renderBatchResults(results){
+  const grid=$("batchGrid");grid.replaceChildren();
+  for(const result of results){
+    const card=normalizeCard(result.card),info=rarityInfo[card.rarity]||rarityInfo.R;
+    const article=document.createElement("article");article.className="batch-card rarity-"+card.rarity.toLowerCase();
+    article.setAttribute("role","button");article.setAttribute("tabindex","0");article.setAttribute("aria-label","Xem chi tiết thẻ "+card.name+" trong phim "+card.movie);article.title="Nhấn để xem hồ sơ chi tiết";
+    const openDetails=()=>showCharacterDetails(card.id);article.addEventListener("click",openDetails);article.addEventListener("keydown",event=>{if((event.key==="Enter"||event.key===" ")&&event.target===article){event.preventDefault();openDetails();}});
+    article.style.setProperty("--rarity",info.color);article.style.setProperty("--art1",card.art1||info.art[0]);article.style.setProperty("--art2",card.art2||info.art[1]);article.style.setProperty("--accent",card.accent||info.art[2]);
+    const art=document.createElement("div");art.className="batch-art";
+    const initials=document.createElement("strong");initials.className="batch-initials";initials.textContent=card.initials||makeInitials(card.chinese,card.name);
+    const tier=document.createElement("span");tier.className="batch-art-tier";tier.textContent=card.rarity;
+    const glow=document.createElement("span");glow.className="batch-starfield";glow.setAttribute("aria-hidden","true");art.append(initials,tier,glow);
+    setCardImage(art,card,"batch-photo","Ảnh "+card.name+" trong "+card.movie);article.appendChild(art);
+    const content=document.createElement("div");content.className="batch-info";
+    const rarity=document.createElement("p");rarity.className="batch-rarity";rarity.textContent=info.label;
+    const name=document.createElement("h3");name.textContent=card.name;
+    const movie=document.createElement("p");movie.className="batch-movie";movie.textContent=card.movie;
+    const role=document.createElement("p");role.className="batch-role";role.textContent=card.role||card.style||"Phiên bản thẻ";
+    const copy=document.createElement("span");copy.className="batch-copy"+(result.duplicate?" is-duplicate":"");copy.textContent=result.duplicate?"↻ Trùng · ×"+result.copyNumber:"✦ Mới sở hữu";
+    content.append(rarity,name,movie,role,copy);article.appendChild(content);grid.appendChild(article);
+  }
+}
+$("openTenBtn").addEventListener("click",openTenCards);
+$("batchCloseBtn").addEventListener("click",()=>{$("batchReveal").hidden=true;});
+
 function collectionMatchesFilter(card){
   if(activeFilter==="male")return card.gender==="male";
   if(activeFilter==="female")return card.gender==="female";
@@ -297,7 +371,7 @@ document.querySelectorAll(".filter").forEach(button=>button.addEventListener("cl
 $("resetBtn").addEventListener("click",()=>{
   if(!Object.keys(state.owned).length){showToast("Bạn chưa có thẻ nào cần đặt lại.");return;}
   if(confirm("Xóa toàn bộ tiến độ sưu tầm và yêu thích? Danh sách thẻ/phim sẽ được giữ nguyên.")){
-    state={owned:{},favorites:[]};saveState();renderCollection();updateStats();$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";$("luckLabel").textContent="Đang chờ";$("luckBar").style.width="15%";showToast("Đã đặt lại tiến độ sưu tầm.");
+    state={owned:{},favorites:[]};saveState();renderCollection();updateStats();$("batchReveal").hidden=true;lastBatchCards=[];$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";$("luckLabel").textContent="Đang chờ";$("luckBar").style.width="15%";showToast("Đã đặt lại tiến độ sưu tầm.");
   }
 });
 
@@ -315,10 +389,25 @@ async function dbGet(key){const database=await openDatabase();return new Promise
 async function dbPut(key,value){const database=await openDatabase();return new Promise((resolve,reject)=>{const tx=database.transaction(DB_STORE,"readwrite");tx.objectStore(DB_STORE).put(value,key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error("Không thể lưu dữ liệu"));tx.onabort=()=>reject(tx.error||new Error("Đã hủy lưu dữ liệu"));});}
 function normalizeManagerData(saved){
   const raw=saved&&typeof saved==="object"?saved:{};
-  return {custom:Array.isArray(raw.custom)?raw.custom.map(card=>normalizeCard(card)):[],overrides:raw.overrides&&typeof raw.overrides==="object"?raw.overrides:{},hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[]};
+  const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>[id,normalizeSavedNameFields({...card})])):{};
+  return {custom:Array.isArray(raw.custom)?raw.custom.map(card=>normalizeCard(card)):[],overrides,hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[]};
 }
 async function readManagerData(){
-  try{return normalizeManagerData(await dbGet("managerData"));}
+  try{
+    const saved=await dbGet("managerData");
+    if(!saved||typeof saved!=="object")return normalizeManagerData(saved);
+    // Migrate only the three requested display-name fields. All other user data, including photos,
+    // IDs, ownership, favorites, hidden/deleted flags and custom metadata, stays intact.
+    const migrated=JSON.parse(JSON.stringify(saved));
+    if(Array.isArray(migrated.custom))migrated.custom.forEach(normalizeSavedNameFields);
+    if(migrated.overrides&&typeof migrated.overrides==="object")Object.values(migrated.overrides).forEach(normalizeSavedNameFields);
+    const changed=JSON.stringify(migrated)!==JSON.stringify(saved);
+    if(changed){
+      try{await dbPut("managerData",migrated);}
+      catch(migrationError){console.warn("Không thể lưu chuẩn hóa chữ hoa; sẽ dùng bản đã chuẩn hóa trong phiên này:",migrationError);}
+    }
+    return normalizeManagerData(migrated);
+  }
   catch(error){console.warn("Không đọc được IndexedDB:",error);showToast("Không đọc được ảnh/hồ sơ đã lưu. Hãy mở bằng Chrome/Edge hoặc localhost.");return normalizeManagerData(null);}
 }
 async function persistManagerData(){
@@ -398,6 +487,7 @@ async function deleteCharacter(id){
   if(editingId===id)clearCharacterForm();
   if(currentDetailId===id)closeCharacterDetails();
   if(lastCharacter?.id===id){lastCharacter=null;$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Thẻ đã được xóa khỏi kho.";}
+  if(lastBatchCards.some(card=>card.id===id)){$("batchReveal").hidden=true;lastBatchCards=[];}
   rebuildCharacters();showToast("Đã xóa hẳn thẻ "+card.name+".");
 }
 function fileToCompressedDataUrl(file){
@@ -417,6 +507,9 @@ $("managerToggle").addEventListener("click",()=>{if($("characterForm").hidden)st
 $("cancelEditBtn").addEventListener("click",clearCharacterForm);
 $("clearFormBtn").addEventListener("click",()=>{if(editingId)editCharacter(editingId);else clearCharacterForm();});
 $("managerSearch").addEventListener("input",renderManagerList);
+for(const fieldId of ["fieldName","fieldMovie","fieldRole"]){
+  $(fieldId).addEventListener("blur",event=>{event.target.value=titleCaseName(event.target.value);});
+}
 $("fieldPhoto").addEventListener("change",async event=>{
   const file=event.target.files?.[0];if(!file)return;$("photoStatus").textContent="Đang xử lý ảnh…";
   try{pendingPhotoData=await fileToCompressedDataUrl(file);buildPreview(pendingPhotoData,file.name);$("photoStatus").textContent="Ảnh mới đã sẵn sàng để lưu cho đúng phiên bản thẻ này.";}
@@ -424,12 +517,13 @@ $("fieldPhoto").addEventListener("change",async event=>{
 });
 $("characterForm").addEventListener("submit",async event=>{
   event.preventDefault();
-  const name=$("fieldName").value.trim(),movie=$("fieldMovie").value.trim(),costume=$("fieldCostume").value.trim();
+  const name=titleCaseName($("fieldName").value),movie=titleCaseName($("fieldMovie").value),costume=$("fieldCostume").value.trim();
+  $("fieldName").value=name;$("fieldMovie").value=movie;$("fieldRole").value=titleCaseName($("fieldRole").value);
   if(!name||!movie||!costume){showToast("Hãy nhập tên diễn viên, tên phim và phiên bản trang phục.");return;}
   if(!editingId&&!pendingPhotoData){showToast("Hãy chọn ảnh đúng phiên bản thẻ khi thêm thẻ mới.");return;}
   const wasEditing=Boolean(editingId),rarity=$("fieldRarity").value,current=editingId?getAnyCharacter(editingId):null,art=makeArt(rarity);
   const changedPhoto=Boolean(pendingPhotoData);
-  const fields={name,chinese:$("fieldChinese").value.trim(),movie,role:$("fieldRole").value.trim(),costume,gender:$("fieldGender").value,style:$("fieldStyle").value,rarity,quote:$("fieldQuote").value.trim()||"Một ngôi sao, một câu chuyện.",initials:makeInitials($("fieldChinese").value,name),photo:pendingPhotoData||current?.photo||"",photoFallback:changedPhoto?null:(current?.photoFallback||null),...art};
+  const fields={name,chinese:$("fieldChinese").value.trim(),movie,role:titleCaseName($("fieldRole").value),costume,gender:$("fieldGender").value,style:$("fieldStyle").value,rarity,quote:$("fieldQuote").value.trim()||"Một ngôi sao, một câu chuyện.",initials:makeInitials($("fieldChinese").value,name),photo:pendingPhotoData||current?.photo||"",photoFallback:changedPhoto?null:(current?.photoFallback||null),...art};
   const previous=JSON.parse(JSON.stringify(managerData));
   if(editingId){
     if(managerData.custom.some(card=>card.id===editingId))managerData.custom=managerData.custom.map(card=>card.id===editingId?{...card,...fields,...(changedPhoto?{photoCredit:"Ảnh do người dùng thêm",photoLicense:"Ảnh cá nhân",photoSource:""}:{})}:card);

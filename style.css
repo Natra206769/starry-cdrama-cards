@@ -931,7 +931,7 @@ main {
 }
 .detail-owned[hidden],.detail-delete-btn[hidden],.detail-favorite-btn[hidden]{display:none !important;}
 
-/* V7.8 — actor leaderboards, hotness from unique drama titles and collection-based visual score. */
+/* V7.9 — actor leaderboards use catalog-wide film and card data, not player ownership. */
 .leaderboard-section{border-top:1px solid var(--line);padding:42px 0 70px;min-width:0;}
 .leaderboard-page-heading{gap:18px;margin-bottom:24px;}
 .leaderboard-total{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:8px;padding:10px 15px;border:1px solid #d8bb863b;border-radius:13px;background:linear-gradient(145deg,#d8bb8610,#c18aff08);white-space:nowrap;}

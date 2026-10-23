@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7.8
+STARRY C-DRAMA CARDS — BẢN V7.9
 ================================
 
 THAY ĐỔI V7.7
@@ -127,10 +127,10 @@ CẬP NHẬT V7.3 — ICON STARRY, SÁU CẤP ĐỘ HIẾM VÀ BẢO TOÀN DỮ 
 - Thẻ sưu tập được gắn class theo cấp độ ở mỗi lần render, kể cả thẻ chưa sở hữu; các cấp có khung/màu/ánh sáng riêng và SP nổi bật hơn UR. Hiệu ứng tôn trọng prefers-reduced-motion.
 - Không đổi key localStorage starry-cbiz-cards-v1, tên IndexedDB starry-cbiz-manager-db, phiên bản DB, ID thẻ mẫu hay định dạng JSON sao lưu/khôi phục. Không xóa hoặc migrate dữ liệu người dùng khi khởi động.
 
-CÁCH TRIỂN KHAI V7.8
+CÁCH TRIỂN KHAI V7.9
 1. Trước khi cập nhật bản đang sử dụng, xuất bản sao lưu JSON trong mục Quản lý thẻ.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon.ico, favicon-32.png, apple-touch-icon.png và thư mục icons/ (icon-192.png, icon-512.png) vào đúng thư mục được GitHub Pages xuất bản.
-3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Service Worker dùng cache shell v10 để nhận HTML/CSS/JS mới. Gói bàn giao này chưa tự push hay cập nhật trang live.
+3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Service Worker dùng cache shell v11 để nhận HTML/CSS/JS mới. Gói bàn giao này chưa tự push hay cập nhật trang live.
 4. Mở app có Internet và chọn “Cập nhật” nếu thông báo xuất hiện. Nếu biểu tượng lối tắt cũ không thay đổi, xóa lối tắt khỏi màn hình chính và thêm lại sau khi bản live đã cập nhật; hành vi cụ thể tùy hệ điều hành/trình duyệt.
 5. Nên kiểm tra bộ sưu tập và thử sao lưu/khôi phục trên bản live sau triển khai. Bản làm việc được cung cấp không truy cập dữ liệu trình duyệt đang có của bạn.
 
@@ -176,3 +176,12 @@ CẬP NHẬT V7.8 — BẢNG XẾP HẠNG DIỄN VIÊN
 - Dữ liệu xếp hạng được tính trực tiếp từ kho thẻ và state sở hữu hiện có; không tạo bảng dữ liệu hoặc khóa lưu trữ mới.
 - Tăng Service Worker shell cache lên v10 để nhận tệp giao diện mới; vẫn giữ cơ chế hỏi người dùng trước khi chuyển phiên bản.
 - Lưu ý: thẻ mẫu mặc định là ảnh chân dung sự kiện, không ghi tên phim cụ thể, nên bảng Độ hot sẽ hướng dẫn người dùng bổ sung thẻ theo phim cho đến khi có dữ liệu phim thực.
+
+
+CẬP NHẬT V7.9 — ĐIỂM NHAN SẮC DỰA TRÊN TOÀN BỘ KHO DỮ LIỆU
+- Công thức: Điểm Nhan sắc = P / N + N. P là tổng điểm của các biến thể thẻ khác nhau được ghi nhận trong kho dữ liệu (cấp N=1 điểm, R=2, SR=4, SSR=7, UR=12, SP=20); N là số phim khác nhau của diễn viên đã có tên phim cụ thể trong hệ thống.
+- Không đọc số lượng thẻ đã sở hữu, số bản trùng hoặc tiến độ bộ sưu tập của người chơi khi tính điểm và sắp xếp. Ảnh đại diện và thông tin phụ cũng lấy từ kho dữ liệu, không phụ thuộc bộ sưu tập cá nhân.
+- Mỗi tên phim chỉ tính một lần. Các mục chung như “Bộ sưu tập chân dung” không được tính là phim; diễn viên chưa có phim cụ thể chưa được xếp điểm Nhan sắc để tránh chia cho 0.
+- Bảng “Độ hot” vẫn xếp theo số phim khác nhau có dữ liệu. Điểm Nhan sắc là chỉ số giải trí của game, không phải phép đo khách quan về ngoại hình.
+- Tăng Service Worker shell cache lên v11 để nhận tệp giao diện mới.
+- Không thay đổi localStorage key starry-cbiz-cards-v1, IndexedDB starry-cbiz-manager-db (version 1/store appData), schema sao lưu, hoặc cơ chế lưu tiến độ; không xóa/reset dữ liệu người dùng.

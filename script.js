@@ -1,4 +1,4 @@
-// Starry C-Drama Cards V7.8 — bảng xếp hạng diễn viên nam/nữ.
+// Starry C-Drama Cards V7.9 — xếp hạng nhan sắc dựa trên dữ liệu toàn bộ kho phim/thẻ.
 let characters = [
   {id:"xiao-zhan",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Tiêu Chiến",chinese:"肖战",gender:"male",style:"Hiện đại",rarity:"SSR",quote:"Một ánh nhìn, vạn câu chuyện.",symbol:"✦",initials:"肖战",art1:"#34445c",art2:"#101522",accent:"#b8a5d0",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg/330px-Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg?width=700",photoCredit:"Pobediti丨肖战",photoLicense:"CC BY-SA 4.0",photoSource:"https://commons.wikimedia.org/wiki/File:Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg"},
   {id:"wang-yibo",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Vương Nhất Bác",chinese:"王一博",gender:"male",style:"Hiện đại",rarity:"SR",quote:"Tự do là phong cách của riêng mình.",symbol:"✧",initials:"王博",art1:"#214b57",art2:"#101a25",accent:"#6ec6c2",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg/500px-%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg?width=700",photoCredit:"Aco",photoLicense:"CC BY 2.5",photoSource:"https://commons.wikimedia.org/wiki/File:王一博.jpg"},
@@ -496,7 +496,8 @@ $("characterDetailDialog").addEventListener("click",event=>{if(event.target===$(
 $("characterDetailDialog").addEventListener("cancel",()=>{currentDetailId=null;});
 $("detailFavoriteBtn").addEventListener("click",()=>{if(currentDetailId)toggleFavorite(currentDetailId);});
 $("detailDeleteBtn").addEventListener("click",()=>{if(currentDetailId)deleteCharacter(currentDetailId);});
-// Bảng xếp hạng: độ hot dùng số phim khác nhau trong kho; điểm nhan sắc là điểm sưu tầm vui.
+// Bảng xếp hạng dùng dữ liệu trong toàn bộ kho thẻ hiện có, không đọc state sở hữu.
+// Nhan sắc = P / N + N; P là tổng điểm các biến thể thẻ khác nhau, N là số phim khác nhau.
 let leaderboardGender = "female";
 let leaderboardMode = "hot";
 const leaderboardRarityPoints = {N:1,R:2,SR:4,SSR:7,UR:12,SP:20};
@@ -513,19 +514,19 @@ function buildActorRankingData(){
   }
   return [...byName.values()].map(actor=>{
     actor.gender=actor.genderCounts.female>actor.genderCounts.male?"female":actor.genderCounts.male>actor.genderCounts.female?"male":(actor.cards.find(card=>card.gender==="male"||card.gender==="female")?.gender||"other");
+    // Card IDs identify individual catalog variants. The owned copy count is deliberately ignored.
+    actor.systemCards=[...new Map(actor.cards.map((card,index)=>[String(card.id||`${actor.key}-variant-${index}`),card])).values()];
     actor.hotScore=actor.movies.size;
-    actor.ownedCards=actor.cards.filter(card=>(Number(state.owned[card.id])||0)>0);
-    actor.ownedCopies=actor.ownedCards.reduce((sum,card)=>sum+(Number(state.owned[card.id])||0),0);
-    const ownedDramaMovies=new Set(actor.ownedCards.map(card=>String(card.movie||"").trim()).filter(movie=>movie&&!isGenericCollectionTitle(movie)).map(normalizedSearchKey));
-    actor.beautyScore=actor.ownedCards.reduce((sum,card)=>sum+(leaderboardRarityPoints[card.rarity]||1),0)+ownedDramaMovies.size*2;
-    actor.ownedMovieCount=ownedDramaMovies.size;
-    actor.cardCount=actor.cards.length;
+    actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+(leaderboardRarityPoints[card.rarity]||1),0);
+    actor.cardCount=actor.systemCards.length;
+    // A defined score requires at least one concrete film; portrait-only entries have N = 0.
+    actor.beautyScore=actor.hotScore>0?(actor.catalogCardPoints/actor.hotScore)+actor.hotScore:0;
     return actor;
   });
 }
 function compareVietnamese(a,b){return String(a).localeCompare(String(b),"vi",{sensitivity:"base"});}
 function getActorRankingAvatar(actor,mode){
-  const candidates=mode==="beauty"&&actor.ownedCards.length?actor.ownedCards:actor.cards;
+  const candidates=actor.systemCards||actor.cards;
   const rarityOrder={SP:6,UR:5,SSR:4,SR:3,R:2,N:1};
   return [...candidates].sort((a,b)=>(rarityOrder[b.rarity]||0)-(rarityOrder[a.rarity]||0)||compareVietnamese(a.movie,b.movie))[0]||null;
 }
@@ -548,15 +549,12 @@ function makeLeaderboardEntry(actor,rank,mode,podium=false){
   const identity=document.createElement("div");identity.className="leaderboard-identity";
   const name=document.createElement("strong");name.textContent=actor.name;
   const sub=document.createElement("small");
-  if(mode==="hot")sub.textContent=actor.movies.size+" phim khác nhau · "+actor.cardCount+" phiên bản thẻ";
-  else{
-    const rarityOrder={SP:6,UR:5,SSR:4,SR:3,R:2,N:1};
-    const highestOwned=actor.ownedCards.reduce((best,card)=>(rarityOrder[card.rarity]||0)>(rarityOrder[best]||0)?card.rarity:best,"");
-    sub.textContent=actor.ownedCards.length+" phiên bản đã sưu tầm · "+actor.ownedCopies+" lượt sở hữu"+(highestOwned?" · cao nhất "+highestOwned:"");
-  }
+  if(mode==="hot")sub.textContent=actor.hotScore+" phim khác nhau · "+actor.cardCount+" biến thể trong kho";
+  else sub.textContent="N = "+actor.hotScore+" phim · P = "+actor.catalogCardPoints+" điểm thẻ trong kho";
   identity.append(name,sub);
   const metric=document.createElement("div");metric.className="leaderboard-metric";
-  const score=document.createElement("strong");score.textContent=String(mode==="hot"?actor.hotScore:actor.beautyScore);
+  const score=document.createElement("strong");
+  score.textContent=mode==="hot"?String(actor.hotScore):actor.beautyScore.toLocaleString("vi-VN",{maximumFractionDigits:2});
   const label=document.createElement("span");label.textContent=mode==="hot"?"PHIM":"ĐIỂM";metric.append(score,label);
   item.append(rankBadge,avatar,identity,metric);
   return item;
@@ -570,19 +568,19 @@ function renderLeaderboard(){
   const allActors=buildActorRankingData();
   const actors=allActors.filter(actor=>actor.gender===leaderboardGender);
   $("leaderboardRules").textContent=leaderboardMode==="hot"
-    ?"Độ hot = số phim khác nhau đã ghi trên thẻ của diễn viên. Các phiên bản trang phục trong cùng phim chỉ tính một lần; mục “Bộ sưu tập chân dung” không tính là phim."
-    :"Điểm Nhan sắc là điểm sưu tầm vui: N 1 · R 2 · SR 4 · SSR 7 · UR 12 · SP 20 cho mỗi phiên bản khác nhau đang sở hữu, cộng 2 điểm cho mỗi phim khác nhau đã sưu tầm. Thẻ trùng không cộng điểm thêm.";
-  const sorted=actors.filter(actor=>leaderboardMode==="hot"?actor.hotScore>0:actor.ownedCards.length>0).sort((a,b)=>{
+    ?"Độ hot = số phim khác nhau ghi nhận trong kho dữ liệu của diễn viên. Các phiên bản trong cùng phim chỉ tính một phim; mục “Bộ sưu tập chân dung” không tính là phim."
+    :"Điểm Nhan sắc = P / N + N. P là tổng điểm các biến thể thẻ khác nhau trong kho hiện tại (cấp N = 1 · R = 2 · SR = 4 · SSR = 7 · UR = 12 · SP = 20); N là số phim khác nhau của diễn viên đã ghi nhận. Không phụ thuộc thẻ người chơi sở hữu. Diễn viên chưa có phim cụ thể chưa được xếp điểm.";
+  const sorted=actors.filter(actor=>actor.hotScore>0).sort((a,b)=>{
     const scoreKey=leaderboardMode==="hot"?"hotScore":"beautyScore";
-    return b[scoreKey]-a[scoreKey]||(leaderboardMode==="beauty"?b.ownedCards.length-a.ownedCards.length:b.cardCount-a.cardCount)||b.cardCount-a.cardCount||compareVietnamese(a.name,b.name);
+    return b[scoreKey]-a[scoreKey]||b.hotScore-a.hotScore||b.catalogCardPoints-a.catalogCardPoints||compareVietnamese(a.name,b.name);
   });
   $("leaderboardActorCount").textContent=sorted.length;
   empty.hidden=sorted.length>0;
   if(!sorted.length){
-    $("leaderboardEmptyTitle").textContent=leaderboardMode==="hot"?"Chưa có dữ liệu phim cụ thể":"Chưa có thẻ để tính điểm nhan sắc";
+    $("leaderboardEmptyTitle").textContent=leaderboardMode==="hot"?"Chưa có dữ liệu phim cụ thể":"Chưa có dữ liệu phim để tính điểm nhan sắc";
     $("leaderboardEmptyText").textContent=leaderboardMode==="hot"
       ?"Các thẻ mẫu hiện là ảnh chân dung, chưa gắn với tên phim. Vào Quản lý thẻ để thêm các phiên bản theo phim; bảng xếp hạng sẽ tự cập nhật và đếm phim không trùng."
-      :"Mở thẻ để sưu tầm phiên bản của các diễn viên. Điểm được tính từ những phiên bản khác nhau bạn đang sở hữu, không tính thêm điểm cho các bản trùng.";
+      :"Hãy ghi tên phim cụ thể trong kho thẻ. Điểm được tính từ toàn bộ biến thể thẻ và phim hiện có trong hệ thống, không phụ thuộc những thẻ bạn đã sưu tầm.";
     return;
   }
   if(sorted.length>=3){

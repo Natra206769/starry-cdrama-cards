@@ -1,5 +1,11 @@
-STARRY C-DRAMA CARDS — BẢN V7.6
+STARRY C-DRAMA CARDS — BẢN V7.7
 ================================
+
+THAY ĐỔI V7.7
+- Đồng bộ hiệu ứng và thời gian triệu hồi thẻ nổi bật trong x10 với mở đơn bằng cùng bộ rarityInfo; làm chậm hợp lý các mốc, nhất là UR/SP, và giữ spotlight lâu hơn để hiệu ứng thẻ hoàn tất.
+- Thêm liên kết hồ sơ tự động: các phiên bản khác nhau của cùng diễn viên và các bạn diễn có cùng tên phim; liên kết dựa trên dữ liệu đã nhập, bỏ qua nhóm chung "Bộ sưu tập chân dung" để tránh liên kết giả.
+- Khi nhập tên diễn viên, phim hoặc vai diễn, gợi ý các giá trị đã có, hiển thị số thẻ liên quan và cảnh báo trước khi tạo trùng hoàn toàn; vẫn cho phép tạo phiên bản mới hợp lệ.
+- Không thêm trường vào schema lưu trữ, không thay localStorage key, IndexedDB name/version/store hay định dạng sao lưu.
 
 NÂNG CẤP CHÍNH
 - Thêm, sửa và xóa hẳn từng thẻ; chức năng xóa có hộp xác nhận.
@@ -121,10 +127,10 @@ CẬP NHẬT V7.3 — ICON STARRY, SÁU CẤP ĐỘ HIẾM VÀ BẢO TOÀN DỮ 
 - Thẻ sưu tập được gắn class theo cấp độ ở mỗi lần render, kể cả thẻ chưa sở hữu; các cấp có khung/màu/ánh sáng riêng và SP nổi bật hơn UR. Hiệu ứng tôn trọng prefers-reduced-motion.
 - Không đổi key localStorage starry-cbiz-cards-v1, tên IndexedDB starry-cbiz-manager-db, phiên bản DB, ID thẻ mẫu hay định dạng JSON sao lưu/khôi phục. Không xóa hoặc migrate dữ liệu người dùng khi khởi động.
 
-CÁCH TRIỂN KHAI V7.6
+CÁCH TRIỂN KHAI V7.7
 1. Trước khi cập nhật bản đang sử dụng, xuất bản sao lưu JSON trong mục Quản lý thẻ.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon.ico, favicon-32.png, apple-touch-icon.png và thư mục icons/ (icon-192.png, icon-512.png) vào đúng thư mục được GitHub Pages xuất bản.
-3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Service Worker dùng cache shell v8 để nhận HTML/CSS/JS mới. Gói bàn giao này chưa tự push hay cập nhật trang live.
+3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Service Worker dùng cache shell v9 để nhận HTML/CSS/JS mới. Gói bàn giao này chưa tự push hay cập nhật trang live.
 4. Mở app có Internet và chọn “Cập nhật” nếu thông báo xuất hiện. Nếu biểu tượng lối tắt cũ không thay đổi, xóa lối tắt khỏi màn hình chính và thêm lại sau khi bản live đã cập nhật; hành vi cụ thể tùy hệ điều hành/trình duyệt.
 5. Nên kiểm tra bộ sưu tập và thử sao lưu/khôi phục trên bản live sau triển khai. Bản làm việc được cung cấp không truy cập dữ liệu trình duyệt đang có của bạn.
 

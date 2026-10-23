@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V7.6</title>
+  <title>Starry C-Drama Cards — V7.7</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -157,10 +157,10 @@
           <div class="form-title-row"><h3 id="formTitle">Thêm thẻ mới</h3><button class="icon-text-btn" id="cancelEditBtn" type="button">Đóng ✕</button></div>
           <input id="characterId" type="hidden" />
           <div class="form-grid">
-            <label>Tên diễn viên *<input id="fieldName" maxlength="60" placeholder="Ví dụ: Điền Hi Vi" required /></label>
+            <div class="form-field autocomplete-field"><label for="fieldName">Tên diễn viên *</label><div class="autocomplete-control"><input id="fieldName" maxlength="60" placeholder="Ví dụ: Điền Hi Vi" required aria-autocomplete="list" aria-controls="fieldNameSuggestions" aria-expanded="false" /><div class="field-suggestions" id="fieldNameSuggestions" role="listbox" aria-label="Tên diễn viên đã có" hidden></div></div><small class="field-suggestion-note" id="fieldNameSuggestionNote" aria-live="polite"></small></div>
             <label>Tên tiếng Trung<input id="fieldChinese" maxlength="30" placeholder="Ví dụ: 田曦薇" /></label>
-            <label class="wide-field">Tên phim / bộ sưu tập *<input id="fieldMovie" maxlength="100" placeholder="Ví dụ: Trục Ngọc" required /></label>
-            <label>Vai diễn trong phim<input id="fieldRole" maxlength="80" placeholder="Ví dụ: Tạ Chinh" /></label>
+            <div class="form-field autocomplete-field wide-field"><label for="fieldMovie">Tên phim / bộ sưu tập *</label><div class="autocomplete-control"><input id="fieldMovie" maxlength="100" placeholder="Ví dụ: Trục Ngọc" required aria-autocomplete="list" aria-controls="fieldMovieSuggestions" aria-expanded="false" /><div class="field-suggestions" id="fieldMovieSuggestions" role="listbox" aria-label="Phim và bộ sưu tập đã có" hidden></div></div><small class="field-suggestion-note" id="fieldMovieSuggestionNote" aria-live="polite"></small></div>
+            <div class="form-field autocomplete-field"><label for="fieldRole">Vai diễn trong phim</label><div class="autocomplete-control"><input id="fieldRole" maxlength="80" placeholder="Ví dụ: Tạ Chinh" aria-autocomplete="list" aria-controls="fieldRoleSuggestions" aria-expanded="false" /><div class="field-suggestions" id="fieldRoleSuggestions" role="listbox" aria-label="Vai diễn đã có" hidden></div></div><small class="field-suggestion-note" id="fieldRoleSuggestionNote" aria-live="polite"></small></div>
             <label>Phiên bản trang phục *<input id="fieldCostume" maxlength="100" placeholder="Ví dụ: Hôn lễ / chiến giáp / tiên phục" required /></label>
             <label>Giới tính<select id="fieldGender"><option value="female">Nữ</option><option value="male">Nam</option><option value="other">Khác / nhóm</option></select></label>
             <label>Phong cách<select id="fieldStyle"><option>Cổ trang</option><option>Hiện đại</option><option>Tiên hiệp</option><option>Dân quốc</option><option>Khác</option></select></label>
@@ -205,9 +205,11 @@
       </section>
       <div class="info-cards">
         <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Có thể mở 1 thẻ hoặc 10 thẻ cùng lúc. Thẻ đã sở hữu vẫn có thể xuất hiện lại; số lần sở hữu sẽ tăng lên.</p></article>
-        <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Chỉ thẻ đã sở hữu mới mở hồ sơ chi tiết và có thể đánh dấu yêu thích.</p></article>
+        <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Thẻ đã sở hữu mở hồ sơ đầy đủ; thẻ chưa sở hữu có thể xem trước qua mục liên kết diễn viên.</p></article>
         <article class="info-card"><span>03</span><h3>Dữ liệu trên thiết bị</h3><p>Tiến độ và yêu thích được lưu ở localStorage; hồ sơ thẻ tùy chỉnh và ảnh được lưu trong IndexedDB trên trình duyệt hiện tại.</p></article>
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
+        <article class="info-card"><span>05</span><h3>Mối liên kết</h3><p>Hồ sơ tự nối các phiên bản cùng diễn viên và các diễn viên có cùng tên phim. Hãy nhập tên phim nhất quán để tạo mạng lưới bạn diễn chính xác.</p></article>
+        <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng cả diễn viên, phim và trang phục, ứng dụng sẽ hỏi lại trước khi thêm thẻ trùng hoàn toàn.</p></article>
       </div>
       <details class="credits-section">
     <summary>✦ Nguồn ảnh mẫu & giấy phép sử dụng</summary>
@@ -248,10 +250,14 @@
         <div class="detail-tags"><span id="detailGender"></span><span id="detailStyle"></span></div>
         <div class="detail-film-info"><p><span>Phim / bộ sưu tập</span><strong id="detailMovie"></strong></p><p><span>Vai diễn</span><strong id="detailRole"></strong></p><p><span>Trang phục</span><strong id="detailCostume"></strong></p></div>
         <p class="detail-quote" id="detailQuote"></p>
+        <section class="detail-relations" id="detailRelations" aria-labelledby="detailRelationsTitle">
+          <div class="detail-relations-intro"><p class="detail-relations-eyebrow">STARRY CONNECTIONS</p><h3 id="detailRelationsTitle">Mối liên kết</h3><p id="detailRelationSummary">Các mối liên kết được tổng hợp từ diễn viên và tên phim trong kho thẻ.</p></div>
+          <div class="detail-relation-groups" id="detailRelationGroups"></div>
+        </section>
         <div class="detail-owned"><span>Đã sở hữu</span><strong id="detailCount">×1</strong></div>
         <button class="primary-btn detail-favorite-btn" id="detailFavoriteBtn" type="button">♡ Thêm yêu thích</button>
         <button class="outline-btn danger-btn detail-delete-btn" id="detailDeleteBtn" type="button">⌫ Xóa thẻ vĩnh viễn</button>
-        <p class="detail-hint">Hồ sơ này được đồng bộ với thẻ trong bộ sưu tập của bạn.</p>
+        <p class="detail-hint" id="detailHint">Hồ sơ này được đồng bộ với thẻ trong bộ sưu tập của bạn.</p>
       </div>
     </div>
   </dialog>

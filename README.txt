@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7.5
+STARRY C-DRAMA CARDS — BẢN V7.6
 ================================
 
 NÂNG CẤP CHÍNH
@@ -18,6 +18,15 @@ THAY ĐỔI V7.5
 - Mở x10 lật thẻ cấp cao nhất trước trên thẻ chính, sau đó mới hiện lưới đủ 10 thẻ theo thứ tự cấp hiếm giảm dần.
 - Sửa viền N/R thành đường viền liền, rõ và nhất quán trên thẻ chính, bộ sưu tập, hồ sơ và lưới mở x10.
 - Khóa lưu trữ localStorage và IndexedDB không thay đổi.
+
+
+THAY ĐỔI V7.6
+- Làm mới luồng mở x10 theo phong cách nghi thức triệu hồi: cổng năng lượng trong lúc mở, hé lộ thẻ hiếm nhất trước, rồi chuyển sang màn spotlight và lưới đủ 10 thẻ.
+- Thêm nút bỏ qua hoạt ảnh và nút hiện toàn bộ 10 thẻ ngay; hỗ trợ prefers-reduced-motion.
+- Thêm tổng kết số thẻ mới / trùng và phần thưởng Bụi Sao.
+- Thẻ trùng nhận Bụi Sao theo độ hiếm: N 1, R 2, SR 5, SSR 12, UR 35, SP 100 điểm. Bụi Sao là điểm nội bộ của ứng dụng, không có giá trị tiền tệ.
+- Hiển thị số dư Bụi Sao trên thanh đầu trang; số dư được lưu cùng tiến độ trong khóa localStorage hiện tại và được xuất/nhập qua JSON.
+- Giữ nguyên khóa localStorage và cấu trúc IndexedDB; dữ liệu cũ không có trường Bụi Sao bắt đầu từ 0, các thẻ/yêu thích hiện tại được giữ nguyên.
 
 CÁCH CHẠY
 1. Giải nén toàn bộ file ZIP vào một thư mục.
@@ -112,10 +121,10 @@ CẬP NHẬT V7.3 — ICON STARRY, SÁU CẤP ĐỘ HIẾM VÀ BẢO TOÀN DỮ 
 - Thẻ sưu tập được gắn class theo cấp độ ở mỗi lần render, kể cả thẻ chưa sở hữu; các cấp có khung/màu/ánh sáng riêng và SP nổi bật hơn UR. Hiệu ứng tôn trọng prefers-reduced-motion.
 - Không đổi key localStorage starry-cbiz-cards-v1, tên IndexedDB starry-cbiz-manager-db, phiên bản DB, ID thẻ mẫu hay định dạng JSON sao lưu/khôi phục. Không xóa hoặc migrate dữ liệu người dùng khi khởi động.
 
-CÁCH TRIỂN KHAI V7.5
+CÁCH TRIỂN KHAI V7.6
 1. Trước khi cập nhật bản đang sử dụng, xuất bản sao lưu JSON trong mục Quản lý thẻ.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon.ico, favicon-32.png, apple-touch-icon.png và thư mục icons/ (icon-192.png, icon-512.png) vào đúng thư mục được GitHub Pages xuất bản.
-3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Gói bàn giao này chưa tự push hay cập nhật trang live.
+3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Service Worker dùng cache shell v8 để nhận HTML/CSS/JS mới. Gói bàn giao này chưa tự push hay cập nhật trang live.
 4. Mở app có Internet và chọn “Cập nhật” nếu thông báo xuất hiện. Nếu biểu tượng lối tắt cũ không thay đổi, xóa lối tắt khỏi màn hình chính và thêm lại sau khi bản live đã cập nhật; hành vi cụ thể tùy hệ điều hành/trình duyệt.
 5. Nên kiểm tra bộ sưu tập và thử sao lưu/khôi phục trên bản live sau triển khai. Bản làm việc được cung cấp không truy cập dữ liệu trình duyệt đang có của bạn.
 

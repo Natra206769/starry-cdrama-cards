@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7.2
+STARRY C-DRAMA CARDS — BẢN V7.3
 ================================
 
 NÂNG CẤP CHÍNH
@@ -96,3 +96,19 @@ CẬP NHẬT V7.2
 - Tải đè đủ 5 tệp index.html, style.css, script.js, service-worker.js và README.txt vào đúng thư mục GitHub Pages.
 - Commit changes, đợi GitHub Pages triển khai, rồi mở app trên điện thoại có Internet. Chọn nút Cập nhật nếu thông báo xuất hiện; nếu chưa thấy, đóng hẳn app, mở lại và tải lại trang một lần.
 - Gói này chỉ chuẩn bị file để bạn tự tải lên; chưa push trực tiếp lên GitHub.
+
+
+CẬP NHẬT V7.3 — ICON STARRY, SÁU CẤP ĐỘ HIẾM VÀ BẢO TOÀN DỮ LIỆU
+- Tích hợp favicon, Apple touch icon, manifest PWA và icon 192/512 theo đường dẫn tương đối phù hợp với GitHub Pages tại /starry-cdrama-cards/.
+- Service Worker tăng cache từ v4 lên v5 và cache trước cả manifest/icon; vẫn dùng thông báo người dùng xác nhận cập nhật, không tự skipWaiting khi cài bản mới.
+- Form thêm/sửa bỏ trường nhập Biểu tượng. Dữ liệu symbol/icon cũ không bị xóa; biểu tượng cũ vẫn được đọc, và thẻ không có symbol được hiển thị bằng biểu tượng mặc định.
+- Bổ sung sáu cấp N, R, SR, SSR, UR, SP. Trọng số cấu hình tổng 1000: N 399, R 288, SR 180, SSR 102, UR 30, SP 1. SP hiếm hơn UR; tỉ lệ trên màn hình mở thẻ được tính theo các cấp thực sự đang có trong kho thẻ. Khi chưa có thẻ N hoặc SP, các cấp đó không được bốc ra ngẫu nhiên cho tới khi có thẻ tương ứng; tỉ lệ các cấp cũ giữ nguyên quan hệ 48:30:17:5.
+- Thẻ sưu tập được gắn class theo cấp độ ở mỗi lần render, kể cả thẻ chưa sở hữu; các cấp có khung/màu/ánh sáng riêng và SP nổi bật hơn UR. Hiệu ứng tôn trọng prefers-reduced-motion.
+- Không đổi key localStorage starry-cbiz-cards-v1, tên IndexedDB starry-cbiz-manager-db, phiên bản DB, ID thẻ mẫu hay định dạng JSON sao lưu/khôi phục. Không xóa hoặc migrate dữ liệu người dùng khi khởi động.
+
+CÁCH TRIỂN KHAI V7.3
+1. Trước khi cập nhật bản đang sử dụng, xuất bản sao lưu JSON trong mục Quản lý thẻ.
+2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon.ico, favicon-32.png, apple-touch-icon.png và thư mục icons/ (icon-192.png, icon-512.png) vào đúng thư mục được GitHub Pages xuất bản.
+3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Gói bàn giao này chưa tự push hay cập nhật trang live.
+4. Mở app có Internet và chọn “Cập nhật” nếu thông báo xuất hiện. Nếu biểu tượng lối tắt cũ không thay đổi, xóa lối tắt khỏi màn hình chính và thêm lại sau khi bản live đã cập nhật; hành vi cụ thể tùy hệ điều hành/trình duyệt.
+5. Nên kiểm tra bộ sưu tập và thử sao lưu/khôi phục trên bản live sau triển khai. Bản làm việc được cung cấp không truy cập dữ liệu trình duyệt đang có của bạn.

@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V7.2</title>
+  <title>Starry C-Drama Cards — V7.3</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -43,12 +47,7 @@
         <div class="note-icon">☯</div>
         <h3>Hai thế giới</h3>
         <p>Từ khí chất cổ trang đến vẻ cuốn hút hiện đại — ngôi sao tiếp theo sẽ là ai?</p>
-        <div class="rarity-legend">
-          <span><i class="dot r"></i> R <small>Phổ biến</small></span>
-          <span><i class="dot sr"></i> SR <small>Hiếm</small></span>
-          <span><i class="dot ssr"></i> SSR <small>Siêu hiếm</small></span>
-          <span><i class="dot ur"></i> UR <small>Huyền thoại</small></span>
-        </div>
+        <div class="rarity-legend" id="rarityLegend" aria-label="Sáu cấp độ hiếm"></div>
       </aside>
 
       <div class="stage">
@@ -87,6 +86,7 @@
         <h3>May mắn hôm nay</h3>
         <p>Mỗi lượt mở sẽ chọn ngẫu nhiên một nhân vật. Độ hiếm ảnh hưởng xác suất xuất hiện.</p>
         <div class="luck-meter"><div><span>Vận may</span><b id="luckLabel">Đang chờ</b></div><div class="meter-track"><span id="luckBar"></span></div></div>
+        <p class="rarity-odds" id="rarityOdds" aria-live="polite"></p>
         <div class="tip">✦ <span>Mẹo nhỏ</span><br>Thẻ mới sẽ được lưu tự động trong bộ sưu tập trên trình duyệt của bạn.</div>
       </aside>
     </section>
@@ -110,8 +110,7 @@
             <label>Phiên bản trang phục *<input id="fieldCostume" maxlength="100" placeholder="Ví dụ: Hôn lễ / chiến giáp / tiên phục" required /></label>
             <label>Giới tính<select id="fieldGender"><option value="female">Nữ</option><option value="male">Nam</option><option value="other">Khác / nhóm</option></select></label>
             <label>Phong cách<select id="fieldStyle"><option>Cổ trang</option><option>Hiện đại</option><option>Tiên hiệp</option><option>Dân quốc</option><option>Khác</option></select></label>
-            <label>Độ hiếm<select id="fieldRarity"><option value="R">R · Phổ biến</option><option value="SR">SR · Hiếm</option><option value="SSR" selected>SSR · Siêu hiếm</option><option value="UR">UR · Huyền thoại</option></select></label>
-            <label>Biểu tượng<input id="fieldSymbol" maxlength="4" value="✦" placeholder="✦" /></label>
+            <label>Độ hiếm<select id="fieldRarity" aria-label="Độ hiếm"></select></label>
             <label class="wide-field">Câu trích dẫn / mô tả<input id="fieldQuote" maxlength="180" placeholder="Một câu ngắn về nhân vật…" /></label>
             <label class="wide-field">Ảnh của đúng phiên bản thẻ <span class="optional-label" id="imageRequiredLabel">(bắt buộc khi thêm)</span><input id="fieldPhoto" type="file" accept="image/*" /><small>Hãy chọn ảnh đúng tạo hình / trang phục của diễn viên trong phim này. Ảnh sẽ được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
           </div>

@@ -1,8 +1,8 @@
 /* Starry C-Drama Cards — app shell cache and user-approved updates.
-   For every future release, change CACHE_NAME (for example v4 -> v5).
+   For every future release, change CACHE_NAME (for example v5 -> v6).
    Never clear localStorage or IndexedDB here: those hold the user's collection. */
-const CACHE_NAME = "starry-cdrama-shell-v4";
-const APP_SHELL = ["./", "./index.html", "./style.css", "./script.js"];
+const CACHE_NAME = "starry-cdrama-shell-v5";
+const APP_SHELL = ["./", "./index.html", "./style.css", "./script.js", "./manifest.webmanifest", "./favicon.ico", "./favicon-32.png", "./apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png"];
 const APP_SHELL_URLS = APP_SHELL.map((path) => new URL(path, self.registration.scope).href);
 
 self.addEventListener("install", (event) => {

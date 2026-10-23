@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V7.7</title>
+  <title>Starry C-Drama Cards — V7.8</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -32,6 +32,7 @@
     <nav class="main-nav" aria-label="Điều hướng chính">
       <button class="nav-tab active" type="button" data-page="open" aria-current="page"><span>✦</span> Mở thẻ</button>
       <button class="nav-tab" type="button" data-page="collection"><span>▦</span> Bộ sưu tập</button>
+      <button class="nav-tab" type="button" data-page="leaderboard"><span>♛</span> Xếp hạng</button>
       <button class="nav-tab" type="button" data-page="manager"><span>✎</span> Quản lý thẻ</button>
       <button class="nav-tab" type="button" data-page="info"><span>☷</span> Hướng dẫn & dữ liệu</button>
     </nav>
@@ -197,6 +198,35 @@
     </section>
     </section>
 
+    <section class="app-page" id="page-leaderboard" data-app-page="leaderboard" hidden>
+      <section class="leaderboard-section" id="leaderboard">
+        <div class="section-heading leaderboard-page-heading">
+          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Khám phá những diễn viên nổi bật trong kho thẻ của bạn.</p></div>
+          <div class="leaderboard-total"><span>✦</span><strong id="leaderboardActorCount">0</strong><small>diễn viên</small></div>
+        </div>
+        <div class="leaderboard-controls">
+          <div class="leaderboard-control-group" role="group" aria-label="Chọn giới tính diễn viên">
+            <button class="leaderboard-chip active" type="button" data-rank-gender="female" aria-pressed="true">✿ Diễn viên nữ</button>
+            <button class="leaderboard-chip" type="button" data-rank-gender="male" aria-pressed="false">✦ Diễn viên nam</button>
+          </div>
+          <div class="leaderboard-control-group leaderboard-mode-group" role="group" aria-label="Chọn cách xếp hạng">
+            <button class="leaderboard-mode active" type="button" data-rank-mode="hot" aria-pressed="true"><span>🔥</span><strong>Độ hot</strong><small>Số phim khác nhau</small></button>
+            <button class="leaderboard-mode" type="button" data-rank-mode="beauty" aria-pressed="false"><span>✧</span><strong>Nhan sắc</strong><small>Điểm sưu tầm</small></button>
+          </div>
+        </div>
+        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Độ hot được tính theo số tên phim khác nhau trong kho thẻ; nhiều phiên bản trang phục cùng một phim chỉ tính một phim.</div>
+        <div class="leaderboard-podium" id="leaderboardPodium" aria-label="Ba vị trí dẫn đầu"></div>
+        <ol class="leaderboard-list" id="leaderboardList" aria-label="Bảng xếp hạng các diễn viên"></ol>
+        <div class="leaderboard-empty" id="leaderboardEmpty" hidden>
+          <span class="leaderboard-empty-star" aria-hidden="true">✧</span>
+          <h3 id="leaderboardEmptyTitle">Chưa có đủ dữ liệu xếp hạng</h3>
+          <p id="leaderboardEmptyText">Hãy thêm tên phim cụ thể hoặc sưu tầm thẻ để bắt đầu bảng xếp hạng.</p>
+          <button class="secondary-btn" id="leaderboardAddCardsBtn" type="button">＋ Thêm / cập nhật thẻ</button>
+        </div>
+        <p class="leaderboard-disclaimer">Bảng “Nhan sắc” là điểm chơi vui dựa trên thẻ bạn đã sưu tầm, không phải đánh giá khách quan về ngoại hình diễn viên.</p>
+      </section>
+    </section>
+
     <section class="app-page" id="page-info" data-app-page="info" hidden>
       <section class="info-page-heading">
         <p class="eyebrow left-eyebrow">STARRY ARCHIVE</p>
@@ -210,6 +240,7 @@
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
         <article class="info-card"><span>05</span><h3>Mối liên kết</h3><p>Hồ sơ tự nối các phiên bản cùng diễn viên và các diễn viên có cùng tên phim. Hãy nhập tên phim nhất quán để tạo mạng lưới bạn diễn chính xác.</p></article>
         <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng cả diễn viên, phim và trang phục, ứng dụng sẽ hỏi lại trước khi thêm thẻ trùng hoàn toàn.</p></article>
+        <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Độ hot tính theo số phim khác nhau trong kho thẻ. Điểm Nhan sắc dựa trên độ hiếm và số phim của các phiên bản bạn đã sưu tầm; bản trùng không cộng điểm thêm.</p></article>
       </div>
       <details class="credits-section">
     <summary>✦ Nguồn ảnh mẫu & giấy phép sử dụng</summary>

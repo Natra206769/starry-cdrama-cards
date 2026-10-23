@@ -1,4 +1,4 @@
-// Starry C-Drama Cards V7.7 — reveal đồng bộ, liên kết dàn diễn viên và gợi ý tên.
+// Starry C-Drama Cards V7.8 — bảng xếp hạng diễn viên nam/nữ.
 let characters = [
   {id:"xiao-zhan",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Tiêu Chiến",chinese:"肖战",gender:"male",style:"Hiện đại",rarity:"SSR",quote:"Một ánh nhìn, vạn câu chuyện.",symbol:"✦",initials:"肖战",art1:"#34445c",art2:"#101522",accent:"#b8a5d0",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg/330px-Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg?width=700",photoCredit:"Pobediti丨肖战",photoLicense:"CC BY-SA 4.0",photoSource:"https://commons.wikimedia.org/wiki/File:Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg"},
   {id:"wang-yibo",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",costume:"Ảnh sự kiện",name:"Vương Nhất Bác",chinese:"王一博",gender:"male",style:"Hiện đại",rarity:"SR",quote:"Tự do là phong cách của riêng mình.",symbol:"✧",initials:"王博",art1:"#214b57",art2:"#101a25",accent:"#6ec6c2",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg/500px-%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg?width=700",photoCredit:"Aco",photoLicense:"CC BY 2.5",photoSource:"https://commons.wikimedia.org/wiki/File:王一博.jpg"},
@@ -496,17 +496,124 @@ $("characterDetailDialog").addEventListener("click",event=>{if(event.target===$(
 $("characterDetailDialog").addEventListener("cancel",()=>{currentDetailId=null;});
 $("detailFavoriteBtn").addEventListener("click",()=>{if(currentDetailId)toggleFavorite(currentDetailId);});
 $("detailDeleteBtn").addEventListener("click",()=>{if(currentDetailId)deleteCharacter(currentDetailId);});
+// Bảng xếp hạng: độ hot dùng số phim khác nhau trong kho; điểm nhan sắc là điểm sưu tầm vui.
+let leaderboardGender = "female";
+let leaderboardMode = "hot";
+const leaderboardRarityPoints = {N:1,R:2,SR:4,SSR:7,UR:12,SP:20};
+function buildActorRankingData(){
+  const byName=new Map();
+  for(const card of characters){
+    const actorKey=normalizedSearchKey(card.name);
+    if(!actorKey)continue;
+    if(!byName.has(actorKey))byName.set(actorKey,{key:actorKey,name:card.name,cards:[],genderCounts:{male:0,female:0},movies:new Set()});
+    const actor=byName.get(actorKey);actor.cards.push(card);
+    if(card.gender==="male"||card.gender==="female")actor.genderCounts[card.gender]++;
+    const movie=String(card.movie||"").trim();
+    if(movie&&!isGenericCollectionTitle(movie))actor.movies.add(normalizedSearchKey(movie));
+  }
+  return [...byName.values()].map(actor=>{
+    actor.gender=actor.genderCounts.female>actor.genderCounts.male?"female":actor.genderCounts.male>actor.genderCounts.female?"male":(actor.cards.find(card=>card.gender==="male"||card.gender==="female")?.gender||"other");
+    actor.hotScore=actor.movies.size;
+    actor.ownedCards=actor.cards.filter(card=>(Number(state.owned[card.id])||0)>0);
+    actor.ownedCopies=actor.ownedCards.reduce((sum,card)=>sum+(Number(state.owned[card.id])||0),0);
+    const ownedDramaMovies=new Set(actor.ownedCards.map(card=>String(card.movie||"").trim()).filter(movie=>movie&&!isGenericCollectionTitle(movie)).map(normalizedSearchKey));
+    actor.beautyScore=actor.ownedCards.reduce((sum,card)=>sum+(leaderboardRarityPoints[card.rarity]||1),0)+ownedDramaMovies.size*2;
+    actor.ownedMovieCount=ownedDramaMovies.size;
+    actor.cardCount=actor.cards.length;
+    return actor;
+  });
+}
+function compareVietnamese(a,b){return String(a).localeCompare(String(b),"vi",{sensitivity:"base"});}
+function getActorRankingAvatar(actor,mode){
+  const candidates=mode==="beauty"&&actor.ownedCards.length?actor.ownedCards:actor.cards;
+  const rarityOrder={SP:6,UR:5,SSR:4,SR:3,R:2,N:1};
+  return [...candidates].sort((a,b)=>(rarityOrder[b.rarity]||0)-(rarityOrder[a.rarity]||0)||compareVietnamese(a.movie,b.movie))[0]||null;
+}
+function makeLeaderboardAvatar(actor,mode){
+  const avatar=document.createElement("div");avatar.className="leaderboard-avatar";
+  const card=getActorRankingAvatar(actor,mode);
+  if(card){
+    const image=document.createElement("img");image.alt="Ảnh đại diện thẻ của "+actor.name;image.loading="lazy";image.referrerPolicy="no-referrer";
+    image.onerror=()=>{image.remove();const mark=document.createElement("span");mark.textContent=card.initials||makeInitials(card.chinese,actor.name);avatar.appendChild(mark);};
+    image.src=card.photo||"";
+    if(card.photo){avatar.appendChild(image);}else{const mark=document.createElement("span");mark.textContent=card.initials||makeInitials(card.chinese,actor.name);avatar.appendChild(mark);}
+    avatar.style.setProperty("--avatar-accent",card.accent||"#c18aff");
+  }else{const mark=document.createElement("span");mark.textContent=makeInitials("",actor.name);avatar.appendChild(mark);}
+  return avatar;
+}
+function makeLeaderboardEntry(actor,rank,mode,podium=false){
+  const item=document.createElement(podium?"article":"li");item.className="leaderboard-entry rank-"+rank+(podium?" is-podium":"");
+  const rankBadge=document.createElement("span");rankBadge.className="leaderboard-rank-badge";rankBadge.textContent=rank===1?"♛ "+rank:String(rank).padStart(2,"0");
+  const avatar=makeLeaderboardAvatar(actor,mode);
+  const identity=document.createElement("div");identity.className="leaderboard-identity";
+  const name=document.createElement("strong");name.textContent=actor.name;
+  const sub=document.createElement("small");
+  if(mode==="hot")sub.textContent=actor.movies.size+" phim khác nhau · "+actor.cardCount+" phiên bản thẻ";
+  else{
+    const rarityOrder={SP:6,UR:5,SSR:4,SR:3,R:2,N:1};
+    const highestOwned=actor.ownedCards.reduce((best,card)=>(rarityOrder[card.rarity]||0)>(rarityOrder[best]||0)?card.rarity:best,"");
+    sub.textContent=actor.ownedCards.length+" phiên bản đã sưu tầm · "+actor.ownedCopies+" lượt sở hữu"+(highestOwned?" · cao nhất "+highestOwned:"");
+  }
+  identity.append(name,sub);
+  const metric=document.createElement("div");metric.className="leaderboard-metric";
+  const score=document.createElement("strong");score.textContent=String(mode==="hot"?actor.hotScore:actor.beautyScore);
+  const label=document.createElement("span");label.textContent=mode==="hot"?"PHIM":"ĐIỂM";metric.append(score,label);
+  item.append(rankBadge,avatar,identity,metric);
+  return item;
+}
+function renderLeaderboard(){
+  const page=$("page-leaderboard");if(!page)return;
+  const podium=$("leaderboardPodium"),list=$("leaderboardList"),empty=$("leaderboardEmpty");
+  podium.replaceChildren();list.replaceChildren();podium.hidden=true;list.hidden=true;
+  document.querySelectorAll("[data-rank-gender]").forEach(button=>{const active=button.dataset.rankGender===leaderboardGender;button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));});
+  document.querySelectorAll("[data-rank-mode]").forEach(button=>{const active=button.dataset.rankMode===leaderboardMode;button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));});
+  const allActors=buildActorRankingData();
+  const actors=allActors.filter(actor=>actor.gender===leaderboardGender);
+  $("leaderboardRules").textContent=leaderboardMode==="hot"
+    ?"Độ hot = số phim khác nhau đã ghi trên thẻ của diễn viên. Các phiên bản trang phục trong cùng phim chỉ tính một lần; mục “Bộ sưu tập chân dung” không tính là phim."
+    :"Điểm Nhan sắc là điểm sưu tầm vui: N 1 · R 2 · SR 4 · SSR 7 · UR 12 · SP 20 cho mỗi phiên bản khác nhau đang sở hữu, cộng 2 điểm cho mỗi phim khác nhau đã sưu tầm. Thẻ trùng không cộng điểm thêm.";
+  const sorted=actors.filter(actor=>leaderboardMode==="hot"?actor.hotScore>0:actor.ownedCards.length>0).sort((a,b)=>{
+    const scoreKey=leaderboardMode==="hot"?"hotScore":"beautyScore";
+    return b[scoreKey]-a[scoreKey]||(leaderboardMode==="beauty"?b.ownedCards.length-a.ownedCards.length:b.cardCount-a.cardCount)||b.cardCount-a.cardCount||compareVietnamese(a.name,b.name);
+  });
+  $("leaderboardActorCount").textContent=sorted.length;
+  empty.hidden=sorted.length>0;
+  if(!sorted.length){
+    $("leaderboardEmptyTitle").textContent=leaderboardMode==="hot"?"Chưa có dữ liệu phim cụ thể":"Chưa có thẻ để tính điểm nhan sắc";
+    $("leaderboardEmptyText").textContent=leaderboardMode==="hot"
+      ?"Các thẻ mẫu hiện là ảnh chân dung, chưa gắn với tên phim. Vào Quản lý thẻ để thêm các phiên bản theo phim; bảng xếp hạng sẽ tự cập nhật và đếm phim không trùng."
+      :"Mở thẻ để sưu tầm phiên bản của các diễn viên. Điểm được tính từ những phiên bản khác nhau bạn đang sở hữu, không tính thêm điểm cho các bản trùng.";
+    return;
+  }
+  if(sorted.length>=3){
+    podium.hidden=false;list.hidden=sorted.length<=3;
+    const podiumActors=sorted.slice(0,3);
+    // Center the winner visually while preserving rank labels: 2nd, 1st, 3rd.
+    const displayOrder=[podiumActors[1],podiumActors[0],podiumActors[2]];
+    displayOrder.forEach(actor=>podium.appendChild(makeLeaderboardEntry(actor,sorted.indexOf(actor)+1,leaderboardMode,true)));
+    sorted.slice(3).forEach((actor,index)=>list.appendChild(makeLeaderboardEntry(actor,index+4,leaderboardMode,false)));
+  }else{
+    // Until three actors have meaningful scores, show full-width ranked rows rather than an awkward half-empty podium.
+    list.hidden=false;
+    sorted.forEach((actor,index)=>list.appendChild(makeLeaderboardEntry(actor,index+1,leaderboardMode,false)));
+  }
+}
+for(const button of document.querySelectorAll("[data-rank-gender]"))button.addEventListener("click",()=>{leaderboardGender=button.dataset.rankGender;renderLeaderboard();});
+for(const button of document.querySelectorAll("[data-rank-mode]"))button.addEventListener("click",()=>{leaderboardMode=button.dataset.rankMode;renderLeaderboard();});
+$("leaderboardAddCardsBtn").addEventListener("click",()=>{showAppPage("manager");startAddCharacter();});
+
 function updateStats(){
   const total=Object.values(state.owned).reduce((sum,value)=>sum+(Number(value)||0),0);
   const unique=characters.filter(card=>(state.owned[card.id]||0)>0).length;
   $("totalOwned").textContent=total;$("uniqueOwned").textContent=unique;$("totalCards").textContent=characters.length;
   const dust=$("stardustBalance");if(dust)dust.textContent=(Number(state.stardust)||0).toLocaleString("vi-VN");
+  if($("page-leaderboard")?.classList.contains("active"))renderLeaderboard();
 }
 function showToast(message){const toast=$("toast");toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2800);}
 
 
 function showAppPage(pageName){
-  const allowed=["open","collection","manager","info"];
+  const allowed=["open","collection","leaderboard","manager","info"];
   const page=allowed.includes(pageName)?pageName:"open";
   document.querySelectorAll("[data-app-page]").forEach(section=>{
     const active=section.dataset.appPage===page;
@@ -522,6 +629,7 @@ function showAppPage(pageName){
   // own scroll area instead of moving the browser window.
   const activeSection=document.querySelector(`[data-app-page="${page}"]`);
   if(activeSection)activeSection.scrollTop=0;
+  if(page==="leaderboard")renderLeaderboard();
 }
 document.querySelectorAll(".nav-tab[data-page]").forEach(button=>button.addEventListener("click",()=>showAppPage(button.dataset.page)));
 document.querySelector(".brand")?.addEventListener("click",event=>{event.preventDefault();showAppPage("open");});

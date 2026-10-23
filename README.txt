@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — BẢN V7.7
+STARRY C-DRAMA CARDS — BẢN V7.8
 ================================
 
 THAY ĐỔI V7.7
@@ -127,10 +127,10 @@ CẬP NHẬT V7.3 — ICON STARRY, SÁU CẤP ĐỘ HIẾM VÀ BẢO TOÀN DỮ 
 - Thẻ sưu tập được gắn class theo cấp độ ở mỗi lần render, kể cả thẻ chưa sở hữu; các cấp có khung/màu/ánh sáng riêng và SP nổi bật hơn UR. Hiệu ứng tôn trọng prefers-reduced-motion.
 - Không đổi key localStorage starry-cbiz-cards-v1, tên IndexedDB starry-cbiz-manager-db, phiên bản DB, ID thẻ mẫu hay định dạng JSON sao lưu/khôi phục. Không xóa hoặc migrate dữ liệu người dùng khi khởi động.
 
-CÁCH TRIỂN KHAI V7.7
+CÁCH TRIỂN KHAI V7.8
 1. Trước khi cập nhật bản đang sử dụng, xuất bản sao lưu JSON trong mục Quản lý thẻ.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon.ico, favicon-32.png, apple-touch-icon.png và thư mục icons/ (icon-192.png, icon-512.png) vào đúng thư mục được GitHub Pages xuất bản.
-3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Service Worker dùng cache shell v9 để nhận HTML/CSS/JS mới. Gói bàn giao này chưa tự push hay cập nhật trang live.
+3. Commit/push repository rồi đợi GitHub Pages hoàn tất. Service Worker dùng cache shell v10 để nhận HTML/CSS/JS mới. Gói bàn giao này chưa tự push hay cập nhật trang live.
 4. Mở app có Internet và chọn “Cập nhật” nếu thông báo xuất hiện. Nếu biểu tượng lối tắt cũ không thay đổi, xóa lối tắt khỏi màn hình chính và thêm lại sau khi bản live đã cập nhật; hành vi cụ thể tùy hệ điều hành/trình duyệt.
 5. Nên kiểm tra bộ sưu tập và thử sao lưu/khôi phục trên bản live sau triển khai. Bản làm việc được cung cấp không truy cập dữ liệu trình duyệt đang có của bạn.
 
@@ -156,7 +156,7 @@ LỊCH SỬ V7.4 — TITLE CASE, MỞ 10 THẺ, THẺ ẢNH LỚN VÀ HIỆU Ứ
 
 BẢO TOÀN DỮ LIỆU VÀ CACHE
 - Giữ nguyên localStorage key starry-cbiz-cards-v1 và IndexedDB starry-cbiz-manager-db (version 1, store appData).
-- Service Worker dùng cache shell v6; chỉ các cache có tiền tố starry-cdrama-shell- cũ mới bị dọn, không xóa localStorage hoặc IndexedDB.
+- Service Worker dùng cache shell v10; chỉ các cache có tiền tố starry-cdrama-shell- cũ mới bị dọn, không xóa localStorage hoặc IndexedDB.
 - Bản nâng cấp chưa được push/triển khai tự động lên GitHub Pages.
 
 
@@ -167,3 +167,12 @@ CẬP NHẬT V7.5 — SỬA VIỀN N/R/SR, SP 0,3%, LẬT THẺ CAO NHẤT TRƯ�
 - Giữ nguyên localStorage key starry-cbiz-cards-v1 và IndexedDB starry-cbiz-manager-db (version 1/store appData); không xóa, reset hoặc migration dữ liệu người dùng.
 - Service Worker cache shell chuyển sang v7 để trình duyệt nhận bộ HTML/CSS/JS mới; cơ chế yêu cầu người dùng xác nhận cập nhật vẫn được giữ.
 - Đã kiểm thử trong Chromium với dữ liệu lưu trữ giả lập: x10 hiển thị thẻ SP cao nhất trước khi mở lưới, đủ 10 kết quả và cập nhật sở hữu đúng 10 lượt; SP giữ 0,3%; viền N/R/SR liền; không có lỗi JavaScript hoặc tràn ngang tại các kích thước 320–1024 px. Chưa triển khai lên GitHub Pages.
+
+
+CẬP NHẬT V7.8 — BẢNG XẾP HẠNG DIỄN VIÊN
+- Thêm trang “Xếp hạng” với hai nhóm diễn viên nam/nữ và hai kiểu xếp hạng: Độ hot và Nhan sắc (điểm sưu tầm).
+- Độ hot tính số phim có tên khác nhau gắn với diễn viên; các phiên bản trang phục của cùng phim chỉ tính một lần; bỏ qua nhóm chung “Bộ sưu tập chân dung”.
+- Điểm Nhan sắc là thước đo vui dựa trên các phiên bản khác nhau đang sở hữu: N 1, R 2, SR 4, SSR 7, UR 12, SP 20 điểm mỗi phiên bản, cộng 2 điểm cho mỗi phim khác nhau đã sưu tầm. Bản trùng không cộng thêm điểm. Không được hiểu là đánh giá khách quan về ngoại hình.
+- Dữ liệu xếp hạng được tính trực tiếp từ kho thẻ và state sở hữu hiện có; không tạo bảng dữ liệu hoặc khóa lưu trữ mới.
+- Tăng Service Worker shell cache lên v10 để nhận tệp giao diện mới; vẫn giữ cơ chế hỏi người dùng trước khi chuyển phiên bản.
+- Lưu ý: thẻ mẫu mặc định là ảnh chân dung sự kiện, không ghi tên phim cụ thể, nên bảng Độ hot sẽ hướng dẫn người dùng bổ sung thẻ theo phim cho đến khi có dữ liệu phim thực.

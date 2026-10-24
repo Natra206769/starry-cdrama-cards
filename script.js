@@ -1,4 +1,4 @@
-// Starry C-Drama Cards V8.0 — bộ sưu tập tìm kiếm và xếp hạng từ toàn bộ kho phim/thẻ.
+// Starry C-Drama Cards V9.0 — nâng sao theo tỉ lệ cố định và nâng level bằng phôi thẻ.
 let characters = [
   {id:"xiao-zhan",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",name:"Tiêu Chiến",chinese:"肖战",gender:"male",style:"Hiện đại",rarity:"SSR",quote:"Một ánh nhìn, vạn câu chuyện.",symbol:"✦",initials:"肖战",art1:"#34445c",art2:"#101522",accent:"#b8a5d0",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg/330px-Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg?width=700",photoCredit:"Pobediti丨肖战",photoLicense:"CC BY-SA 4.0",photoSource:"https://commons.wikimedia.org/wiki/File:Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg"},
   {id:"wang-yibo",movie:"Bộ sưu tập chân dung",role:"Chân dung sự kiện",name:"Vương Nhất Bác",chinese:"王一博",gender:"male",style:"Hiện đại",rarity:"SR",quote:"Tự do là phong cách của riêng mình.",symbol:"✧",initials:"王博",art1:"#214b57",art2:"#101a25",accent:"#6ec6c2",photo:"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg/500px-%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg",photoFallback:"https://commons.wikimedia.org/wiki/Special:FilePath/%E7%8E%8B%E4%B8%80%E5%8D%9A.jpg?width=700",photoCredit:"Aco",photoLicense:"CC BY 2.5",photoSource:"https://commons.wikimedia.org/wiki/File:王一博.jpg"},
@@ -134,10 +134,11 @@ function loadState(){
     if(parsed&&typeof parsed==="object")return {
       owned:parsed.owned&&typeof parsed.owned==="object"?parsed.owned:{},
       favorites:Array.isArray(parsed.favorites)?parsed.favorites:[],
-      stardust:Math.max(0,Number(parsed.stardust)||0)
+      stardust:Math.max(0,Number(parsed.stardust)||0),
+      cardProgress:parsed.cardProgress&&typeof parsed.cardProgress==="object"?parsed.cardProgress:{}
     };
   } catch(error){console.warn("Không thể đọc bộ sưu tập đã lưu:",error);}
-  return {owned:{},favorites:[],stardust:0};
+  return {owned:{},favorites:[],stardust:0,cardProgress:{}};
 }
 function genderLabel(gender){return gender==="male"?"Nam":gender==="female"?"Nữ":"Khác / nhóm";}
 function saveState(){
@@ -480,7 +481,9 @@ function renderCollection(){
       const rarity=document.createElement("div");rarity.className="mini-rarity";rarity.textContent=card.rarity+" · "+displayStyleLabel(card.style).toUpperCase();
       const name=document.createElement("h3");name.textContent=card.name;
       const meta=document.createElement("p");meta.textContent=[card.role,card.chinese,genderLabel(card.gender)].filter(Boolean).join(" · ");
-      infoBox.append(rarity,name,meta);article.appendChild(infoBox);
+      infoBox.append(rarity,name,meta);
+      if(owned){const progress=getCardProgress(card.id);const upgradeMark=document.createElement("small");upgradeMark.className="mini-upgrade-progress";upgradeMark.textContent=`${"★".repeat(progress.stars)}${"☆".repeat(5-progress.stars)} · Lv.${progress.level}`;upgradeMark.setAttribute("aria-label",`${progress.stars} sao, level ${progress.level}`);infoBox.appendChild(upgradeMark);}
+      article.appendChild(infoBox);
       if(owned){const fav=document.createElement("button");fav.className="favorite-btn"+(state.favorites.includes(card.id)?" active":"");fav.textContent=state.favorites.includes(card.id)?"♥":"♡";fav.title=state.favorites.includes(card.id)?"Bỏ yêu thích":"Đánh dấu yêu thích";fav.setAttribute("aria-label",fav.title+" "+card.name);fav.addEventListener("click",event=>{event.stopPropagation();toggleFavorite(card.id);});article.appendChild(fav);}
       grid.appendChild(article);
     }
@@ -528,6 +531,134 @@ function renderCharacterRelations(card){
   addGroup("Bạn diễn trong cùng phim",card.movie,relations.coStars,"co-star");
 }
 
+// V9.0 — card upgrades. Legacy collections without cardProgress start at 1★ / Lv.1.
+const starUpgradeRules = {
+  1:{rate:100,cost:1,next:2},
+  2:{rate:85,cost:2,next:3},
+  3:{rate:70,cost:3,next:4},
+  4:{rate:55,cost:4,next:5}
+};
+const levelExpByRarity = {N:10,R:20,SR:40,SSR:80,UR:150,SP:250};
+const levelExpRequirements = [30,50,75,100,140,180,230,290,360];
+const MAX_CARD_LEVEL = 10;
+function getCardProgress(id){
+  if(!state.cardProgress||typeof state.cardProgress!=="object")state.cardProgress={};
+  const saved=state.cardProgress[id]&&typeof state.cardProgress[id]==="object"?state.cardProgress[id]:{};
+  const stars=Math.max(1,Math.min(5,Math.floor(Number(saved.stars)||1)));
+  const level=Math.max(1,Math.min(MAX_CARD_LEVEL,Math.floor(Number(saved.level)||1)));
+  const needed=level>=MAX_CARD_LEVEL?0:(levelExpRequirements[level-1]||0);
+  const exp=needed?Math.max(0,Math.min(needed-1,Math.floor(Number(saved.exp)||0))):0;
+  const progress={stars,level,exp};
+  state.cardProgress[id]=progress;
+  return progress;
+}
+function requiredLevelExp(level){return level>=MAX_CARD_LEVEL?0:(levelExpRequirements[level-1]||0);}
+function renderCardUpgradePanel(card){
+  const panel=$("cardUpgradePanel");if(!panel)return;
+  const owned=Math.max(0,Number(state.owned[card.id])||0);
+  panel.hidden=owned<1;
+  if(owned<1)return;
+  const progress=getCardProgress(card.id);
+  $("upgradeStarsDisplay").textContent="★".repeat(progress.stars)+"☆".repeat(5-progress.stars)+` (${progress.stars}/5)`;
+  $("upgradeLevelDisplay").textContent=`Lv.${progress.level}`;
+  const needed=requiredLevelExp(progress.level);
+  $("upgradeLevelExp").textContent=progress.level>=MAX_CARD_LEVEL?"Đã đạt level tối đa":`${progress.exp} / ${needed} EXP`;
+  $("upgradeExpFill").style.width=needed?`${Math.min(100,progress.exp/needed*100)}%`:"100%";
+  const starRule=starUpgradeRules[progress.stars];
+  const starBtn=$("upgradeStarBtn");
+  if(!starRule){$("upgradeStarRule").textContent="Thẻ đã đạt tối đa 5★.";starBtn.textContent="Đã tối đa sao";starBtn.disabled=true;}
+  else{
+    const availableCopies=Math.max(0,owned-1);
+    $("upgradeStarRule").textContent=`${progress.stars}★ → ${starRule.next}★ · Tỉ lệ cố định ${starRule.rate}% mỗi lần thử · Cần ${starRule.cost} bản sao cùng thẻ. ${availableCopies} bản sao hiện có thể dùng.`;
+    starBtn.textContent=`Đập sao ${progress.stars}★ → ${starRule.next}★ · ${starRule.rate}%`;
+    starBtn.disabled=availableCopies<starRule.cost;
+  }
+  renderUpgradeFodderList(card);
+}
+function renderUpgradeFodderList(mainCard){
+  const list=$("upgradeFodderList");if(!list)return;
+  list.replaceChildren();
+  const search=normalizedSearchKey($("upgradeFodderSearch")?.value||"");
+  const fodderCards=characters.filter(card=>card.id!==mainCard.id&&(Number(state.owned[card.id])||0)>1)
+    .sort((a,b)=>compareVietnamese(a.name,b.name)||compareVietnamese(a.movie,b.movie));
+  if(!fodderCards.length){
+    const empty=document.createElement("p");empty.className="upgrade-fodder-empty";empty.textContent="Chưa có thẻ trùng nào đủ điều kiện làm phôi. Mỗi thẻ được chọn phải sở hữu ít nhất 2 bản.";list.appendChild(empty);
+  }else{
+    for(const card of fodderCards){
+      const owned=Number(state.owned[card.id])||0,available=owned-1,exp=levelExpByRarity[card.rarity]||10;
+      const key=normalizedSearchKey([card.name,card.movie,card.role,card.rarity].join(" "));
+      const row=document.createElement("label");row.className="upgrade-fodder-row";row.dataset.search=key;
+      if(search&&!key.includes(search))row.hidden=true;
+      const identity=document.createElement("span");identity.className="upgrade-fodder-identity";
+      const name=document.createElement("strong");name.textContent=card.name;
+      const meta=document.createElement("small");meta.textContent=`${card.rarity} · ${card.movie} · sở hữu ×${owned} · ${exp} EXP/thẻ`;
+      identity.append(name,meta);
+      const quantityWrap=document.createElement("span");quantityWrap.className="upgrade-fodder-quantity";
+      const quantityLabel=document.createElement("small");quantityLabel.textContent="Số phôi";
+      const input=document.createElement("input");input.type="number";input.min="0";input.max=String(available);input.step="1";input.value="0";input.inputMode="numeric";input.dataset.fodderId=card.id;input.dataset.exp=String(exp);input.setAttribute("aria-label",`Số bản ${card.name} dùng làm phôi, tối đa ${available}`);
+      input.addEventListener("input",updateLevelUpgradeSummary);
+      quantityWrap.append(quantityLabel,input);row.append(identity,quantityWrap);list.appendChild(row);
+    }
+  }
+  updateLevelUpgradeSummary();
+}
+function updateLevelUpgradeSummary(){
+  const list=$("upgradeFodderList");if(!list)return;
+  let totalExp=0,totalCards=0;
+  for(const input of list.querySelectorAll("input[data-fodder-id]")){
+    const id=input.dataset.fodderId,owned=Math.max(0,Number(state.owned[id])||0),max=Math.max(0,owned-1);
+    let count=Math.floor(Number(input.value)||0);count=Math.max(0,Math.min(max,count));input.value=String(count);input.max=String(max);
+    totalCards+=count;totalExp+=count*(Number(input.dataset.exp)||0);
+  }
+  $("upgradeSelectedExp").textContent=`${totalExp.toLocaleString("vi-VN")} EXP · ${totalCards} thẻ`;
+  const card=characters.find(item=>item.id===currentDetailId);
+  const progress=card?getCardProgress(card.id):{level:1,exp:0};
+  const maxed=progress.level>=MAX_CARD_LEVEL;
+  const needed=requiredLevelExp(progress.level);
+  const button=$("upgradeLevelBtn");button.disabled=maxed||totalExp<1;
+  $("upgradeLevelSummary").textContent=maxed?"Thẻ đã đạt level tối đa.":totalExp<1?`Cần thêm ${Math.max(0,needed-progress.exp)} EXP để lên Lv.${progress.level+1}.`:`Có thể nhận ${totalExp} EXP; cần ${Math.max(0,needed-progress.exp)} EXP để lên level tiếp.`;
+}
+$("upgradeFodderSearch")?.addEventListener("input",()=>{
+  const search=normalizedSearchKey($("upgradeFodderSearch").value);
+  for(const row of $("upgradeFodderList").querySelectorAll(".upgrade-fodder-row"))row.hidden=!!search&&!row.dataset.search.includes(search);
+});
+$("upgradeStarBtn")?.addEventListener("click",()=>{
+  const id=currentDetailId,card=characters.find(item=>item.id===id);if(!card)return;
+  const owned=Math.max(0,Number(state.owned[id])||0),progress=getCardProgress(id),rule=starUpgradeRules[progress.stars];
+  if(!rule||owned-1<rule.cost){showToast("Không đủ bản sao của chính thẻ này để nâng sao.");renderCardUpgradePanel(card);return;}
+  if(!confirm(`Đập ${progress.stars}★ → ${rule.next}★ với tỉ lệ ${rule.rate}%?\n\nTiêu hao ${rule.cost} bản sao cùng thẻ dù thành công hay thất bại. Thẻ chính vẫn được giữ lại.`))return;
+  // Recheck quantity after the confirmation dialog; the chance stays fixed on every independent attempt.
+  if((Number(state.owned[id])||0)-1<rule.cost){showToast("Số lượng thẻ đã thay đổi; không đủ phôi.");renderCardUpgradePanel(card);return;}
+  state.owned[id]=(Number(state.owned[id])||0)-rule.cost;
+  const success=Math.random()*100<rule.rate;
+  if(success)progress.stars=rule.next;
+  saveState();renderCollection();updateStats();showCharacterDetails(id);
+  showToast(success?`✨ Thành công! Thẻ đã lên ${rule.next}★.`:`✧ Thất bại. Thẻ vẫn giữ ${progress.stars}★; phôi đã bị tiêu hao.`);
+});
+$("upgradeLevelBtn")?.addEventListener("click",()=>{
+  const id=currentDetailId,card=characters.find(item=>item.id===id);if(!card)return;
+  let totalExp=0,totalCards=0;const selected=[];
+  for(const input of $("upgradeFodderList").querySelectorAll("input[data-fodder-id]")){
+    const fodderId=input.dataset.fodderId,count=Math.floor(Number(input.value)||0),fodder=characters.find(item=>item.id===fodderId);
+    if(!fodder||fodderId===id||count<1)continue;
+    const owned=Math.max(0,Number(state.owned[fodderId])||0),max=Math.max(0,owned-1);
+    if(count>max){showToast(`Không đủ phôi ${fodder.name}; mỗi thẻ phải giữ lại ít nhất 1 bản.`);renderCardUpgradePanel(card);return;}
+    const exp=(levelExpByRarity[fodder.rarity]||10)*count;selected.push({id:fodderId,count,exp,name:fodder.name});totalExp+=exp;totalCards+=count;
+  }
+  const progress=getCardProgress(id);if(progress.level>=MAX_CARD_LEVEL){showToast("Thẻ đã đạt level tối đa.");return;}
+  if(!totalCards){showToast("Hãy chọn ít nhất một thẻ làm phôi.");return;}
+  const summary=selected.map(item=>`${item.name} ×${item.count}`).join("\n");
+  if(!confirm(`Dùng ${totalCards} thẻ làm phôi để nhận ${totalExp} EXP?\n\n${summary}\n\nMỗi thẻ làm phôi sẽ được giữ lại tối thiểu 1 bản. Nâng level không trượt.`))return;
+  // Revalidate all quantities after confirmation before mutating inventory.
+  for(const item of selected){if((Number(state.owned[item.id])||0)-item.count<1){showToast("Số lượng phôi đã thay đổi; chưa có thẻ nào bị tiêu hao.");showCharacterDetails(id);return;}}
+  for(const item of selected)state.owned[item.id]=(Number(state.owned[item.id])||0)-item.count;
+  let leveled=0;progress.exp+=totalExp;
+  while(progress.level<MAX_CARD_LEVEL){const needed=requiredLevelExp(progress.level);if(!needed||progress.exp<needed)break;progress.exp-=needed;progress.level++;leveled++;}
+  if(progress.level>=MAX_CARD_LEVEL)progress.exp=0;
+  saveState();renderCollection();updateStats();showCharacterDetails(id);
+  showToast(leveled?`⬆ Đã lên ${leveled} level, hiện tại Lv.${progress.level}.`:`Đã nạp ${totalExp} EXP; hiện tại Lv.${progress.level}.`);
+});
+
 function showCharacterDetails(id,allowUnowned=false){
   const card=characters.find(item=>item.id===id);if(!card||(!allowUnowned&&!(state.owned[id]>0)))return;
   currentDetailId=id;const dialog=$("characterDetailDialog"),visual=$("detailVisual"),photo=$("detailPhoto"),initials=$("detailInitials");const info=rarityInfo[card.rarity]||rarityInfo.R;visual.classList.remove(...Object.values(rarityInfo).map(item=>"rarity-"+item.effect));visual.classList.add("rarity-"+info.effect);visual.style.setProperty("--rarity",info.color);
@@ -543,6 +674,8 @@ function showCharacterDetails(id,allowUnowned=false){
   $("detailDeleteBtn").hidden=!isOwned;
   $("detailCount").closest(".detail-owned").hidden=!isOwned;
   $("detailHint").textContent=isOwned?"Hồ sơ này được đồng bộ với thẻ trong bộ sưu tập của bạn.":"Đây là hồ sơ xem trước từ mạng lưới liên kết; bạn chưa sở hữu thẻ này.";
+  $("cardUpgradePanel").hidden=!isOwned;
+  if(isOwned)renderCardUpgradePanel(card);
   renderCharacterRelations(card);
   if(typeof dialog.showModal==="function"){if(!dialog.open)dialog.showModal();}else dialog.setAttribute("open","");
 }
@@ -702,9 +835,9 @@ const collectionSearchInput=$("collectionSearch"),clearCollectionSearchButton=$(
 collectionSearchInput.addEventListener("input",()=>{clearCollectionSearchButton.hidden=!collectionSearchInput.value;renderCollection();});
 clearCollectionSearchButton.addEventListener("click",()=>{collectionSearchInput.value="";clearCollectionSearchButton.hidden=true;renderCollection();collectionSearchInput.focus();});
 $("resetBtn").addEventListener("click",()=>{
-  if(!Object.keys(state.owned).length&&!state.favorites.length&&!(Number(state.stardust)||0)){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
+  if(!Object.keys(state.owned).length&&!state.favorites.length&&!(Number(state.stardust)||0)&&!Object.keys(state.cardProgress||{}).length){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
   if(confirm("Xóa toàn bộ tiến độ sưu tầm, yêu thích và Bụi Sao? Danh sách thẻ/phim sẽ được giữ nguyên.")){
-    state={owned:{},favorites:[],stardust:0};saveState();renderCollection();updateStats();resetBatchExperience();lastBatchCards=[];$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";$("luckLabel").textContent="Đang chờ";$("luckBar").style.width="15%";showToast("Đã đặt lại tiến độ sưu tầm.");
+    state={owned:{},favorites:[],stardust:0,cardProgress:{}};saveState();renderCollection();updateStats();resetBatchExperience();lastBatchCards=[];$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";$("luckLabel").textContent="Đang chờ";$("luckBar").style.width="15%";showToast("Đã đặt lại tiến độ sưu tầm.");
   }
 });
 
@@ -815,7 +948,7 @@ async function toggleCharacterVisibility(id){
   const wasHidden=managerData.hidden.includes(id);const previous=JSON.parse(JSON.stringify(managerData));
   managerData.hidden=wasHidden?managerData.hidden.filter(item=>item!==id):[...managerData.hidden,id];
   if(await persistManagerData()){
-    if(!wasHidden){delete state.owned[id];state.favorites=state.favorites.filter(item=>item!==id);saveState();}
+    if(!wasHidden){delete state.owned[id];state.favorites=state.favorites.filter(item=>item!==id);if(state.cardProgress)delete state.cardProgress[id];saveState();}
     rebuildCharacters();showToast(wasHidden?"Đã hiện lại thẻ.":"Đã ẩn thẻ và xóa tiến độ sở hữu của thẻ này.");
   }else managerData=normalizeManagerData(previous);
 }
@@ -828,7 +961,7 @@ async function deleteCharacter(id){
   if(isBuiltIn){managerData.deleted=[...new Set([...managerData.deleted,id])];managerData.hidden=managerData.hidden.filter(item=>item!==id);delete managerData.overrides[id];}
   else managerData.custom=managerData.custom.filter(item=>item.id!==id);
   if(!(await persistManagerData())){managerData=normalizeManagerData(previous);return;}
-  delete state.owned[id];state.favorites=state.favorites.filter(item=>item!==id);saveState();
+  delete state.owned[id];state.favorites=state.favorites.filter(item=>item!==id);if(state.cardProgress)delete state.cardProgress[id];saveState();
   if(editingId===id)clearCharacterForm();
   if(currentDetailId===id)closeCharacterDetails();
   if(lastCharacter?.id===id){lastCharacter=null;$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Thẻ đã được xóa khỏi kho.";}
@@ -967,7 +1100,7 @@ $("importFile").addEventListener("change",async event=>{
     if(!confirm("Khôi phục sẽ thay thế thẻ cá nhân, chỉnh sửa, danh sách thẻ đã xóa/ẩn và bộ sưu tập hiện tại. Bạn có chắc không?"))return;
     const previous=JSON.parse(JSON.stringify(managerData));managerData=normalizeManagerData(backup.managerData);
     if(await persistManagerData()){
-      state={owned:backup.state.owned&&typeof backup.state.owned==="object"?backup.state.owned:{},favorites:Array.isArray(backup.state.favorites)?backup.state.favorites:[],stardust:Math.max(0,Number(backup.state.stardust)||0)};
+      state={owned:backup.state.owned&&typeof backup.state.owned==="object"?backup.state.owned:{},favorites:Array.isArray(backup.state.favorites)?backup.state.favorites:[],stardust:Math.max(0,Number(backup.state.stardust)||0),cardProgress:backup.state.cardProgress&&typeof backup.state.cardProgress==="object"?backup.state.cardProgress:{}};
       saveState();clearCharacterForm();rebuildCharacters();showToast("Đã khôi phục dữ liệu từ bản sao lưu.");
     }else managerData=normalizeManagerData(previous);
   }catch(error){showToast(error.message||"Không thể đọc tệp sao lưu.");}

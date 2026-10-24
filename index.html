@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V8.1</title>
+  <title>Starry C-Drama Cards — V9.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -291,6 +291,26 @@
           <div class="detail-relation-groups" id="detailRelationGroups"></div>
         </section>
         <div class="detail-owned"><span>Đã sở hữu</span><strong id="detailCount">×1</strong></div>
+        <section class="card-upgrade-panel" id="cardUpgradePanel" hidden aria-labelledby="cardUpgradeTitle">
+          <div class="upgrade-panel-heading"><p class="upgrade-eyebrow">STARRY FORGE</p><h3 id="cardUpgradeTitle">Cường hóa thẻ</h3><p>Tiến độ được lưu tự động trên thiết bị này.</p></div>
+          <div class="upgrade-current-stats">
+            <div class="upgrade-current-stat"><span>⭐ SAO</span><strong id="upgradeStarsDisplay">1★</strong></div>
+            <div class="upgrade-current-stat"><span>✦ LEVEL</span><strong id="upgradeLevelDisplay">Lv.1</strong><small id="upgradeLevelExp">0 / 30 EXP</small><span class="upgrade-exp-track"><i id="upgradeExpFill"></i></span></div>
+          </div>
+          <section class="upgrade-subsection" aria-labelledby="upgradeStarTitle">
+            <div class="upgrade-subsection-heading"><h4 id="upgradeStarTitle">⭐ Nâng sao</h4><span class="upgrade-pill">Có thể trượt</span></div>
+            <p class="upgrade-description" id="upgradeStarRule">Mỗi lần thử có tỉ lệ cố định; phôi vẫn mất khi thất bại.</p>
+            <button class="primary-btn upgrade-action-btn" id="upgradeStarBtn" type="button">Đập sao</button>
+          </section>
+          <section class="upgrade-subsection" aria-labelledby="upgradeLevelTitle">
+            <div class="upgrade-subsection-heading"><h4 id="upgradeLevelTitle">⬆ Nâng level</h4><span class="upgrade-pill safe">Không trượt</span></div>
+            <p class="upgrade-description">Chọn bất kỳ thẻ khác làm phôi, không phân biệt phim hoặc độ hiếm. Mỗi thẻ được chọn phải còn ít nhất 1 bản sau khi tiêu hao.</p>
+            <label class="upgrade-search-wrap" for="upgradeFodderSearch"><span aria-hidden="true">⌕</span><input id="upgradeFodderSearch" type="search" placeholder="Tìm thẻ làm phôi…" autocomplete="off" /></label>
+            <div class="upgrade-fodder-list" id="upgradeFodderList" aria-label="Chọn thẻ làm phôi"></div>
+            <div class="upgrade-level-footer"><div><small>EXP phôi đã chọn</small><strong id="upgradeSelectedExp">0 EXP</strong><span id="upgradeLevelSummary">Chọn thẻ làm phôi để tiếp tục.</span></div><button class="primary-btn upgrade-action-btn" id="upgradeLevelBtn" type="button" disabled>Nâng level</button></div>
+          </section>
+          <p class="upgrade-footnote">Nâng sao: 1★→2★ 100% (1 phôi), 2★→3★ 85% (2), 3★→4★ 70% (3), 4★→5★ 55% (4). Nâng level: N 10 · R 20 · SR 40 · SSR 80 · UR 150 · SP 250 EXP mỗi phôi.</p>
+        </section>
         <button class="primary-btn detail-favorite-btn" id="detailFavoriteBtn" type="button">♡ Thêm yêu thích</button>
         <button class="outline-btn danger-btn detail-delete-btn" id="detailDeleteBtn" type="button">⌫ Xóa thẻ vĩnh viễn</button>
         <p class="detail-hint" id="detailHint">Hồ sơ này được đồng bộ với thẻ trong bộ sưu tập của bạn.</p>

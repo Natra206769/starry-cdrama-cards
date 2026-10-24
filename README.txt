@@ -1,15 +1,15 @@
-STARRY C-DRAMA CARDS — BẢN V8.1
+STARRY C-DRAMA CARDS — BẢN V9.0
 
-CẬP NHẬT V8.1 — BỘ SƯU TẬP & DANH MỤC THẺ
+CẬP NHẬT V9.0 — BỘ SƯU TẬP & DANH MỤC THẺ
 - Bộ sưu tập phim được sắp xếp theo bảng chữ cái tiếng Việt, không phân biệt hoa/thường; có tìm kiếm tức thời theo phim, diễn viên, tên tiếng Trung, vai diễn, phong cách và độ hiếm.
 - Thêm bộ lọc “Chưa sưu tầm” để chỉ hiển thị thẻ còn thiếu. Tiến độ mỗi phim hiển thị số thẻ đã có / tổng số và số còn thiếu.
-- Mỗi phim luôn hiển thị đủ sáu cấp N, R, SR, SSR, UR, SP với số thẻ đã có / chưa có. Số lượng đếm theo thẻ khác nhau đã sở hữu ít nhất một bản, không lấy tổng số bản trùng.
+- Trong mỗi phim, chỉ hiển thị các cấp N, R, SR, SSR, UR, SP thực sự có thẻ; thống kê đếm theo thẻ khác nhau đã sở hữu ít nhất một bản, không lấy tổng số bản trùng.
 - Bỏ trường phiên bản trang phục khỏi biểu mẫu, bộ sưu tập, hồ sơ, danh sách quản lý và logic phát hiện trùng. Khi thêm mới, thẻ trùng thông tin được kiểm tra theo diễn viên + phim + vai diễn + độ hiếm. Điểm xếp hạng coi thẻ khác nhau theo phim + vai diễn + độ hiếm trong nhóm từng diễn viên. Thẻ cũ không bị tự ý xóa và tiến độ/ID cũ được giữ nguyên.
 - Phong cách mới gồm Cổ trang, Thanh xuân vườn trường, Công sở, Tiên hiệp, Dân quốc và Khác. Giá trị “Hiện đại” tồn tại từ dữ liệu cũ không được tự phân loại; khi sửa, ứng dụng yêu cầu chọn loại phù hợp.
 - Bảng xếp hạng sử dụng toàn bộ kho thẻ hệ thống, không đọc tiến độ sở hữu hay số bản trùng. P là tổng điểm các thẻ khác nhau theo độ hiếm (N=1, R=2, SR=4, SSR=7, UR=12, SP=20); N là số phim khác nhau. Điểm Nhan sắc = P / N + N.
-- Nâng cache Service Worker lên v12 để nhận bản mới. Giữ nguyên key localStorage, tên/phiên bản IndexedDB và cơ chế xác nhận cập nhật của người dùng.
+- Nâng cache Service Worker lên v14 để nhận bản mới. Giữ nguyên key localStorage, tên/phiên bản IndexedDB và cơ chế xác nhận cập nhật của người dùng.
 
-CÁCH TRIỂN KHAI V8.1
+CÁCH TRIỂN KHAI V9.0
 1. Trước khi cập nhật bản đang dùng, vào Quản lý thẻ → Sao lưu để xuất tệp JSON.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon và thư mục icons/ tại thư mục gốc GitHub Pages.
 3. Sau khi GitHub Pages triển khai, mở app có Internet và chọn cập nhật khi thông báo xuất hiện. Nếu còn giao diện cũ, đóng hẳn app rồi mở lại/tải lại trang.
@@ -204,7 +204,14 @@ CẬP NHẬT V7.9 — ĐIỂM NHAN SẮC DỰA TRÊN TOÀN BỘ KHO DỮ LIỆU
 - Không thay đổi localStorage key starry-cbiz-cards-v1, IndexedDB starry-cbiz-manager-db (version 1/store appData), schema sao lưu, hoặc cơ chế lưu tiến độ; không xóa/reset dữ liệu người dùng.
 
 
-CẬP NHẬT V8.1 — TỔNG HỢP ĐỘ HIẾM TOÀN HỆ THỐNG
+CẬP NHẬT V9.0 — TỔNG HỢP ĐỘ HIẾM TOÀN HỆ THỐNG
 - Thêm thanh tổng hợp số thẻ đã sưu tầm / tổng số thẻ khác nhau cho từng cấp độ trên toàn bộ phim.
 - Chỉ hiển thị cấp độ có ít nhất một thẻ trong kho dữ liệu hệ thống.
 - Trong từng bộ phim, ẩn các cấp độ không có thẻ để tiết kiệm diện tích.
+
+
+V9.0 — NÂNG CẤP THẺ
+- Nâng sao: 1★→2★ (100%, 1 phôi), 2★→3★ (85%, 2 phôi), 3★→4★ (70%, 3 phôi), 4★→5★ (55%, 4 phôi). Mỗi lần thử độc lập; phôi tiêu hao cả khi thất bại; thẻ chính không mất sao.
+- Nâng level: dùng thẻ khác làm phôi, bất kể phim/độ hiếm; mỗi thẻ phôi giữ lại tối thiểu một bản; không có tỉ lệ trượt.
+- EXP/phôi: N 10, R 20, SR 40, SSR 80, UR 150, SP 250. Yêu cầu EXP Lv.1→10: 30, 50, 75, 100, 140, 180, 230, 290, 360.
+- Tiến độ sao/level được lưu cùng dữ liệu bộ sưu tập trong localStorage và đi theo bản sao lưu JSON. Dữ liệu bộ sưu tập cũ tự khởi tạo ở 1★/Lv.1.

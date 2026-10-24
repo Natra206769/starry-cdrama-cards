@@ -44,3 +44,10 @@
 /* V10.0A — avoid cramped film headers in library list mode */
 .collection-list-view .mini-info{overflow:hidden}
 .collection-list-view .mini-rarity{line-height:1.4}
+
+
+/* V10.0B — film-set headers open a complete movie profile */
+.film-title-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.film-set-title-wrap .film-title-row h3{margin:0}
+.film-open-profile{flex:0 0 auto;border:1px solid #e7c58c38;border-radius:20px;background:#e7c58c0b;color:#e7c58c;padding:5px 9px;font:600 9px var(--sans);cursor:pointer;transition:background .18s,border-color .18s}
+.film-open-profile:hover,.film-open-profile:focus-visible{background:#e7c58c18;border-color:#e7c58c99;outline:none}

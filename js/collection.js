@@ -168,9 +168,14 @@ function renderCollection(){
     const head=document.createElement("div");head.className="film-set-heading";
     const titleWrap=document.createElement("div");titleWrap.className="film-set-title-wrap";
     const eyebrow=document.createElement("p");eyebrow.className="film-set-eyebrow";eyebrow.textContent="DRAMA COLLECTION";
+    const titleRow=document.createElement("div");titleRow.className="film-title-row";
     const title=document.createElement("h3");title.textContent=movie;
+    titleRow.appendChild(title);
+    const openMovieBtn=document.createElement("button");openMovieBtn.type="button";openMovieBtn.className="film-open-profile";openMovieBtn.textContent="Chi tiết ↗";openMovieBtn.setAttribute("aria-label","Mở trang phim "+movie);
+    openMovieBtn.addEventListener("click",()=>openMovieProfile(movie));
+    titleRow.appendChild(openMovieBtn);
     const count=document.createElement("p");count.className="film-set-count";count.textContent=`${ownedUnique} / ${allCards.length} thẻ đã sưu tầm · ${missingUnique} thẻ còn thiếu`;
-    titleWrap.append(eyebrow,title,count);
+    titleWrap.append(eyebrow,titleRow,count);
     const progress=document.createElement("div");progress.className="film-progress";progress.setAttribute("role","progressbar");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax",String(allCards.length));progress.setAttribute("aria-valuenow",String(ownedUnique));progress.setAttribute("aria-label","Tiến độ "+movie);
     const fill=document.createElement("span");fill.style.width=(allCards.length?ownedUnique/allCards.length*100:0)+"%";progress.appendChild(fill);
     head.append(titleWrap,progress);set.appendChild(head);

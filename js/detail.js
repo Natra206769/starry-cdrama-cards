@@ -9,6 +9,7 @@ function showCharacterDetails(id,allowUnowned=false){
   $("detailGender").textContent=genderLabel(card.gender);$("detailStyle").textContent=displayStyleLabel(card.style);$("detailRarity").textContent=info.label;$("detailRarity").style.color=info.color;
   $("detailCount").textContent="×"+(state.owned[id]||0);$("detailQuote").textContent=card.quote||"Một ngôi sao, một câu chuyện.";
   $("detailMovie").textContent=card.movie||"Bộ sưu tập chân dung";$("detailRole").textContent=card.role||"Chưa nhập";
+  $("detailOpenMovieBtn").textContent=isGenericCollectionTitle(card.movie)?"Xem nhóm thẻ ↗":"▣ Xem trang phim";
   visual.style.setProperty("--art1",card.art1||"#292f46");visual.style.setProperty("--art2",card.art2||"#111522");visual.style.setProperty("--accent",card.accent||"#a1a8c9");
   initials.textContent=card.initials||makeInitials(card.chinese,card.name);photo.hidden=true;photo.removeAttribute("src");photo.dataset.fallbackTried="0";photo.alt="Ảnh "+card.name+" trong "+card.movie;visual.classList.remove("has-detail-photo");
   if(card.photo){photo.hidden=false;photo.src=card.photo;photo.onerror=()=>{if(card.photoFallback&&photo.dataset.fallbackTried!=="1"){photo.dataset.fallbackTried="1";photo.src=card.photoFallback;}else{photo.hidden=true;visual.classList.remove("has-detail-photo");}};photo.onload=()=>visual.classList.add("has-detail-photo");}
@@ -40,3 +41,5 @@ $("characterDetailDialog").addEventListener("cancel",()=>{currentDetailId=null;}
 $("detailFavoriteBtn").addEventListener("click",()=>{if(currentDetailId)toggleFavorite(currentDetailId);});
 $("detailDeleteBtn").addEventListener("click",()=>{if(currentDetailId)deleteCharacter(currentDetailId);});
 $("detailUpgradeBtn").addEventListener("click",()=>{const id=currentDetailId;if(!id)return;currentUpgradeId=id;closeCharacterDetails();showAppPage("upgrade");renderUpgradePage(id);});
+$("detailOpenMovieBtn").addEventListener("click",()=>{const id=currentDetailId,card=characters.find(item=>item.id===id);if(!card)return;openMovieProfile(card.movie,{returnToCard:id});});
+$("detailOpenActorBtn").addEventListener("click",()=>{const id=currentDetailId;if(!id)return;openActorProfile(id,{returnToCard:id});});

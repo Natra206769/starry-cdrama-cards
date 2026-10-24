@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V10.0A Library</title>
+  <title>Starry C-Drama Cards — V10.0B Drama Library</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -370,6 +370,10 @@
         <h2 id="detailName">Tên nhân vật</h2>
         <p class="detail-chinese" id="detailChinese"></p>
         <div class="detail-tags"><span id="detailGender"></span><span id="detailStyle"></span></div>
+        <div class="detail-profile-navigation" aria-label="Đi đến hồ sơ liên quan">
+          <button type="button" class="outline-btn" id="detailOpenMovieBtn">▣ Xem trang phim</button>
+          <button type="button" class="outline-btn" id="detailOpenActorBtn">✦ Hồ sơ diễn viên</button>
+        </div>
         <div class="detail-film-info"><p><span>Phim / bộ sưu tập</span><strong id="detailMovie"></strong></p><p><span>Vai diễn</span><strong id="detailRole"></strong></p></div>
         <p class="detail-quote" id="detailQuote"></p>
         <section class="detail-relations" id="detailRelations" aria-labelledby="detailRelationsTitle">
@@ -385,6 +389,17 @@
     </div>
   </dialog>
 
+  <dialog class="library-profile-dialog" id="libraryProfileDialog" aria-labelledby="libraryProfileTitle">
+    <div class="library-profile-shell">
+      <header class="library-profile-dialog-header">
+        <button class="library-profile-back" id="libraryProfileBackBtn" type="button" hidden>← Quay lại hồ sơ thẻ</button>
+        <span class="library-profile-kicker">STARRY · DRAMA LIBRARY</span>
+        <button class="detail-close library-profile-close" id="libraryProfileCloseBtn" type="button" aria-label="Đóng trang thư viện">✕</button>
+      </header>
+      <div class="library-profile-content" id="libraryProfileContent"></div>
+    </div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="js/config.js"></script>
   <script src="data/characters.js"></script>
@@ -393,6 +408,7 @@
   <script src="js/rarity.js"></script>
   <script src="js/gacha.js"></script>
   <script src="js/collection.js"></script>
+  <script src="js/library.js"></script>
   <script src="js/upgrade.js"></script>
   <script src="js/detail.js"></script>
   <script src="js/leaderboard.js"></script>

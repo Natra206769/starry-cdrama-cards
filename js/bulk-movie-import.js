@@ -1,16 +1,22 @@
 /* V11.2 — bulk movie metadata importer. Records can exist without character cards. */
 (function initBulkMovieImport(){
  const $m=id=>document.getElementById(id);
- const columns={title:["ten phim","phim","movie","drama","title","movie title"],originalTitle:["ten goc","ten tieng trung","original title","originaltitle","chinese title","ten trung"],year:["nam phat hanh","nam","year","release year","releaseyear"],genres:["the loai","genres","genre"],description:["mo ta","gioi thieu","description","synopsis","plot"],poster:["poster url","poster","posterurl","anh poster","duong dan poster","image url","poster link"]};
+ const columns={title:["ten phim","phim","movie","drama","title","movie title"],originalTitle:["ten goc","ten phim goc","ten goc phim","ten tieng trung","ten phim tieng trung","ten trung","ten trung quoc","ten tieng hoa","ten nguyen tac","original title","originaltitle","original name","originalname","chinese title","chinese name","native title","original language title"],year:["nam phat hanh","nam","year","release year","releaseyear"],genres:["the loai","genres","genre"],description:["mo ta","gioi thieu","description","synopsis","plot"],poster:["poster url","poster","posterurl","anh poster","duong dan poster","image url","poster link"]};
  let rows=[],totalRows=0;
  function status(msg,kind=""){const el=$m("movieBulkImportStatus");el.textContent=msg;el.classList.toggle("is-error",kind==="error");el.classList.toggle("is-ready",kind==="ready");}
- function headerKey(value){return normalizedSearchKey(value).replace(/[_-]+/g," ").trim();}
+ function headerKey(value){return normalizedSearchKey(value).replace(/[_-]+/g," ").replace(/[()/:：|.]/g," ").replace(/\s+/g," ").trim();}
+ function findHeaderIndex(headers,aliases){
+  const normalizedAliases=aliases.map(headerKey).filter(Boolean).sort((a,b)=>b.length-a.length);
+  let index=headers.findIndex(header=>normalizedAliases.includes(header));if(index>=0)return index;
+  // Accept decorated headers such as “Tên gốc (tiếng Trung)” or “Original Title / Chinese Name”.
+  return headers.findIndex(header=>normalizedAliases.some(alias=>alias.length>=7&&header.includes(alias)));
+ }
  function delimiterOf(text){const line=String(text).replace(/^\uFEFF/,"").split(/\r\n|\n|\r/).find(x=>x.trim())||"";return [",","\t",";"].map(delim=>{let count=0,q=false;for(let i=0;i<line.length;i++){if(line[i]==='"'&&q&&line[i+1]==='"'){i++;continue;}if(line[i]==='"'){q=!q;continue;}if(!q&&line[i]===delim)count++;}return {delim,count};}).sort((a,b)=>b.count-a.count)[0].delim;}
  function parseTable(text,delim){const out=[];let row=[],cell="",q=false;const src=String(text).replace(/^\uFEFF/,"");for(let i=0;i<src.length;i++){const ch=src[i];if(ch==='"'){if(q&&src[i+1]==='"'){cell+='"';i++;}else q=!q;}else if(ch===delim&&!q){row.push(cell);cell="";}else if((ch==="\r"||ch==="\n")&&!q){if(ch==="\r"&&src[i+1]==="\n")i++;row.push(cell);if(row.some(x=>String(x).trim()))out.push(row);row=[];cell="";}else cell+=ch;}if(q)throw Error("Có dấu ngoặc kép chưa đóng trong tệp phim.");row.push(cell);if(row.some(x=>String(x).trim()))out.push(row);return out.map(r=>r.map(x=>String(x??"").trim()));}
  function posterValue(value){if(!value)return {value:"",error:""};try{const u=new URL(value);return u.protocol==="http:"||u.protocol==="https:"?{value:u.href,error:""}:{value:"",error:"Poster URL phải dùng http:// hoặc https://."};}catch{return {value:"",error:"Poster URL không hợp lệ."};}}
  function parseSource(text){
   const table=parseTable(text,delimiterOf(text));if(table.length<2)throw Error("Cần dòng tiêu đề và ít nhất một dòng phim.");
-  const heads=table[0].map(headerKey),map={};for(const [field,names] of Object.entries(columns)){const i=heads.findIndex(h=>names.includes(h));if(i>=0)map[field]=i;}
+  const heads=table[0].map(headerKey),map={};for(const [field,names] of Object.entries(columns)){const i=findHeaderIndex(heads,names);if(i>=0)map[field]=i;}
   if(map.title===undefined)throw Error("Thiếu cột bắt buộc “Tên phim”. Hãy tải mẫu CSV phim.");
   const input=table.slice(1).filter(r=>r.some(Boolean));if(input.length>500)throw Error("Mỗi lần chỉ nhập tối đa 500 phim. Hãy chia tệp nhỏ hơn.");
   const existing=new Set(Object.keys(managerData.movieMetadata||{})),seen=new Set();

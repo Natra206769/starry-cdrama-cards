@@ -47,6 +47,7 @@ LỘ TRÌNH PHIÊN BẢN
 - V11.1: nhập thẻ hàng loạt CSV/TSV hoặc dán bảng; xem trước, xác thực và phát hiện trùng trước khi lưu.
 - V11.2: nhập danh mục phim hàng loạt, giữ metadata cũ theo mặc định và hỗ trợ phim chưa có thẻ trong danh mục, kệ phim và hồ sơ phim.
 - V11.3: tra cứu metadata/poster bằng TMDB, xem trước trước khi lưu, không lưu token API và hết hạn trường dữ liệu TMDB sau 180 ngày.
+- V11.3.3: sửa nhập CSV tên gốc bằng cách nhận thêm các biến thể tiêu đề cột và bỏ qua dấu câu trang trí.
 
 
 TMDB & QUYỀN SỬ DỤNG

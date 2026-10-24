@@ -1,0 +1,65 @@
+/* suggestions.css — Gợi ý tên có sẵn, mối liên kết diễn viên, nhịp lật thẻ. Thứ tự nạp các tệp CSS trong index.html là thứ tự cascade, đừng đảo. */
+/* V7.7 — accessible existing-name suggestions and cast/actor connections. */
+.form-grid > .form-field { display:flex; flex-direction:column; gap:7px; min-width:0; font-size:11px; color:#d4d5df; }
+.form-field > label { display:block; color:#d4d5df; font-size:11px; }
+.autocomplete-control { position:relative; width:100%; min-width:0; }
+.autocomplete-control > input { display:block; position:relative; z-index:1; }
+.field-suggestions[hidden] { display:none !important; }
+.field-suggestions { position:absolute; z-index:60; top:calc(100% + 5px); left:0; right:0; max-height:240px; overflow:auto; padding:5px; border:1px solid #d8bb866b; border-radius:11px; background:linear-gradient(150deg,#171a2beF,#101321fF); box-shadow:0 16px 35px #000b,0 0 24px #c18aff12; backdrop-filter:blur(16px); }
+.field-suggestion { display:flex; flex-direction:column; align-items:flex-start; gap:3px; width:100%; min-width:0; padding:9px 10px; border:1px solid transparent; border-radius:7px; background:transparent; color:#eee7dc; text-align:left; font:inherit; cursor:pointer; }
+.field-suggestion + .field-suggestion { margin-top:2px; }
+.field-suggestion:hover,.field-suggestion:focus-visible { border-color:#d6b77855; background:linear-gradient(100deg,#d4ae6620,#c18aff12); outline:none; }
+.field-suggestion-main { width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; font-weight:700; }
+.field-suggestion-meta { display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#969ab3; font-size:9px; line-height:1.5; }
+.field-suggestion-note { display:block; min-height:0; color:#9c9fb6; font-size:9px !important; line-height:1.55 !important; }
+.field-suggestion-note:empty { display:none; }
+.field-suggestion-note.has-match { color:#d7bf8d; }
+
+.detail-relations { margin:0 0 18px; padding:15px; border:1px solid #d8bb8626; border-radius:13px; background:radial-gradient(ellipse at 8% 0,#b78aff0c,transparent 48%),#ffffff03; }
+.detail-relations-intro { margin-bottom:12px; }
+.detail-relations-eyebrow { margin:0 0 5px; color:#c7a8f5; font-size:8px; font-weight:800; letter-spacing:1.8px; }
+.detail-relations-intro h3 { margin:0 0 5px; color:#f1dfbd; font-family:var(--serif); font-size:18px; font-weight:600; }
+.detail-relations-intro > p:last-child { margin:0; color:#999db5; font-size:10px; line-height:1.55; }
+.detail-relation-groups { display:grid; gap:13px; }
+.detail-relation-group { min-width:0; }
+.detail-relation-heading { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:3px 10px; margin-bottom:7px; }
+.detail-relation-heading h4 { margin:0; color:#eee5d7; font-size:11px; }
+.detail-relation-heading p { margin:0; color:#858aa3; font-size:9px; }
+.detail-relation-list { display:grid; gap:6px; }
+.detail-relation-card { display:grid; grid-template-columns:35px minmax(0,1fr) auto; align-items:center; gap:9px; width:100%; min-width:0; padding:8px; border:1px solid #ffffff13; border-radius:9px; background:#070b181c; text-align:left; color:var(--text); cursor:pointer; transition:border-color .18s,background .18s,transform .18s; }
+.detail-relation-card:hover,.detail-relation-card:focus-visible { border-color:#d8bb866b; background:#d8bb860d; transform:translateY(-1px); outline:none; }
+.relation-rarity { display:grid; place-items:center; width:35px; min-height:42px; border:1px solid #ffffff33; border-radius:7px; background:linear-gradient(150deg,#ffffff0c,#0000001a); font-family:var(--serif); font-size:10px; font-weight:800; }
+.relation-rarity.rarity-n { color:#b8c4d9; border-color:#b8c4d966; }
+.relation-rarity.rarity-r { color:#e6c69c; border-color:#e6c69c77; }
+.relation-rarity.rarity-sr { color:#72b6ff; border-color:#72b6ff77; }
+.relation-rarity.rarity-ssr { color:#c18aff; border-color:#c18aff88; }
+.relation-rarity.rarity-ur { color:#ffca75; border-color:#ffca7599; box-shadow:0 0 10px #ffca7510; }
+.relation-rarity.rarity-sp { color:#ff85d4; border-color:#ff85d4aa; box-shadow:0 0 12px #ff85d422; }
+.detail-relation-info { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.detail-relation-info strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:10px; }
+.detail-relation-info small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#969ab3; font-size:9px; }
+.detail-relation-owned { max-width:86px; color:#d4bd8c; font-size:8px; line-height:1.45; text-align:right; }
+.detail-relations [hidden] { display:none !important; }
+
+/* Slow the same reveal choreography for both ×1 and ×10, especially UR/SP. */
+.stage.opening-rarity-n:before { animation-duration:.52s; }
+.stage.opening-rarity-n .card-back { animation-duration:.5s; }
+.stage.opening-rarity-r:before { animation-duration:.68s; }
+.stage.opening-rarity-r .card-back { animation-duration:.68s; }
+.stage.opening-rarity-sr:before { animation-duration:.96s; }
+.stage.opening-rarity-sr .card-back { animation-duration:.94s; }
+.stage.opening-rarity-ssr:before { animation-duration:1.3s; }
+.stage.opening-rarity-ssr .card-back { animation-duration:1.25s; }
+.stage.opening-rarity-ur:before { animation-duration:1.72s; }
+.stage.opening-rarity-ur .card-back { animation-duration:1.7s; }
+.stage.opening-rarity-sp:before { animation-duration:2.25s; }
+.stage.opening-rarity-sp .card-back { animation-duration:2.2s; }
+@media(max-width:650px) {
+  .detail-relations { padding:12px; }
+  .detail-relation-heading { display:block; }
+  .detail-relation-heading p { margin-top:3px; }
+  .detail-relation-card { grid-template-columns:32px minmax(0,1fr) auto; gap:7px; padding:7px; }
+  .relation-rarity { width:32px; min-height:38px; }
+  .detail-relation-owned { max-width:68px; font-size:7px; }
+}
+.detail-owned[hidden],.detail-delete-btn[hidden],.detail-favorite-btn[hidden]{display:none !important;}

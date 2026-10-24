@@ -1,0 +1,145 @@
+/* viewport.css — Khung app cố định, vùng an toàn trên điện thoại, hiệu ứng chạm thẻ. Thứ tự nạp các tệp CSS trong index.html là thứ tự cascade, đừng đảo. */
+/* V7.1 — stable, app-like viewport: fixed header/tabs and isolated page scrolling. */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+body {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.topbar {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 30;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+main {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+body > footer { display: none !important; }
+.main-nav {
+  position: relative;
+  top: auto;
+  flex: 0 0 auto;
+  min-width: 0;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.main-nav::-webkit-scrollbar { display: none; }
+.app-page[hidden] { display: none !important; }
+.app-page.active {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  animation: page-arrive .18s ease both;
+}
+@keyframes page-arrive { from { opacity: 0; } to { opacity: 1; } }
+
+/* Collection-card tap feedback: press, soft glow, then a moving glint. */
+.mini-card {
+  transform-origin: center;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform;
+}
+.mini-card.is-tapped {
+  z-index: 5;
+  border-color: var(--rarity, var(--gold));
+  box-shadow: 0 0 0 1px var(--rarity, var(--gold)), 0 0 25px rgba(231, 197, 140, .25);
+  animation: collection-card-tap .36s cubic-bezier(.2, .85, .25, 1) both;
+}
+.mini-card.is-tapped::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 13%, rgba(255,255,255,.02) 36%, rgba(255,255,255,.43) 50%, rgba(255,255,255,.04) 63%, transparent 82%);
+  transform: translateX(-130%) skewX(-12deg);
+  animation: collection-card-shine .36s ease-out both;
+}
+@keyframes collection-card-tap {
+  0% { transform: scale(1); filter: brightness(1); }
+  28% { transform: scale(.965); filter: brightness(1.15); }
+  64% { transform: scale(1.025); filter: brightness(1.22); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+@keyframes collection-card-shine {
+  0% { transform: translateX(-130%) skewX(-12deg); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateX(130%) skewX(-12deg); opacity: 0; }
+}
+.character-dialog[open] { animation: character-dialog-enter .28s cubic-bezier(.2,.8,.25,1) both; }
+@keyframes character-dialog-enter {
+  from { opacity: 0; transform: translateY(12px) scale(.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 650px) {
+  .topbar { min-height: 68px; height: auto; }
+  main { padding-left: 12px; padding-right: 12px; }
+  .app-page.active { padding-bottom: max(12px, env(safe-area-inset-bottom, 0px)); }
+  .main-nav { margin-left: -12px; margin-right: -12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-page.active { animation: none; }
+  .mini-card.is-tapped, .mini-card.is-tapped::after, .character-dialog[open] { animation: none !important; }
+}
+
+
+/* V7.2 — fill the entire mobile viewport and safe-area gutters with the app background. */
+:root { color-scheme: dark; }
+html {
+  background-color: #0b0d16 !important;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  background-color: #0b0d16 !important;
+  background-image: radial-gradient(ellipse at 50% 20%, #202137 0, #10121e 40%, #0b0d16 78%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+}
+/* Safe-area colors are inherited from the dark document canvas; keep the shell edge-to-edge. */
+.topbar {
+  width: 100%;
+}
+main {
+  box-sizing: border-box;
+}
+@media (max-width: 650px) {
+  .topbar {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  main {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .main-nav {
+    margin-left: calc(-1 * max(12px, env(safe-area-inset-left, 0px)));
+    margin-right: calc(-1 * max(12px, env(safe-area-inset-right, 0px)));
+  }
+}

@@ -1,8 +1,45 @@
 /* Starry C-Drama Cards — app shell cache and user-approved updates.
    For every future release, change CACHE_NAME (for example v11 -> v12).
    Never clear localStorage or IndexedDB here: those hold the user's collection. */
-const CACHE_NAME = "starry-cdrama-shell-v18";
-const APP_SHELL = ["./", "./index.html", "./style.css", "./script.js", "./manifest.webmanifest", "./favicon.ico", "./favicon-32.png", "./apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png"];
+const CACHE_NAME = "starry-cdrama-shell-v19";
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./css/base.css",
+  "./css/manager.css",
+  "./css/detail.css",
+  "./css/collection.css",
+  "./css/screens.css",
+  "./css/update-banner.css",
+  "./css/viewport.css",
+  "./css/rarity.css",
+  "./css/summon.css",
+  "./css/suggestions.css",
+  "./css/leaderboard.css",
+  "./css/collection-tools.css",
+  "./css/upgrade.css",
+  "./js/config.js",
+  "./data/characters.js",
+  "./js/state.js",
+  "./js/utils.js",
+  "./js/rarity.js",
+  "./js/gacha.js",
+  "./js/collection.js",
+  "./js/upgrade.js",
+  "./js/detail.js",
+  "./js/leaderboard.js",
+  "./js/app.js",
+  "./js/storage.js",
+  "./js/manager.js",
+  "./js/main.js",
+  "./js/pwa.js",
+  "./manifest.webmanifest",
+  "./favicon.ico",
+  "./favicon-32.png",
+  "./apple-touch-icon.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
+];
 const APP_SHELL_URLS = APP_SHELL.map((path) => new URL(path, self.registration.scope).href);
 
 self.addEventListener("install", (event) => {

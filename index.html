@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V9.2</title>
+  <title>Starry C-Drama Cards — V9.3</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,19 @@
   <link rel="icon" href="./favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/manager.css" />
+  <link rel="stylesheet" href="css/detail.css" />
+  <link rel="stylesheet" href="css/collection.css" />
+  <link rel="stylesheet" href="css/screens.css" />
+  <link rel="stylesheet" href="css/update-banner.css" />
+  <link rel="stylesheet" href="css/viewport.css" />
+  <link rel="stylesheet" href="css/rarity.css" />
+  <link rel="stylesheet" href="css/summon.css" />
+  <link rel="stylesheet" href="css/suggestions.css" />
+  <link rel="stylesheet" href="css/leaderboard.css" />
+  <link rel="stylesheet" href="css/collection-tools.css" />
+  <link rel="stylesheet" href="css/upgrade.css" />
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -239,7 +251,7 @@
             <div class="upgrade-fodder-list" id="upgradeFodderList" aria-label="Chọn thẻ làm phôi"></div>
             <div class="upgrade-level-footer"><div><small>EXP phôi đã chọn</small><strong id="upgradeSelectedExp">0 EXP</strong><span id="upgradeLevelSummary">Chọn thẻ làm phôi để tiếp tục.</span></div><button class="primary-btn upgrade-action-btn" id="upgradeLevelBtn" type="button" disabled>Nâng level</button></div>
           </section>
-          <p class="upgrade-footnote">Nâng sao: 1★→2★ 80% (2 phôi), 2★→3★ 60% (3), 3★→4★ 40% (4), 4★→5★ 25% (6). Nâng level: N 10 · R 20 · SR 40 · SSR 80 · UR 150 · SP 250 EXP mỗi phôi.</p>
+          <p class="upgrade-footnote" id="upgradeFootnote">Nâng sao: 1★→2★ 80% (2 phôi), 2★→3★ 60% (3), 3★→4★ 40% (4), 4★→5★ 25% (6). Nâng level: N 10 · R 20 · SR 40 · SSR 80 · UR 150 · SP 250 EXP mỗi phôi.</p>
         </section>
 
         </div>
@@ -343,6 +355,20 @@
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="script.js"></script>
+  <script src="js/config.js"></script>
+  <script src="data/characters.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/rarity.js"></script>
+  <script src="js/gacha.js"></script>
+  <script src="js/collection.js"></script>
+  <script src="js/upgrade.js"></script>
+  <script src="js/detail.js"></script>
+  <script src="js/leaderboard.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/manager.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pwa.js"></script>
 </body>
 </html>

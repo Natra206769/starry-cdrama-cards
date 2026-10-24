@@ -1,0 +1,97 @@
+/* leaderboard.css — Bảng xếp hạng diễn viên. Thứ tự nạp các tệp CSS trong index.html là thứ tự cascade, đừng đảo. */
+/* V7.9 — actor leaderboards use catalog-wide film and card data, not player ownership. */
+.leaderboard-section{border-top:1px solid var(--line);padding:42px 0 70px;min-width:0;}
+.leaderboard-page-heading{gap:18px;margin-bottom:24px;}
+.leaderboard-total{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:8px;padding:10px 15px;border:1px solid #d8bb863b;border-radius:13px;background:linear-gradient(145deg,#d8bb8610,#c18aff08);white-space:nowrap;}
+.leaderboard-total>span{grid-row:span 2;color:var(--gold);font-size:20px;}
+.leaderboard-total strong{font-family:var(--serif);font-size:20px;color:#fff0d4;line-height:1.1;}
+.leaderboard-total small{color:var(--muted);font-size:9px;}
+.leaderboard-controls{display:flex;align-items:stretch;justify-content:space-between;gap:14px;margin:26px 0 14px;flex-wrap:wrap;}
+.leaderboard-control-group{display:flex;gap:7px;align-items:stretch;flex-wrap:wrap;}
+.leaderboard-chip,.leaderboard-mode{border:1px solid #ffffff17;border-radius:11px;background:#ffffff04;color:#b5b7ca;font:inherit;cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .2s;}
+.leaderboard-chip{padding:10px 14px;font-size:11px;font-weight:700;}
+.leaderboard-chip.active{color:#fff0d4;border-color:#e7c58c80;background:linear-gradient(135deg,#e7c58c1c,#a985d018);box-shadow:0 5px 20px #d8ae7310;}
+.leaderboard-mode-group{flex:1;justify-content:flex-end;}
+.leaderboard-mode{display:grid;grid-template-columns:auto 1fr;align-content:center;align-items:center;gap:3px 9px;min-width:145px;padding:9px 13px;text-align:left;}
+.leaderboard-mode>span{grid-row:span 2;color:var(--gold);font-size:21px;}
+.leaderboard-mode strong{font-size:11px;color:#eee5d7;}
+.leaderboard-mode small{font-size:9px;color:#999db5;}
+.leaderboard-mode.active{border-color:#c18aff8a;background:linear-gradient(135deg,#c18aff16,#e7c58c0a);box-shadow:inset 0 0 18px #c18aff08;}
+.leaderboard-mode.active>span{color:#d9b4ff;}
+.leaderboard-chip:hover,.leaderboard-mode:hover{border-color:#e7c58c66;transform:translateY(-1px);}
+.leaderboard-rules{padding:12px 15px;border:1px solid #c18aff26;border-radius:11px;background:linear-gradient(110deg,#c18aff0b,#d8bb8608);color:#b5b8ce;font-size:10px;line-height:1.7;}
+.leaderboard-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:12px;margin:28px 0 20px;}
+.leaderboard-entry{position:relative;display:grid;grid-template-columns:35px 48px minmax(0,1fr) auto;align-items:center;gap:10px;min-width:0;padding:12px;border:1px solid #ffffff13;border-radius:13px;background:linear-gradient(130deg,#ffffff07,#ffffff02);color:var(--text);}
+.leaderboard-rank-badge{display:grid;place-items:center;min-width:30px;min-height:30px;border:1px solid #ffffff20;border-radius:9px;color:#b8bdd0;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums;}
+.leaderboard-avatar{position:relative;display:grid;place-items:center;width:48px;aspect-ratio:3/4;overflow:hidden;border:1px solid color-mix(in srgb,var(--avatar-accent,#c18aff) 70%,transparent);border-radius:9px;background:radial-gradient(circle at 50% 15%,color-mix(in srgb,var(--avatar-accent,#c18aff) 36%,transparent),transparent 70%),#111522;box-shadow:0 0 18px color-mix(in srgb,var(--avatar-accent,#c18aff) 13%,transparent);}
+.leaderboard-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;}
+.leaderboard-avatar span{font-family:var(--serif);font-size:17px;color:var(--avatar-accent,#d5c0ff);}
+.leaderboard-identity{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.leaderboard-identity strong{overflow-wrap:anywhere;color:#f2eadf;font-family:var(--serif);font-size:13px;line-height:1.35;}
+.leaderboard-identity small{color:#969ab3;font-size:9px;line-height:1.5;}
+.leaderboard-metric{display:flex;flex-direction:column;align-items:flex-end;gap:3px;white-space:nowrap;}
+.leaderboard-metric strong{font-family:var(--serif);font-size:22px;color:#f4d7a0;line-height:1;}
+.leaderboard-metric span{font-size:8px;letter-spacing:1.3px;color:#9296ae;}
+.leaderboard-entry.rank-1 .leaderboard-rank-badge,.leaderboard-entry.rank-2 .leaderboard-rank-badge,.leaderboard-entry.rank-3 .leaderboard-rank-badge{color:#f4d7a0;border-color:#e7c58c69;background:#e7c58c0b;}
+.leaderboard-entry.rank-1{border-color:#e7c58c70;background:linear-gradient(125deg,#d8bb8615,#c18aff08);}
+.leaderboard-list{display:grid;gap:8px;list-style:none;margin:0;padding:0;}
+.leaderboard-list .leaderboard-entry{padding:10px 12px;}
+.leaderboard-empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:44px 20px;margin-top:22px;border:1px dashed #d8bb8648;border-radius:16px;background:radial-gradient(ellipse at 50% 0,#c18aff0b,transparent 70%);text-align:center;}
+.leaderboard-empty[hidden]{display:none!important;}
+.leaderboard-empty-star{display:grid;place-items:center;width:54px;height:54px;border:1px solid #d8bb8644;border-radius:50%;color:#d8bb86;font-size:28px;box-shadow:0 0 35px #c18aff14;}
+.leaderboard-empty h3{margin:2px 0 0;font-family:var(--serif);font-size:20px;color:#f1dfbd;}
+.leaderboard-empty p{max-width:480px;margin:0 0 6px;color:#999db5;font-size:11px;line-height:1.75;}
+.leaderboard-disclaimer{max-width:740px;margin:17px auto 0;text-align:center;color:#777d98;font-size:9px;line-height:1.7;}
+@media(max-width:850px){.leaderboard-controls{align-items:stretch;}.leaderboard-control-group{flex:1;}.leaderboard-mode-group{justify-content:stretch;}.leaderboard-mode{flex:1;min-width:0;}}
+@media(max-width:650px){
+  .leaderboard-section{padding:30px 0 48px;}
+  .leaderboard-page-heading{align-items:flex-start;gap:9px;}
+  .leaderboard-page-heading .section-subtitle{max-width:225px;}
+  .leaderboard-total{padding:8px 10px;column-gap:6px;}
+  .leaderboard-total strong{font-size:17px;}
+  .leaderboard-total small{font-size:8px;}
+  .leaderboard-controls{gap:10px;margin:20px 0 12px;}
+  .leaderboard-control-group{width:100%;}
+  .leaderboard-chip{flex:1;padding:9px 8px;font-size:10px;}
+  .leaderboard-mode{padding:9px 10px;gap:3px 7px;}
+  .leaderboard-mode>span{font-size:18px;}
+  .leaderboard-mode strong{font-size:10px;}
+  .leaderboard-mode small{font-size:8px;}
+  .leaderboard-podium{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:20px 0 16px;}
+  .leaderboard-podium .leaderboard-entry{display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:10px 6px;min-height:180px;text-align:center;}
+  .leaderboard-podium .leaderboard-entry.rank-1{min-height:198px;}
+  .leaderboard-podium .leaderboard-rank-badge{min-height:24px;min-width:28px;}
+  .leaderboard-podium .leaderboard-avatar{width:min(100%,68px);}
+  .leaderboard-podium .leaderboard-identity{width:100%;align-items:center;}
+  .leaderboard-podium .leaderboard-identity strong{font-size:10px;}
+  .leaderboard-podium .leaderboard-identity small{font-size:8px;}
+  .leaderboard-podium .leaderboard-metric{align-items:center;}
+  .leaderboard-podium .leaderboard-metric strong{font-size:19px;}
+  .leaderboard-entry{grid-template-columns:27px 40px minmax(0,1fr) auto;gap:7px;padding:9px 8px;}
+  .leaderboard-rank-badge{min-width:25px;min-height:27px;font-size:9px;}
+  .leaderboard-avatar{width:40px;border-radius:7px;}
+  .leaderboard-identity strong{font-size:11px;}
+  .leaderboard-identity small{font-size:8px;}
+  .leaderboard-metric strong{font-size:18px;}
+  .leaderboard-metric span{font-size:7px;letter-spacing:.8px;}
+  .leaderboard-rules{font-size:9px;padding:10px 12px;}
+}
+/* Desktop podium is deliberately vertical, giving top-three portraits space to stand out. */
+.leaderboard-podium .leaderboard-entry{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;min-height:224px;padding:16px 12px;text-align:center;}
+.leaderboard-podium .leaderboard-entry.rank-1{min-height:248px;}
+.leaderboard-podium .leaderboard-rank-badge{min-height:28px;min-width:38px;}
+.leaderboard-podium .leaderboard-avatar{width:76px;border-radius:10px;}
+.leaderboard-podium .leaderboard-identity{width:100%;align-items:center;}
+.leaderboard-podium .leaderboard-identity strong{font-size:14px;}
+.leaderboard-podium .leaderboard-identity small{text-align:center;}
+.leaderboard-podium .leaderboard-metric{align-items:center;}
+@media(max-width:650px){
+  .leaderboard-podium .leaderboard-entry{min-height:180px;padding:10px 6px;gap:8px;}
+  .leaderboard-podium .leaderboard-entry.rank-1{min-height:198px;}
+  .leaderboard-podium .leaderboard-avatar{width:min(100%,68px);}
+  .leaderboard-podium .leaderboard-identity strong{font-size:10px;}
+  .leaderboard-podium .leaderboard-identity small{font-size:8px;}
+  .leaderboard-podium .leaderboard-metric strong{font-size:19px;}
+}
+
+.leaderboard-podium[hidden],.leaderboard-list[hidden]{display:none!important;}

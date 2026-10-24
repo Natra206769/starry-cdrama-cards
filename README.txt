@@ -1,4 +1,27 @@
-STARRY C-DRAMA CARDS — BẢN V9.2
+STARRY C-DRAMA CARDS — BẢN V9.3
+
+CẬP NHẬT V9.3 — TÁCH MÃ NGUỒN ĐỂ DỄ SỬA
+- script.js và style.css được tách thành nhiều tệp theo chức năng (xem mục CẤU TRÚC MÃ NGUỒN bên dưới). Không đổi hành vi: đã chạy cùng một kịch bản trên bản cũ và bản mới, kết quả chữ, dữ liệu lưu, tệp sao lưu JSON và ảnh chụp 15 màn hình giống nhau từng pixel.
+- Mọi số liệu cân bằng (tỉ lệ rút theo độ hiếm, tỉ lệ/số phôi nâng sao, EXP, điểm xếp hạng, thời gian hiệu ứng mở x10) gom về một chỗ: js/config.js. Dòng hướng dẫn nâng sao trên giao diện tự đọc từ đó, không còn phải sửa chữ ở nhiều nơi.
+- Không đổi khóa localStorage, IndexedDB hay định dạng sao lưu. Cache Service Worker lên v19 và liệt kê đủ các tệp mới.
+- Triển khai: tải lên TOÀN BỘ thư mục (index.html, css/, js/, data/, service-worker.js, manifest.webmanifest, favicon, icons/). Xóa style.css và script.js cũ ở thư mục gốc vì không còn dùng.
+
+CẤU TRÚC MÃ NGUỒN
+Muốn chỉnh gì thì mở tệp đó:
+- Chỉnh tỉ lệ, số phôi, EXP, điểm xếp hạng, thời gian hiệu ứng → js/config.js
+- Thêm/sửa thẻ mẫu có sẵn → data/characters.js (thẻ người chơi tự thêm nằm trong trình duyệt, không nằm ở đây)
+- Mở 1 thẻ / mở 10 thẻ → js/gacha.js · rút ngẫu nhiên theo độ hiếm → js/rarity.js
+- Bộ sưu tập (lọc, tìm kiếm) → js/collection.js · nâng sao/level → js/upgrade.js · hồ sơ thẻ → js/detail.js
+- Bảng xếp hạng → js/leaderboard.js · chuyển trang, thống kê đầu trang → js/app.js
+- Quản lý thẻ, sao lưu/khôi phục → js/manager.js · IndexedDB → js/storage.js
+- Trạng thái và localStorage → js/state.js · hàm tiện ích → js/utils.js · cập nhật app → js/pwa.js · khởi động → js/main.js
+- Giao diện (CSS) chia theo khu vực: css/base.css, manager.css, detail.css, collection.css, screens.css, update-banner.css, viewport.css, rarity.css, summon.css, suggestions.css, leaderboard.css, collection-tools.css, upgrade.css.
+Lưu ý quan trọng:
+- Thứ tự thẻ <script> và <link> trong index.html là thứ tự nạp và thứ tự cascade CSS. Đừng đảo. config.js phải nạp đầu tiên, main.js nạp gần cuối.
+- Thêm tệp JS/CSS mới thì phải thêm vào index.html và vào danh sách APP_SHELL trong service-worker.js, rồi tăng CACHE_NAME.
+- Mỗi lần phát hành, tăng CACHE_NAME trong service-worker.js.
+- Các tệp CSS tách theo từng đợt nâng cấp nên một khu vực có thể có luật ghi đè ở tệp CSS sau. Khi một kiểu không ăn, hãy tìm tên lớp đó ở các tệp css/ phía sau.
+
 
 CẬP NHẬT V9.2 — VIỀN SAO ĐỘNG & NÂNG SAO KHÓ HƠN
 - Viền theo cấp sao của thẻ trong Bộ sưu tập giờ chuyển động và mạnh dần theo sao: 1★ thở nhẹ ánh vàng, 2★ thở bạc kèm vệt sáng quét, 3★ vòng sáng xanh chạy quanh viền, 4★ hai vệt sáng tím chạy nhanh hơn, 5★ vòng sáng nhiều màu quay quanh viền đôi cùng ánh hồng phát sáng. Tôn trọng prefers-reduced-motion (tắt chuyển động).
@@ -93,8 +116,7 @@ LƯU TRỮ VÀ SAO LƯU
 
 FILE
 - index.html : cấu trúc và nội dung giao diện
-- style.css  : giao diện, hiển thị theo bộ phim và responsive
-- script.js  : logic game, quản lý thẻ/ảnh, bộ sưu tập và sao lưu
+- css/ , js/ , data/ : xem CẤU TRÚC MÃ NGUỒN ở đầu tệp này (từ V9.3 không còn style.css và script.js)
 
 
 CẬP NHẬT V7

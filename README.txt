@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — V11.1
+STARRY C-DRAMA CARDS — V11.2
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
@@ -13,6 +13,7 @@ TÍNH NĂNG
 - Quản lý metadata dùng chung theo phim: poster, tên gốc, năm phát hành, thể loại, mô tả.
 - Yêu thích, tiến độ sưu tầm, nâng sao 1★–5★, level, hiệu ứng holographic và xếp hạng toàn kho.
 - Quản lý thẻ mẫu/thẻ tự thêm; nhập hàng loạt CSV/TSV hoặc dán bảng với xem trước, kiểm tra dữ liệu và bỏ qua thẻ trùng mặc định.
+- Danh mục phim độc lập với danh mục thẻ; nhập metadata phim hàng loạt, gộp metadata an toàn và giữ phim chưa có thẻ trong danh mục/kệ/hồ sơ.
 - Sao lưu V5 có xem trước khi khôi phục, phát hiện ID trùng và kiểm tra các mục sở hữu không khớp.
 - Tùy chỉnh bảng màu, mật độ hiển thị; hỗ trợ điều hướng bằng bàn phím và giảm chuyển động.
 
@@ -42,3 +43,4 @@ LỘ TRÌNH PHIÊN BẢN
 - V10.9: cải thiện điều hướng bàn phím, focus và hỗ trợ giảm chuyển động.
 - V11.0: tích hợp kệ phim, bộ lọc đã lưu, sao lưu an toàn hơn và tùy chỉnh giao diện.
 - V11.1: nhập thẻ hàng loạt CSV/TSV hoặc dán bảng; xem trước, xác thực và phát hiện trùng trước khi lưu.
+- V11.2: nhập danh mục phim hàng loạt, giữ metadata cũ theo mặc định và hỗ trợ phim chưa có thẻ trong danh mục, kệ phim và hồ sơ phim.

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.1 Bulk Import</title>
+  <title>Starry C-Drama Cards — V11.2 Movie Import</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -221,6 +221,33 @@
         <div><p class="eyebrow left-eyebrow">YOUR DRAMA DATABASE</p><h2>Quản lý <em>dữ liệu phim</em></h2><p class="section-subtitle">Bổ sung thông tin một lần cho mỗi phim. Tất cả thẻ cùng phim sẽ dùng chung hồ sơ này.</p></div>
         <span class="movie-metadata-header-count" id="movieMetadataCount">0 phim</span>
       </div>
+
+      <details class="movie-bulk-import-panel" id="movieBulkImportPanel">
+        <summary><span aria-hidden="true">▤</span> Nhập danh mục phim hàng loạt <small>CSV / TSV · Tối đa 500 phim mỗi lần</small></summary>
+        <div class="movie-bulk-import-body">
+          <p class="movie-bulk-import-note">Mỗi dòng là một phim. Phim vẫn được lưu trong danh mục dù chưa có thẻ; tên phim được dùng để liên kết với các thẻ cùng tên. Metadata cũ được giữ theo mặc định.</p>
+          <div class="bulk-import-actions">
+            <label class="outline-btn bulk-file-label" for="movieBulkImportFile">↑ Chọn CSV / TSV</label>
+            <input id="movieBulkImportFile" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" hidden />
+            <button class="outline-btn" id="downloadMovieTemplateBtn" type="button">↓ Tải mẫu CSV phim</button>
+          </div>
+          <label class="movie-bulk-text-label" for="movieBulkImportText">Hoặc dán bảng từ Excel / Google Sheets
+            <textarea id="movieBulkImportText" rows="6" spellcheck="false" placeholder="Tên phim,Tên gốc,Năm phát hành,Thể loại,Mô tả,Poster URL&#10;Trục Ngọc,逐玉,2026,Cổ trang; Tình cảm,Mô tả ngắn,https://…"></textarea>
+            <small>Cột bắt buộc: Tên phim. Các cột còn lại tùy chọn. Dùng dấu chấm phẩy để tách thể loại trong CSV.</small>
+          </label>
+          <div class="movie-bulk-options">
+            <label><input id="movieBulkPreserveExisting" type="checkbox" checked /> Giữ thông tin cũ, chỉ bổ sung trường còn trống</label>
+            <button class="primary-btn" id="analyzeMovieBulkBtn" type="button">Kiểm tra dữ liệu phim</button>
+            <button class="outline-btn" id="clearMovieBulkBtn" type="button">Xóa nội dung</button>
+          </div>
+          <p class="bulk-import-status" id="movieBulkImportStatus" role="status" aria-live="polite">Chọn tệp hoặc dán bảng rồi kiểm tra trước khi lưu.</p>
+          <div class="bulk-import-preview movie-bulk-preview" id="movieBulkImportPreview" hidden>
+            <div class="bulk-preview-heading"><strong id="movieBulkPreviewSummary">Bản xem trước</strong><small>Dòng trùng trong cùng tệp sẽ được bỏ qua để tránh ghi đè lẫn nhau.</small></div>
+            <div class="bulk-preview-table-wrap"><table class="bulk-preview-table"><thead><tr><th>Dòng</th><th>Phim / metadata</th><th>Kiểm tra</th></tr></thead><tbody id="movieBulkPreviewRows"></tbody></table></div>
+            <div class="bulk-import-commit-row"><button class="primary-btn" id="commitMovieBulkBtn" type="button" disabled>Lưu danh mục phim</button><span id="movieBulkCommitHint">Chưa có dữ liệu sẵn sàng.</span></div>
+          </div>
+        </div>
+      </details>
       <div class="movie-metadata-layout">
         <form class="movie-metadata-form manager-content" id="movieMetadataForm">
           <div class="form-title-row"><h3 id="movieMetadataFormTitle">Chọn phim để chỉnh sửa</h3><span class="movie-metadata-save-state" id="movieMetadataSaveState">Chọn phim trước khi lưu</span></div>
@@ -515,6 +542,7 @@
   <script src="js/manager.js"></script>
   <script src="js/bulk-import.js"></script>
   <script src="js/movie-manager.js"></script>
+  <script src="js/bulk-movie-import.js"></script>
   <script src="js/main.js"></script>
   <script src="js/pwa.js"></script>
 </body>

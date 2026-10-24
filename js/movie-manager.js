@@ -17,6 +17,14 @@ function movieMetadataEntries(){
     if(!grouped.has(key))grouped.set(key,{key,title,cards:[]});
     grouped.get(key).cards.push(card);
   }
+  // Registered movie records remain available even before any card is linked.
+  const saved=managerData?.movieMetadata&&typeof managerData.movieMetadata==="object"?managerData.movieMetadata:{};
+  for(const [storedKey,raw] of Object.entries(saved)){
+    if(!raw||typeof raw!=="object")continue;
+    const title=String(raw.title||storedKey||"").trim(),key=movieMetadataKey(title);
+    if(!title||!key||isGenericCollectionTitle(title))continue;
+    if(!grouped.has(key))grouped.set(key,{key,title,cards:[]});
+  }
   return [...grouped.values()].sort((a,b)=>compareVietnamese(a.title,b.title));
 }
 function movieMetadataHasContent(meta){

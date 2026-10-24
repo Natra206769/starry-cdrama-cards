@@ -1,7 +1,7 @@
 /* Starry C-Drama Cards — app shell cache and user-approved updates.
    For every future release, change CACHE_NAME (for example v11 -> v12).
    Never clear localStorage or IndexedDB here: those hold the user's collection. */
-const CACHE_NAME = "starry-cdrama-shell-v27";
+const CACHE_NAME = "starry-cdrama-shell-v28";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -27,6 +27,7 @@ const APP_SHELL = [
   "./js/collection.js",
   "./js/library.js",
   "./js/movie-manager.js",
+  "./js/bulk-movie-import.js",
   "./js/upgrade.js",
   "./js/detail.js",
   "./js/leaderboard.js",

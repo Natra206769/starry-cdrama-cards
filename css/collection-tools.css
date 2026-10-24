@@ -282,3 +282,6 @@
 .library-profile-missing-item:hover,.library-profile-missing-item:focus-visible{outline:none;border-color:#e7c58c77}
 @media(max-width:1000px){.collection-overview{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:650px){.collection-overview{grid-template-columns:repeat(2,minmax(0,1fr))}.collection-presets{display:grid;grid-template-columns:1fr 1fr}.collection-presets>label,.collection-presets>select{grid-column:1/-1}.collection-presets>button{width:100%}.movie-shelf-actions{right:5px;top:5px}.movie-shelf-action-btn{width:25px;height:25px}.library-profile-missing-list{grid-template-columns:1fr}}
+
+/* V11.2 — movie catalog can include registered films that have no cards yet */
+.movie-shelf-card:has(.movie-shelf-progress.is-empty) .movie-shelf-original{opacity:.82}

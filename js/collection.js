@@ -269,10 +269,14 @@ function collectionMovieGroups(){
     if(!grouped.has(key))grouped.set(key,{key,movie,cards:[]});
     grouped.get(key).cards.push(card);
   }
+  // The movie catalog is independent from cards, so registered no-card movies stay visible.
+  if(typeof movieMetadataEntries==="function")for(const entry of movieMetadataEntries()){
+    if(!grouped.has(entry.key))grouped.set(entry.key,{key:entry.key,movie:entry.title,cards:[]});
+  }
   return [...grouped.values()].map(group=>{
     const metadata=typeof getMovieMetadata==="function"?getMovieMetadata(group.movie):null;
     const ownedCards=group.cards.filter(card=>(Number(state.owned[card.id])||0)>0);
-    return {...group,metadata,ownedUnique:ownedCards.length,ownedCopies:ownedCards.reduce((sum,card)=>sum+(Number(state.owned[card.id])||0),0),
+    return {...group,isStandalone:group.cards.length===0,metadata,ownedUnique:ownedCards.length,ownedCopies:ownedCards.reduce((sum,card)=>sum+(Number(state.owned[card.id])||0),0),
       genres:(metadata?.genres||[]).map(value=>String(value).trim()).filter(Boolean),year:String(metadata?.year||"").trim(),
       posterCard:ownedCards.find(card=>card.photo)||group.cards.find(card=>card.photo)||group.cards[0]};
   });
@@ -366,7 +370,7 @@ function renderCollectionMovieShelf(){
     }
   }
   const movies=allMovies.filter(movie=>{
-    if(collectionMode==="library"&&!movie.ownedUnique&&collectionShelfStatusFilter!=="not-started")return false;
+    if(collectionMode==="library"&&!movie.ownedUnique&&!movie.isStandalone&&collectionShelfStatusFilter!=="not-started")return false;
     if(collectionShelfStatusFilter!=="all"&&collectionMovieStatus(movie)!==collectionShelfStatusFilter)return false;
     return matchesQuery(movie);
   });
@@ -375,7 +379,7 @@ function renderCollectionMovieShelf(){
     if(prefA.pinned!==prefB.pinned)return Number(prefB.pinned)-Number(prefA.pinned);
     if(prefA.favorite!==prefB.favorite)return Number(prefB.favorite)-Number(prefA.favorite);
     if(collectionShelfSortMode==="year")return (Number(b.year)||0)-(Number(a.year)||0)||compareVietnamese(a.movie,b.movie);
-    if(collectionShelfSortMode==="progress")return (b.ownedUnique/b.cards.length)-(a.ownedUnique/a.cards.length)||compareVietnamese(a.movie,b.movie);
+    if(collectionShelfSortMode==="progress")return (b.ownedUnique/Math.max(1,b.cards.length))-(a.ownedUnique/Math.max(1,a.cards.length))||compareVietnamese(a.movie,b.movie);
     if(collectionShelfSortMode==="cards")return b.cards.length-a.cards.length||compareVietnamese(a.movie,b.movie);
     return compareVietnamese(a.movie,b.movie);
   });
@@ -399,8 +403,8 @@ function renderCollectionMovieShelf(){
     const title=document.createElement("strong");title.textContent=movie.movie;
     const original=document.createElement("small");original.className="movie-shelf-original";original.textContent=movie.metadata?.originalTitle||"Chưa bổ sung tên gốc";
     const genres=document.createElement("span");genres.className="movie-shelf-genres";genres.textContent=movie.genres.slice(0,3).join(" · ")||(movie.metadata?.year?"Chưa phân loại":"Bổ sung thể loại trong Quản lý phim");
-    const progressText=document.createElement("span");progressText.className="movie-shelf-progress-text";progressText.textContent=movie.ownedUnique+"/"+movie.cards.length+" phiên bản · "+movie.ownedCopies+" bản sao";
-    const progress=document.createElement("span");progress.className="movie-shelf-progress";progress.setAttribute("role","progressbar");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax",String(movie.cards.length));progress.setAttribute("aria-valuenow",String(movie.ownedUnique));progress.setAttribute("aria-label","Tiến độ sưu tầm "+movie.movie);
+    const progressText=document.createElement("span");progressText.className="movie-shelf-progress-text";progressText.textContent=movie.cards.length?movie.ownedUnique+"/"+movie.cards.length+" phiên bản · "+movie.ownedCopies+" bản sao":"Chưa có thẻ liên kết";
+    const progress=document.createElement("span");progress.className="movie-shelf-progress"+(!movie.cards.length?" is-empty":"");progress.setAttribute("role","progressbar");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax",String(Math.max(1,movie.cards.length)));progress.setAttribute("aria-valuenow",String(movie.ownedUnique));progress.setAttribute("aria-label","Tiến độ sưu tầm "+movie.movie);
     const fill=document.createElement("span");fill.style.width=(movie.cards.length?movie.ownedUnique/movie.cards.length*100:0)+"%";progress.appendChild(fill);
     const action=document.createElement("span");action.className="movie-shelf-action";action.textContent="Mở hồ sơ phim ↗";
     body.append(title,original,genres,progressText,progress,action);

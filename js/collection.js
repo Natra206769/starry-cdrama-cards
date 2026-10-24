@@ -427,7 +427,7 @@ function renderCollectionMovieShelf(){
   const showEmpty=movies.length===0;
   empty.hidden=!showEmpty;
   const title=empty.querySelector("h3"),description=empty.querySelector("p"),button=$("emptyOpenBtn");
-  if(noOwned){title.textContent="Chưa có phim trong thư viện";description.textContent="Khi bạn sở hữu thẻ thuộc một bộ phim, phim đó sẽ xuất hiện trên kệ. Bạn cũng có thể chuyển sang Khám phá kho thẻ.";button.hidden=false;}
+  if(noOwned&&showEmpty){title.textContent="Chưa có phim trong thư viện";description.textContent="Khi bạn sở hữu thẻ thuộc một bộ phim, phim đó sẽ xuất hiện trên kệ. Bạn cũng có thể chuyển sang Khám phá kho thẻ.";button.hidden=false;}
   else if(showEmpty){title.textContent="Không có phim phù hợp";description.textContent="Thử từ khóa khác hoặc đổi bộ lọc năm/thể loại để xem thêm phim.";button.hidden=true;}
   else{button.hidden=true;}
   const result=$("collectionResultCount");if(result)result.textContent=movies.length+" phim · "+(collectionMode==="library"?"đang sưu tầm":"trong danh mục")+" · Kệ phim";

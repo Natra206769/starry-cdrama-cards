@@ -3,7 +3,8 @@ STARRY C-DRAMA CARDS — BẢN V9.2
 CẬP NHẬT V9.2 — VIỀN SAO ĐỘNG & NÂNG SAO KHÓ HƠN
 - Viền theo cấp sao của thẻ trong Bộ sưu tập giờ chuyển động và mạnh dần theo sao: 1★ thở nhẹ ánh vàng, 2★ thở bạc kèm vệt sáng quét, 3★ vòng sáng xanh chạy quanh viền, 4★ hai vệt sáng tím chạy nhanh hơn, 5★ vòng sáng nhiều màu quay quanh viền đôi cùng ánh hồng phát sáng. Tôn trọng prefers-reduced-motion (tắt chuyển động).
 - Nâng sao khó hơn: 1★→2★ 80% (2 phôi), 2★→3★ 60% (3 phôi), 3★→4★ 40% (4 phôi), 4★→5★ 25% (6 phôi). Phôi vẫn mất cả khi thất bại; thẻ chính không mất sao.
-- Tăng cache Service Worker lên v17. Không đổi khóa localStorage, IndexedDB hay cấu trúc sao lưu; tiến độ sao hiện có được giữ nguyên.
+- Gỡ bỏ hoàn toàn Bụi Sao: không còn số dư trên thanh đầu trang, không còn thưởng khi mở trùng. Bản trùng vẫn được cộng vào số lượng và dùng làm phôi nâng sao/level. Dữ liệu cũ có trường Bụi Sao vẫn đọc được; trường này bị bỏ qua và biến mất ở lần lưu kế tiếp.
+- Tăng cache Service Worker lên v18. Không đổi khóa localStorage, IndexedDB hay cấu trúc sao lưu; tiến độ sao hiện có được giữ nguyên.
 
 STARRY C-DRAMA CARDS — BẢN V9.1
 

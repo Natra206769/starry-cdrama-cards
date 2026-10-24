@@ -49,9 +49,6 @@ let batchTimerIds = [];
 let skipBatchFlow = null;
 const $ = id => document.getElementById(id);
 
-// Thẻ trùng đổi thành Bụi Sao; các giá trị này là điểm nội bộ, không phải tiền thật.
-const DUPLICATE_DUST = {N:1,R:2,SR:5,SSR:12,UR:35,SP:100};
-function duplicateDustFor(card){return DUPLICATE_DUST[card?.rarity] || 1;}
 function clearBatchTimers(){for(const timerId of batchTimerIds)clearTimeout(timerId);batchTimerIds=[];}
 function scheduleBatchTimer(callback,delay){
   const timerId=window.setTimeout(()=>{batchTimerIds=batchTimerIds.filter(item=>item!==timerId);callback();},delay);
@@ -137,11 +134,10 @@ function loadState(){
     if(parsed&&typeof parsed==="object")return {
       owned:parsed.owned&&typeof parsed.owned==="object"?parsed.owned:{},
       favorites:Array.isArray(parsed.favorites)?parsed.favorites:[],
-      stardust:Math.max(0,Number(parsed.stardust)||0),
       cardProgress:parsed.cardProgress&&typeof parsed.cardProgress==="object"?parsed.cardProgress:{}
     };
   } catch(error){console.warn("Không thể đọc bộ sưu tập đã lưu:",error);}
-  return {owned:{},favorites:[],stardust:0,cardProgress:{}};
+  return {owned:{},favorites:[],cardProgress:{}};
 }
 function genderLabel(gender){return gender==="male"?"Nam":gender==="female"?"Nữ":"Khác / nhóm";}
 function saveState(){
@@ -236,13 +232,11 @@ function openCard(){
     stage.classList.remove(...openingClasses);
     const info=displayMainCard(card);
     const isDuplicate=(Number(state.owned[card.id])||0)>0;
-    const dustReward=isDuplicate?duplicateDustFor(card):0;
-    $("revealHint").textContent=isDuplicate?"Bạn đã sở hữu phiên bản này rồi! +"+dustReward+" Bụi Sao":"Một thẻ mới gia nhập bộ sưu tập!";
+    $("revealHint").textContent=isDuplicate?"Bạn đã sở hữu phiên bản này rồi! Bản trùng dùng làm phôi nâng cấp.":"Một thẻ mới gia nhập bộ sưu tập!";
     state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
-    if(dustReward)state.stardust=(Number(state.stardust)||0)+dustReward;
     saveState();renderCollection();updateStats();
     $("luckLabel").textContent=card.rarity;$("luckBar").style.width=info.luck+"%";$("againBtn").hidden=false;btn.disabled=false;if(tenBtn)tenBtn.disabled=false;
-    showToast(info.toastPrefix+card.name+" · "+card.movie+(dustReward?" · +"+dustReward+" Bụi Sao":""));
+    showToast(info.toastPrefix+card.name+" · "+card.movie+(isDuplicate?" · bản trùng":""));
   },revealDelay);
 }
 function renderBatchSpotlight(card,result){
@@ -255,7 +249,7 @@ function renderBatchSpotlight(card,result){
   $("batchSpotlightTier").textContent=card.rarity;$("batchSpotlightRarity").textContent=info.label;$("batchSpotlightRarity").style.color=info.color;
   $("batchSpotlightName").textContent=card.name;$("batchSpotlightMovie").textContent=card.movie+(card.role?" · "+card.role:"");
   $("batchSpotlightQuote").textContent="“"+(card.quote||"Một ngôi sao, một câu chuyện.")+"”";
-  $("batchSpotlightCopy").textContent=result.duplicate?"↻ Bản trùng · ×"+result.copyNumber+" · nhận "+duplicateDustFor(card)+" Bụi Sao":"✦ Lần đầu sở hữu thẻ này";
+  $("batchSpotlightCopy").textContent=result.duplicate?"↻ Bản trùng · ×"+result.copyNumber+" · dùng làm phôi nâng cấp":"✦ Lần đầu sở hữu thẻ này";
   setCardImage(art,card,"spotlight-photo","Ảnh nổi bật của "+card.name+" trong "+card.movie);
 }
 function openTenCards(){
@@ -277,7 +271,6 @@ function openTenCards(){
   lastBatchCards=orderedPulled.slice();
   const duplicateCount=results.filter(result=>result.duplicate).length;
   const newCount=results.length-duplicateCount;
-  const dustEarned=results.reduce((sum,result)=>sum+(result.duplicate?duplicateDustFor(result.card):0),0);
   const stage=document.querySelector(".stage"),openingClasses=Object.values(rarityInfo).map(info=>"opening-rarity-"+info.effect);
   // Intentionally use the exact same rarity classes and delay as openCard(). The former
   // batch-summoning class overrode some tier effects and made UR/SP feel rushed.
@@ -307,7 +300,6 @@ function openTenCards(){
     $("revealHint").textContent="Thẻ cao nhất trong 10 thẻ: "+highlight.rarity+" · "+highlight.name+(firstResult.duplicate?" (bản trùng).":"!");
     // Hold the central card reveal briefly, then transition to the full results scene.
     for(const card of orderedPulled)state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
-    state.stardust=(Number(state.stardust)||0)+dustEarned;
     saveState();renderCollection();updateStats();
     $("luckLabel").textContent=highlight.rarity;$("luckBar").style.width=bestInfo.luck+"%";
     if(reducedMotion){enterSpotlight();showResults();}
@@ -324,11 +316,10 @@ function openTenCards(){
     allResultsShown=true;clearBatchTimers();
     renderBatchResults(results);$("batchGrid").hidden=false;$("batchSummaryStats").hidden=false;$("batchResultsHeading").hidden=false;$("batchFooterActions").hidden=false;
     $("batchNewCount").textContent=String(newCount);$("batchDuplicateCount").textContent=String(duplicateCount);
-    $("batchDustEarned").textContent="+"+dustEarned.toLocaleString("vi-VN");$("batchDustBalance").textContent=(Number(state.stardust)||0).toLocaleString("vi-VN");
     $("batchSummary").textContent="10 lượt mở · "+newCount+" thẻ mới · "+duplicateCount+" thẻ trùng · độ hiếm cao nhất: "+highlight.rarity+".";
     $("batchShowAllBtn").hidden=true;$("skipBatchBtn").hidden=true;$("summonKicker").hidden=true;
     buttons.forEach(button=>{if(button)button.disabled=false;});skipBatchFlow=null;
-    showToast("✦ Mở x10 hoàn tất · "+highlight.rarity+" là cấp cao nhất · +"+dustEarned+" Bụi Sao.");
+    showToast("✦ Mở x10 hoàn tất · "+highlight.rarity+" là cấp cao nhất.");
   }
   skipBatchFlow=()=>{clearBatchTimers();if(!heroCommitted)showHero();if(!spotlightShown)enterSpotlight();showResults();};
   scheduleBatchTimer(showHero,wait);
@@ -351,7 +342,7 @@ function renderBatchResults(results){
     const name=document.createElement("h3");name.textContent=card.name;
     const movie=document.createElement("p");movie.className="batch-movie";movie.textContent=card.movie;
     const role=document.createElement("p");role.className="batch-role";role.textContent=card.role||displayStyleLabel(card.style)||"Thẻ phim";
-    const copy=document.createElement("span");copy.className="batch-copy"+(result.duplicate?" is-duplicate":"");copy.textContent=result.duplicate?"↻ Trùng · ×"+result.copyNumber+" · +"+duplicateDustFor(card)+" Bụi Sao":"✦ Mới sở hữu";
+    const copy=document.createElement("span");copy.className="batch-copy"+(result.duplicate?" is-duplicate":"");copy.textContent=result.duplicate?"↻ Trùng · ×"+result.copyNumber:"✦ Mới sở hữu";
     content.append(rarity,name,movie,role,copy);article.appendChild(content);grid.appendChild(article);
   }
 }
@@ -869,7 +860,6 @@ function updateStats(){
   const total=Object.values(state.owned).reduce((sum,value)=>sum+(Number(value)||0),0);
   const unique=characters.filter(card=>(state.owned[card.id]||0)>0).length;
   $("totalOwned").textContent=total;$("uniqueOwned").textContent=unique;$("totalCards").textContent=characters.length;
-  const dust=$("stardustBalance");if(dust)dust.textContent=(Number(state.stardust)||0).toLocaleString("vi-VN");
   if($("page-leaderboard")?.classList.contains("active"))renderLeaderboard();
 }
 function showToast(message){const toast=$("toast");toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2800);}
@@ -907,9 +897,9 @@ const collectionSearchInput=$("collectionSearch"),clearCollectionSearchButton=$(
 collectionSearchInput.addEventListener("input",()=>{clearCollectionSearchButton.hidden=!collectionSearchInput.value;renderCollection();});
 clearCollectionSearchButton.addEventListener("click",()=>{collectionSearchInput.value="";clearCollectionSearchButton.hidden=true;renderCollection();collectionSearchInput.focus();});
 $("resetBtn").addEventListener("click",()=>{
-  if(!Object.keys(state.owned).length&&!state.favorites.length&&!(Number(state.stardust)||0)&&!Object.keys(state.cardProgress||{}).length){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
-  if(confirm("Xóa toàn bộ tiến độ sưu tầm, yêu thích và Bụi Sao? Danh sách thẻ/phim sẽ được giữ nguyên.")){
-    state={owned:{},favorites:[],stardust:0,cardProgress:{}};saveState();renderCollection();updateStats();resetBatchExperience();lastBatchCards=[];$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";$("luckLabel").textContent="Đang chờ";$("luckBar").style.width="15%";showToast("Đã đặt lại tiến độ sưu tầm.");
+  if(!Object.keys(state.owned).length&&!state.favorites.length&&!Object.keys(state.cardProgress||{}).length){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
+  if(confirm("Xóa toàn bộ tiến độ sưu tầm và yêu thích? Danh sách thẻ/phim sẽ được giữ nguyên.")){
+    state={owned:{},favorites:[],cardProgress:{}};saveState();renderCollection();updateStats();resetBatchExperience();lastBatchCards=[];$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("againBtn").hidden=true;$("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";$("luckLabel").textContent="Đang chờ";$("luckBar").style.width="15%";showToast("Đã đặt lại tiến độ sưu tầm.");
   }
 });
 
@@ -1172,7 +1162,7 @@ $("importFile").addEventListener("change",async event=>{
     if(!confirm("Khôi phục sẽ thay thế thẻ cá nhân, chỉnh sửa, danh sách thẻ đã xóa/ẩn và bộ sưu tập hiện tại. Bạn có chắc không?"))return;
     const previous=JSON.parse(JSON.stringify(managerData));managerData=normalizeManagerData(backup.managerData);
     if(await persistManagerData()){
-      state={owned:backup.state.owned&&typeof backup.state.owned==="object"?backup.state.owned:{},favorites:Array.isArray(backup.state.favorites)?backup.state.favorites:[],stardust:Math.max(0,Number(backup.state.stardust)||0),cardProgress:backup.state.cardProgress&&typeof backup.state.cardProgress==="object"?backup.state.cardProgress:{}};
+      state={owned:backup.state.owned&&typeof backup.state.owned==="object"?backup.state.owned:{},favorites:Array.isArray(backup.state.favorites)?backup.state.favorites:[],cardProgress:backup.state.cardProgress&&typeof backup.state.cardProgress==="object"?backup.state.cardProgress:{}};
       saveState();clearCharacterForm();rebuildCharacters();showToast("Đã khôi phục dữ liệu từ bản sao lưu.");
     }else managerData=normalizeManagerData(previous);
   }catch(error){showToast(error.message||"Không thể đọc tệp sao lưu.");}

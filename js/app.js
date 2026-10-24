@@ -54,6 +54,13 @@ document.querySelectorAll("[data-collection-view]").forEach(button=>button.addEv
 $("collectionSortSelect").addEventListener("change",event=>{collectionSortMode=event.target.value;renderCollection();});
 $("collectionRarityFilter").addEventListener("change",event=>{collectionRarityFilter=event.target.value;renderCollection();});
 $("collectionStyleFilter").addEventListener("change",event=>{collectionStyleFilter=event.target.value;renderCollection();});
+document.querySelectorAll("[data-collection-display]").forEach(button=>button.addEventListener("click",()=>{
+  collectionDisplayMode=button.dataset.collectionDisplay;
+  renderCollection();
+}));
+$("collectionMovieGenreFilter").addEventListener("change",event=>{collectionShelfGenreFilter=event.target.value;renderCollection();});
+$("collectionMovieYearFilter").addEventListener("change",event=>{collectionShelfYearFilter=event.target.value;renderCollection();});
+$("collectionMovieSortSelect").addEventListener("change",event=>{collectionShelfSortMode=event.target.value;renderCollection();});
 $("resetBtn").addEventListener("click",()=>{
   if(!Object.keys(state.owned).length&&!state.favorites.length&&!Object.keys(state.cardProgress||{}).length){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
   if(confirm("Xóa toàn bộ tiến độ sưu tầm và yêu thích? Danh sách thẻ/phim sẽ được giữ nguyên.")){

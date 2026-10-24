@@ -1,9 +1,10 @@
-STARRY C-DRAMA CARDS — V10.0C
+STARRY C-DRAMA CARDS — V10.1
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
 - Mở 1 hoặc 10 thẻ theo độ hiếm N / R / SR / SSR / UR / SP.
 - Thư viện cá nhân và danh mục khám phá toàn bộ thẻ; tìm kiếm, lọc, sắp xếp và xem dạng lưới/danh sách.
+- Kệ phim trực quan bằng poster; lọc theo năm/thể loại, sắp xếp theo tên, năm, tiến độ hoặc số phiên bản.
 - Trang phim và hồ sơ diễn viên liên kết với từng phiên bản thẻ.
 - Quản lý metadata dùng chung theo phim: poster, tên gốc, năm phát hành, thể loại, mô tả.
 - Yêu thích, tiến độ sưu tầm, nâng sao 1★–5★, level, hiệu ứng holographic và xếp hạng toàn kho.

@@ -243,6 +243,11 @@
         <button class="collection-mode-tab" type="button" role="tab" data-collection-mode="discover" aria-selected="false"><span aria-hidden="true">✧</span> Khám phá kho thẻ</button>
       </div>
 
+      <div class="collection-display-tabs" role="group" aria-label="Kiểu danh mục">
+        <button type="button" class="collection-display-tab active" data-collection-display="cards" aria-pressed="true"><span aria-hidden="true">▦</span> Xem thẻ</button>
+        <button type="button" class="collection-display-tab" data-collection-display="movies" aria-pressed="false"><span aria-hidden="true">▣</span> Kệ phim</button>
+      </div>
+
       <div class="collection-tools collection-tools-v10">
         <label class="collection-search-wrap" for="collectionSearch"><span aria-hidden="true">⌕</span><input id="collectionSearch" type="search" placeholder="Tìm phim, diễn viên, vai diễn…" autocomplete="off" aria-label="Tìm trong thư viện" /><button type="button" id="clearCollectionSearch" class="search-clear" aria-label="Xóa từ khóa tìm kiếm" hidden>×</button></label>
         <div class="collection-toolbar-actions">
@@ -269,8 +274,14 @@
         </div>
       </div>
 
+      <div class="collection-shelf-filters" id="collectionShelfFilters" hidden>
+        <label class="collection-select-wrap"><span>Thể loại</span><select id="collectionMovieGenreFilter" aria-label="Lọc phim theo thể loại"><option value="all">Tất cả thể loại</option></select></label>
+        <label class="collection-select-wrap"><span>Năm</span><select id="collectionMovieYearFilter" aria-label="Lọc phim theo năm"><option value="all">Tất cả năm</option></select></label>
+        <label class="collection-select-wrap"><span>Sắp xếp phim</span><select id="collectionMovieSortSelect" aria-label="Sắp xếp kệ phim"><option value="title">Tên A–Z</option><option value="year">Năm mới nhất</option><option value="progress">Tiến độ sưu tầm</option><option value="cards">Số phiên bản thẻ</option></select></label>
+      </div>
       <div class="collection-rarity-summary" id="collectionRaritySummary" aria-label="Tiến độ sưu tầm theo cấp độ hiếm"></div>
       <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Các thẻ bạn sở hữu sẽ xuất hiện tại đây. Hãy mở thẻ hoặc chuyển sang Khám phá kho thẻ để xem toàn bộ danh mục.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
+      <div class="collection-movie-shelf" id="collectionMovieShelf" hidden aria-label="Kệ phim"></div>
       <div class="collection-sets" id="collectionSets"></div>
     </section>
     </section>

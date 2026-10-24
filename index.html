@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V10.0B Drama Library</title>
+  <title>Starry C-Drama Cards — V11.1 Bulk Import</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -185,6 +185,33 @@
         </form>
         <div class="manager-content">
           <div class="manager-toolbar"><div><strong id="managerCount">12 thẻ</strong><small>Sửa để cập nhật thông tin thẻ; dùng “Xóa hẳn” để loại thẻ khỏi trò chơi.</small></div><div class="manager-tools"><input id="managerSearch" class="manager-search" type="search" placeholder="Tìm diễn viên / phim…" aria-label="Tìm thẻ trong danh sách" /><button class="outline-btn" id="exportBtn" type="button">↓ Sao lưu</button><button class="outline-btn" id="importBtn" type="button">↑ Khôi phục</button><input id="importFile" type="file" accept="application/json,.json" hidden /><button class="outline-btn" id="restoreDefaultsBtn" type="button">Khôi phục thẻ mẫu</button></div></div>
+
+          <details class="bulk-import-panel" id="bulkImportPanel">
+            <summary><span aria-hidden="true">⚡</span> Nhập hàng loạt từ CSV hoặc dán bảng <small>Tối đa 500 thẻ mỗi lần</small></summary>
+            <div class="bulk-import-body">
+              <p class="bulk-import-intro">Xem trước và kiểm tra dữ liệu trước khi lưu. Thẻ trùng sẽ được bỏ qua mặc định. Không thay thế thẻ mẫu hoặc tiến độ sưu tầm hiện có.</p>
+              <div class="bulk-import-actions">
+                <label class="outline-btn bulk-file-label" for="bulkImportFile">↑ Chọn tệp CSV / TSV</label>
+                <input id="bulkImportFile" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" hidden />
+                <button class="outline-btn" id="downloadBulkTemplateBtn" type="button">↓ Tải mẫu CSV</button>
+              </div>
+              <label class="bulk-import-text-label" for="bulkImportText">Hoặc dán bảng từ Excel / Google Sheets
+                <textarea id="bulkImportText" rows="7" spellcheck="false" placeholder="Tên diễn viên,Tên phim,Vai diễn,Tên tiếng Trung,Giới tính,Phong cách,Độ hiếm,Mô tả,Ảnh URL&#10;Điền Hi Vi,Trục Ngọc,Tạ Chinh,田曦薇,Nữ,Cổ trang,SSR,Một câu mô tả,https://…"></textarea>
+                <small>Dòng đầu là tiêu đề cột. Hỗ trợ CSV phân tách bằng dấu phẩy/chấm phẩy và bảng dán dùng tab. Bắt buộc: Tên diễn viên, Tên phim. Ảnh URL tùy chọn.</small>
+              </label>
+              <div class="bulk-import-controls">
+                <button class="primary-btn" id="analyzeBulkImportBtn" type="button">Kiểm tra dữ liệu</button>
+                <label class="bulk-skip-duplicates"><input id="bulkSkipDuplicates" type="checkbox" checked /> Bỏ qua thẻ trùng thông tin</label>
+                <button class="outline-btn" id="clearBulkImportBtn" type="button">Xóa nội dung</button>
+              </div>
+              <p class="bulk-import-status" id="bulkImportStatus" role="status" aria-live="polite">Chọn tệp hoặc dán bảng, sau đó chọn “Kiểm tra dữ liệu”.</p>
+              <div class="bulk-import-preview" id="bulkImportPreview" hidden>
+                <div class="bulk-preview-heading"><strong id="bulkPreviewSummary">Bản xem trước</strong><small>Dòng lỗi sẽ không được nhập; sửa bảng và kiểm tra lại để nhập đủ.</small></div>
+                <div class="bulk-preview-table-wrap"><table class="bulk-preview-table"><thead><tr><th>Dòng</th><th>Diễn viên / phim</th><th>Kiểm tra</th></tr></thead><tbody id="bulkPreviewRows"></tbody></table></div>
+                <div class="bulk-import-commit-row"><button class="primary-btn" id="commitBulkImportBtn" type="button" disabled>Nhập các thẻ hợp lệ</button><span id="bulkCommitHint">Chưa có dữ liệu sẵn sàng.</span></div>
+              </div>
+            </div>
+          </details>
           <div class="manager-list" id="managerList"></div>
         </div>
       </div>
@@ -486,6 +513,7 @@
   <script src="js/app.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/manager.js"></script>
+  <script src="js/bulk-import.js"></script>
   <script src="js/movie-manager.js"></script>
   <script src="js/main.js"></script>
   <script src="js/pwa.js"></script>

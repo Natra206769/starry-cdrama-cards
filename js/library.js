@@ -48,14 +48,19 @@ function libraryMakeVariantCard(card,context){
   button.appendChild(copy);button.setAttribute("aria-label","Mở hồ sơ thẻ "+card.name+" trong "+(card.movie||"bộ sưu tập"));
   button.addEventListener("click",()=>{const id=card.id;closeLibraryProfile();showCharacterDetails(id,true);});return button;
 }
-function librarySetHeroVisual(visual,card){
+function librarySetHeroVisual(visual,card,poster=""){
   visual.replaceChildren();visual.className="library-profile-art";
   visual.style.setProperty("--rarity",(rarityInfo[card?.rarity]||rarityInfo.R).color);
   visual.style.setProperty("--art1",card?.art1||"#292f46");visual.style.setProperty("--art2",card?.art2||"#111522");visual.style.setProperty("--accent",card?.accent||"#a1a8c9");
   const initials=document.createElement("span");initials.className="library-profile-initials";initials.textContent=card?(card.initials||makeInitials(card.chinese,card.name)):"星光";visual.appendChild(initials);
-  if(card?.photo){
-    const photo=document.createElement("img");photo.className="library-profile-photo";photo.alt="Ảnh minh họa "+(card.movie||card.name);photo.loading="eager";photo.referrerPolicy="no-referrer";photo.src=card.photo;photo.dataset.fallbackTried="0";
-    photo.onerror=()=>{if(photo.dataset.fallbackTried==="0"&&card.photoFallback){photo.dataset.fallbackTried="1";photo.src=card.photoFallback;}else{photo.remove();visual.classList.remove("has-photo");}};
+  const source=poster||card?.photo;
+  if(source){
+    const photo=document.createElement("img");photo.className="library-profile-photo"+(poster?" library-movie-poster":"");photo.alt=poster?"Poster phim "+(card?.movie||""):"Ảnh minh họa "+(card?.movie||card?.name||"");photo.loading="eager";photo.referrerPolicy="no-referrer";photo.src=source;photo.dataset.sourceKind=poster?"poster":"card";photo.dataset.fallbackTried="0";
+    photo.onerror=()=>{
+      if(photo.dataset.sourceKind==="poster"&&card?.photo&&card.photo!==source){photo.dataset.sourceKind="card";photo.src=card.photo;return;}
+      if(photo.dataset.fallbackTried==="0"&&card?.photoFallback){photo.dataset.fallbackTried="1";photo.src=card.photoFallback;return;}
+      photo.remove();visual.classList.remove("has-photo");
+    };
     photo.onload=()=>visual.classList.add("has-photo");visual.appendChild(photo);
   }
 }
@@ -87,21 +92,35 @@ function renderLibraryProfile(){
   const isMovie=profile.type==="movie",cards=isMovie?libraryMovieCards(profile.value):libraryActorCards(profile.value);
   if(!cards.length){const empty=document.createElement("p");empty.className="library-profile-empty";empty.textContent="Hồ sơ này không còn thẻ trong kho.";root.appendChild(empty);return;}
   const ownedCards=cards.filter(card=>(Number(state.owned[card.id])||0)>0),ownedCount=ownedCards.length,copies=cards.reduce((sum,card)=>sum+(Number(state.owned[card.id])||0),0);
+  const metadata=isMovie&&typeof getMovieMetadata==="function"?getMovieMetadata(profile.value):null;
   const heroCard=ownedCards.find(card=>card.photo)||cards.find(card=>card.photo)||ownedCards[0]||cards[0];
   const hero=document.createElement("section");hero.className="library-profile-hero";
-  const visual=document.createElement("div");librarySetHeroVisual(visual,heroCard);hero.appendChild(visual);
+  const visual=document.createElement("div");librarySetHeroVisual(visual,heroCard,metadata?.poster||"");hero.appendChild(visual);
   const copy=document.createElement("div");copy.className="library-profile-hero-copy";
   const eyebrow=document.createElement("p");eyebrow.className="library-profile-eyebrow";eyebrow.textContent=isMovie?"DRAMA · MOVIE FILE":"ACTOR · PERSONAL DOSSIER";
   const title=document.createElement("h2");title.id="libraryProfileTitle";title.textContent=profile.value;
   const description=document.createElement("p");description.className="library-profile-description";
-  description.textContent=isMovie?(isGenericCollectionTitle(profile.value)?"Nhóm thẻ chân dung chưa gán vào một bộ phim cụ thể. Các phiên bản bên dưới được tổng hợp trực tiếp từ kho thẻ.":"Trang phim được tổng hợp từ các thẻ đã có trong hệ thống; thông tin chỉ bao gồm dữ liệu hiện được lưu cho phim này."):"Hồ sơ tổng hợp theo tên diễn viên trong kho thẻ. Các phiên bản có thể khác phim, vai diễn, độ hiếm hoặc phong cách.";
+  description.textContent=isMovie?(metadata?.description||(isGenericCollectionTitle(profile.value)?"Nhóm thẻ chân dung chưa gán vào một bộ phim cụ thể. Các phiên bản bên dưới được tổng hợp trực tiếp từ kho thẻ.":"Trang phim được tổng hợp từ các thẻ đã có trong hệ thống; bổ sung dữ liệu trong mục Quản lý thẻ phim để hoàn thiện hồ sơ.")):"Hồ sơ tổng hợp theo tên diễn viên trong kho thẻ. Các phiên bản có thể khác phim, vai diễn, độ hiếm hoặc phong cách.";
   copy.append(eyebrow,title,description);
+  if(isMovie&&metadata){
+    const metaLine=document.createElement("div");metaLine.className="library-profile-metadata";
+    if(metadata.originalTitle){const original=document.createElement("span");original.className="metadata-original-title";original.textContent=metadata.originalTitle;metaLine.appendChild(original);}
+    if(metadata.year){const year=document.createElement("span");year.textContent=metadata.year;metaLine.appendChild(year);}
+    for(const genre of metadata.genres||[]){const chip=document.createElement("span");chip.textContent=genre;metaLine.appendChild(chip);}
+    if(metaLine.children.length)copy.appendChild(metaLine);
+  }
   const stats=document.createElement("div");stats.className="library-profile-stats";
   if(isMovie){const actors=libraryUniqueBy(cards,card=>normalizedSearchKey(card.name));stats.append(libraryBuildStat("Diễn viên",actors.length),libraryBuildStat("Phiên bản thẻ",cards.length),libraryBuildStat("Đã sở hữu",ownedCount),libraryBuildStat("Bản sao",copies));}
   else{const movies=libraryUniqueBy(cards.filter(card=>!isGenericCollectionTitle(card.movie)),card=>normalizedSearchKey(card.movie));stats.append(libraryBuildStat("Phim",movies.length),libraryBuildStat("Phiên bản thẻ",cards.length),libraryBuildStat("Phiên bản đã có",ownedCount),libraryBuildStat("Bản sao",copies));}
   copy.appendChild(stats);
   const progress=document.createElement("div");progress.className="library-profile-progress";progress.setAttribute("role","progressbar");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax",String(cards.length));progress.setAttribute("aria-valuenow",String(ownedCount));progress.setAttribute("aria-label","Tiến độ sưu tầm của "+profile.value);
-  const progressFill=document.createElement("span");progressFill.style.width=(cards.length?ownedCount/cards.length*100:0)+"%";progress.appendChild(progressFill);copy.appendChild(progress);hero.appendChild(copy);root.appendChild(hero);
+  const progressFill=document.createElement("span");progressFill.style.width=(cards.length?ownedCount/cards.length*100:0)+"%";progress.appendChild(progressFill);copy.appendChild(progress);
+  if(isMovie){
+    const editMetadata=document.createElement("button");editMetadata.type="button";editMetadata.className="outline-btn library-edit-metadata-btn";editMetadata.textContent="✎ Chỉnh sửa thông tin phim";
+    editMetadata.addEventListener("click",()=>{const name=profile.value;closeLibraryProfile();openMovieMetadataEditor(name);});
+    copy.appendChild(editMetadata);
+  }
+  hero.appendChild(copy);root.appendChild(hero);
   const body=document.createElement("div");body.className="library-profile-body";
   if(isMovie){
     const actors=libraryUniqueBy(cards,card=>normalizedSearchKey(card.name)).sort((a,b)=>compareVietnamese(a.name,b.name));

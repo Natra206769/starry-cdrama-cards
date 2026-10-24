@@ -198,7 +198,7 @@ $("restoreDefaultsBtn").addEventListener("click",async()=>{
   if(await persistManagerData()){rebuildCharacters();showToast("Đã khôi phục các thẻ mẫu.");}else managerData=normalizeManagerData(previous);
 });
 $("exportBtn").addEventListener("click",()=>{
-  const backup={app:"Starry C-Drama Cards",version:3,createdAt:new Date().toISOString(),managerData,state};
+  const backup={app:"Starry C-Drama Cards",version:4,createdAt:new Date().toISOString(),managerData,state};
   const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="starry-cbiz-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("Đã tạo bản sao lưu JSON.");
 });
 $("importBtn").addEventListener("click",()=>$("importFile").click());
@@ -206,7 +206,7 @@ $("importFile").addEventListener("change",async event=>{
   const file=event.target.files?.[0];if(!file)return;
   try{
     const backup=JSON.parse(await file.text());if(backup.app!=="Starry C-Drama Cards"||!backup.managerData||!backup.state)throw new Error("Tệp không đúng định dạng sao lưu của game.");
-    if(!confirm("Khôi phục sẽ thay thế thẻ cá nhân, chỉnh sửa, danh sách thẻ đã xóa/ẩn và bộ sưu tập hiện tại. Bạn có chắc không?"))return;
+    if(!confirm("Khôi phục sẽ thay thế thẻ cá nhân, dữ liệu phim đã quản lý, chỉnh sửa, danh sách thẻ đã xóa/ẩn và bộ sưu tập hiện tại. Bạn có chắc không?"))return;
     const previous=JSON.parse(JSON.stringify(managerData));managerData=normalizeManagerData(backup.managerData);
     if(await persistManagerData()){
       state={owned:backup.state.owned&&typeof backup.state.owned==="object"?backup.state.owned:{},favorites:Array.isArray(backup.state.favorites)?backup.state.favorites:[],cardProgress:backup.state.cardProgress&&typeof backup.state.cardProgress==="object"?backup.state.cardProgress:{}};

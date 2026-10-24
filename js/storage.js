@@ -17,7 +17,8 @@ async function dbPut(key,value){const database=await openDatabase();return new P
 function normalizeManagerData(saved){
   const raw=saved&&typeof saved==="object"?saved:{};
   const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>{const clean=normalizeSavedNameFields({...card});delete clean.costume;return [id,clean];})):{};
-  return {custom:Array.isArray(raw.custom)?raw.custom.map(card=>normalizeCard(card)):[],overrides,hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[]};
+  const movieMetadata=raw.movieMetadata&&typeof raw.movieMetadata==="object"&&!Array.isArray(raw.movieMetadata)?raw.movieMetadata:{};
+  return {custom:Array.isArray(raw.custom)?raw.custom.map(card=>normalizeCard(card)):[],overrides,hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[],movieMetadata};
 }
 async function readManagerData(){
   try{
@@ -48,6 +49,7 @@ function rebuildCharacters(){
   const favoriteCount=state.favorites.length;state.favorites=state.favorites.filter(id=>activeIds.has(id));if(state.favorites.length!==favoriteCount)changed=true;
   if(changed)saveState();
   renderCollection();updateStats();renderManagerList();renderRarityOdds();
+  if(typeof renderMovieMetadataManager==="function")renderMovieMetadataManager();
   for(const fieldId of Object.keys(AUTOCOMPLETE_CONFIG||{})){if($(fieldId)&&$(fieldId).value.trim())renderAutocomplete(fieldId);}
 }
 function getAnyCharacter(id){

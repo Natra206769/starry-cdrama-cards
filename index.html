@@ -188,6 +188,45 @@
         </div>
       </div>
     </section>
+    <section class="manage-section movie-metadata-section" id="movieLibraryManager">
+      <div class="section-heading manage-heading">
+        <div><p class="eyebrow left-eyebrow">YOUR DRAMA DATABASE</p><h2>Quản lý <em>dữ liệu phim</em></h2><p class="section-subtitle">Bổ sung thông tin một lần cho mỗi phim. Tất cả thẻ cùng phim sẽ dùng chung hồ sơ này.</p></div>
+        <span class="movie-metadata-header-count" id="movieMetadataCount">0 phim</span>
+      </div>
+      <div class="movie-metadata-layout">
+        <form class="movie-metadata-form manager-content" id="movieMetadataForm">
+          <div class="form-title-row"><h3 id="movieMetadataFormTitle">Chọn phim để chỉnh sửa</h3><span class="movie-metadata-save-state" id="movieMetadataSaveState">Chọn phim trước khi lưu</span></div>
+          <label class="movie-metadata-field">Phim trong kho thẻ *
+            <select id="movieMetadataSelect" required><option value="">Chọn một phim…</option></select>
+            <small>Danh sách lấy từ tên phim đang dùng trong các thẻ; nhóm chân dung chung không nằm trong danh sách này.</small>
+          </label>
+          <div class="movie-metadata-fields-grid">
+            <label class="movie-metadata-field">Tên gốc / tên tiếng Trung<input id="movieMetadataOriginalTitle" maxlength="120" placeholder="Ví dụ: 逐玉" /></label>
+            <label class="movie-metadata-field">Năm phát hành<input id="movieMetadataYear" type="number" min="1900" max="2100" step="1" placeholder="Ví dụ: 2026" /></label>
+            <label class="movie-metadata-field movie-metadata-wide">Thể loại<input id="movieMetadataGenres" maxlength="180" placeholder="Cổ trang, Tình cảm, Hài…" /><small>Phân cách nhiều thể loại bằng dấu phẩy.</small></label>
+            <label class="movie-metadata-field movie-metadata-wide">Mô tả<textarea id="movieMetadataDescription" rows="4" maxlength="1200" placeholder="Tóm tắt ngắn nội dung phim, bối cảnh hoặc điểm nổi bật…"></textarea></label>
+            <label class="movie-metadata-field movie-metadata-wide">Poster bằng đường dẫn ảnh<input id="movieMetadataPosterUrl" type="url" inputmode="url" placeholder="https://…/poster.jpg" /><small>Có thể dùng ảnh trực tuyến hoặc tải ảnh lên bên dưới.</small></label>
+            <label class="movie-metadata-field movie-metadata-wide">Hoặc tải poster từ thiết bị<input id="movieMetadataPosterFile" type="file" accept="image/*" /><small>Ảnh được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
+          </div>
+          <div class="movie-poster-preview-wrap">
+            <div class="movie-poster-preview" id="movieMetadataPosterPreview"><span>✦</span></div>
+            <div class="movie-poster-preview-copy"><strong id="movieMetadataPosterLabel">Chưa có poster</strong><small>Poster được dùng chung trên trang phim, không thay đổi ảnh riêng của từng thẻ.</small></div>
+          </div>
+          <div class="movie-metadata-form-actions">
+            <button class="primary-btn" type="submit" id="saveMovieMetadataBtn" disabled>Lưu dữ liệu phim</button>
+            <button class="outline-btn" type="button" id="clearMovieMetadataPosterBtn">Bỏ poster</button>
+          </div>
+          <p class="form-footnote">Thông tin phim được lưu riêng theo tên phim và đưa vào bản sao lưu JSON. Không chỉnh sửa số thẻ, quyền sở hữu hoặc tiến trình nâng cấp.</p>
+        </form>
+        <div class="manager-content movie-metadata-catalog">
+          <div class="manager-toolbar">
+            <div><strong id="movieMetadataManagedCount">Danh mục phim</strong><small>Chọn một phim bên dưới để thêm hoặc sửa dữ liệu.</small></div>
+            <div class="manager-tools"><input id="movieMetadataSearch" class="manager-search" type="search" placeholder="Tìm tên phim…" aria-label="Tìm phim cần quản lý" /></div>
+          </div>
+          <div class="movie-metadata-list" id="movieMetadataList" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
     </section>
 
     <section class="app-page" id="page-collection" data-app-page="collection" hidden>
@@ -415,6 +454,7 @@
   <script src="js/app.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/manager.js"></script>
+  <script src="js/movie-manager.js"></script>
   <script src="js/main.js"></script>
   <script src="js/pwa.js"></script>
 </body>

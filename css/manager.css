@@ -48,3 +48,61 @@
 .manager-item-actions{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
 @media(max-width:1000px){.manager-layout{grid-template-columns:1fr;}.manager-list{max-height:620px;}.manager-item{grid-template-columns:48px minmax(0,1fr) auto;}}
 @media(max-width:650px){.manage-section{padding:32px 0 40px;}.manage-heading{align-items:flex-start;flex-direction:column;}.manager-toggle{width:100%;}.manager-layout{gap:12px;}.character-form,.manager-content{padding:13px;}.form-grid{gap:10px;}.manager-toolbar{align-items:flex-start;flex-direction:column;}.manager-tools{justify-content:flex-start;}.manager-item{grid-template-columns:42px minmax(0,1fr);gap:8px;}.manager-thumb{width:42px;height:50px;}.manager-item-actions{grid-column:2;justify-content:flex-start;}.manager-item-actions .compact-btn{padding:6px 9px;}.manager-item-detail small{white-space:normal;line-height:1.5;}}
+
+
+/* V10.0C — shared movie metadata editor and movie-poster management */
+.movie-metadata-section{border-top:1px solid var(--line);padding-top:34px}
+.movie-metadata-header-count{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:8px 12px;border:1px solid #e7c58c40;border-radius:24px;background:#e7c58c0c;color:var(--gold);font-size:10px}
+.movie-metadata-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:17px;align-items:start}
+.movie-metadata-form{display:grid;gap:13px;min-width:0}
+.movie-metadata-form .form-title-row{margin-bottom:2px}
+.movie-metadata-form .form-title-row h3{font-size:17px}
+.movie-metadata-save-state{color:var(--muted);font-size:9px;text-align:right}
+.movie-metadata-field{display:flex;flex-direction:column;gap:7px;min-width:0;color:#d4d5df;font-size:11px}
+.movie-metadata-field input,.movie-metadata-field select,.movie-metadata-field textarea{width:100%;min-width:0;border:1px solid #ffffff20;border-radius:8px;background:#0e101b;color:var(--text);padding:10px 11px;font:inherit;font-size:12px;outline:none}
+.movie-metadata-field textarea{resize:vertical;min-height:100px;line-height:1.6}
+.movie-metadata-field input:focus,.movie-metadata-field select:focus,.movie-metadata-field textarea:focus{border-color:#e7c58c88;box-shadow:0 0 0 2px #e7c58c12}
+.movie-metadata-field input[type=file]{font-size:10px;padding:8px}
+.movie-metadata-field small{color:var(--muted);font-size:9px;line-height:1.55;font-weight:400}
+.movie-metadata-fields-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.movie-metadata-wide{grid-column:1/-1}
+.movie-poster-preview-wrap{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #ffffff12;border-radius:10px;background:#00000018}
+.movie-poster-preview{position:relative;flex:0 0 82px;width:82px;height:116px;overflow:hidden;display:grid;place-items:center;border:1px solid #ffffff20;border-radius:7px;background:radial-gradient(circle,#44415b,#151725);color:var(--muted);font:600 22px var(--serif)}
+.movie-poster-preview img{width:100%;height:100%;object-fit:cover}
+.movie-poster-preview-copy{display:grid;gap:7px;min-width:0}
+.movie-poster-preview-copy strong{font-size:11px;overflow-wrap:anywhere}
+.movie-poster-preview-copy small{color:var(--muted);font-size:9px;line-height:1.6}
+.movie-metadata-form-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.movie-metadata-form-actions .primary-btn{min-height:41px;padding:10px 15px;font-size:11px}
+.movie-metadata-list{display:flex;flex-direction:column;gap:8px;max-height:800px;overflow:auto;padding-right:3px}
+.movie-metadata-row{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;min-width:0;padding:8px;border:1px solid #ffffff13;border-radius:11px;background:#ffffff03}
+.movie-metadata-thumb{position:relative;width:56px;height:76px;overflow:hidden;display:grid;place-items:center;border:1px solid #ffffff18;border-radius:6px;background:radial-gradient(circle,#44415b,#151725);color:#c3b5df;font:600 20px var(--serif)}
+.movie-metadata-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.movie-metadata-row-copy{display:grid;gap:5px;min-width:0}
+.movie-metadata-row-copy strong{font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+.movie-metadata-row-copy small{font-size:9px;color:var(--muted);line-height:1.5;overflow-wrap:anywhere}
+.movie-metadata-row-status{font-size:9px;color:#9aa0b8}
+.movie-metadata-row-status.is-ready{color:#b5dcbf}
+.movie-metadata-row-actions{display:grid;gap:5px;justify-items:stretch}
+.movie-metadata-row-actions button{font-size:9px;padding:7px 9px}
+.movie-metadata-row-actions button:disabled{opacity:.35;cursor:not-allowed}
+.movie-metadata-empty{padding:18px;border:1px dashed #ffffff20;border-radius:10px;color:var(--muted);font-size:11px;line-height:1.6}
+.library-profile-metadata{display:flex;gap:7px;flex-wrap:wrap;margin:-5px 0 12px}
+.library-profile-metadata span{display:inline-flex;align-items:center;padding:5px 8px;border:1px solid #ffffff1c;border-radius:8px;background:#ffffff06;color:#d9d5e6;font-size:9px;line-height:1.45}
+.library-profile-metadata .metadata-original-title{color:#e7c58c;border-color:#e7c58c30}
+.library-edit-metadata-btn{margin:8px 0 0;min-height:37px;font-size:10px}
+.library-profile-art.has-photo .library-profile-initials{display:none}
+.library-profile-art .library-movie-poster{object-position:center 20%}
+@media(max-width:1000px){.movie-metadata-layout{grid-template-columns:1fr}.movie-metadata-list{max-height:580px}}
+@media(max-width:650px){
+  .movie-metadata-section{padding-top:28px}
+  .movie-metadata-layout{gap:12px}
+  .movie-metadata-form,.movie-metadata-catalog{padding:12px}
+  .movie-metadata-fields-grid{gap:10px}
+  .movie-metadata-header-count{align-self:flex-start}
+  .movie-metadata-row{grid-template-columns:48px minmax(0,1fr);gap:8px}
+  .movie-metadata-thumb{width:48px;height:65px}
+  .movie-metadata-row-actions{grid-column:2;display:flex;justify-content:flex-start;flex-wrap:wrap}
+  .movie-metadata-form-actions{display:grid;grid-template-columns:1fr 1fr}
+  .movie-metadata-form-actions .primary-btn{grid-column:1/-1;width:100%}
+}

@@ -174,3 +174,97 @@
 }
 @media(prefers-reduced-motion:reduce){.mini-card .mini-star-frame.star-frame-5,.mini-card .mini-star-frame.star-frame-5::after,.upgrade-animation-stage.is-charging .upgrade-animation-orbit,.upgrade-animation-stage.is-charging .upgrade-animation-sigil,.upgrade-animation-stage.is-charging::after,.upgrade-animation-stage.is-charging .upgrade-animation-copy strong,.upgrade-animation-stage.is-success,.upgrade-animation-stage.is-success .upgrade-animation-sigil,.upgrade-animation-stage.is-success::after,.upgrade-animation-stage.is-success .upgrade-animation-sparks,.upgrade-animation-stage.is-success.tier-5 .upgrade-animation-orbit,.upgrade-animation-stage.is-failed,.upgrade-animation-stage.is-failed .upgrade-animation-sigil{animation:none!important}}
 @media(prefers-reduced-motion:reduce){.mini-card .mini-star-frame[class*="star-frame-"],.mini-card .mini-star-frame[class*="star-frame-"]::after{animation:none!important}.mini-card .mini-star-frame.star-frame-2::after{opacity:0}}
+
+
+/* V9.4 — Celestial Ascension: the actual card transforms, not only the status banner. */
+.upgrade-animation-stage{min-height:166px;padding:16px 18px;gap:13px}
+.upgrade-animation-orbit{left:27px;width:116px;height:116px;opacity:.42}
+.ascension-card-preview{
+  --preview-rarity:#c18aff;--preview-art1:#292f46;--preview-art2:#111522;--preview-accent:#a1a8c9;
+  position:relative;isolation:isolate;flex:0 0 82px;width:82px;height:122px;overflow:hidden;
+  border:1px solid var(--preview-rarity);border-radius:8px;
+  background:radial-gradient(ellipse at 50% 35%,var(--preview-accent),transparent 56%),linear-gradient(145deg,var(--preview-art1),var(--preview-art2));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--preview-rarity) 35%,transparent),0 0 20px color-mix(in srgb,var(--preview-rarity) 18%,transparent),0 12px 24px #0008;
+  transform:perspective(700px) rotateY(-5deg) rotateX(2deg);
+  transition:border-color .35s,box-shadow .35s,filter .35s;
+}
+.ascension-card-preview[hidden]{display:none!important}
+.ascension-card-preview::before{content:"";position:absolute;z-index:4;inset:3px;border:1px solid color-mix(in srgb,var(--preview-rarity) 80%,white);border-radius:5px;pointer-events:none;opacity:.78}
+.ascension-preview-photo{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
+.ascension-preview-photo[hidden]{display:none!important}
+.ascension-preview-initials{position:absolute;z-index:1;inset:0;display:grid;place-items:center;padding:8px;font-family:var(--serif);font-size:26px;writing-mode:vertical-rl;letter-spacing:4px;color:#fffD;text-shadow:0 3px 20px #000;background:radial-gradient(ellipse at 50% 45%,var(--preview-accent),transparent 65%)}
+.ascension-card-preview.has-photo .ascension-preview-initials{display:none}
+.ascension-preview-tier{position:absolute;z-index:5;top:7px;right:6px;padding:3px 4px;border:1px solid #ffffff55;border-radius:4px;background:#080a16b8;color:#fff2cb;font-size:8px;font-weight:800;letter-spacing:.5px}
+.ascension-preview-stars{position:absolute;z-index:5;left:0;right:0;bottom:5px;text-align:center;color:#fff2cb;text-shadow:0 0 5px #fff,0 0 14px var(--preview-rarity);font-size:11px;letter-spacing:1px}
+.ascension-preview-foil,.mini-star-art-overlay,.detail-star-art-overlay{position:absolute;z-index:2;inset:0;display:block;overflow:hidden;pointer-events:none;opacity:0;mix-blend-mode:screen}
+.mini-star-art-overlay{z-index:3}
+.detail-star-art-overlay{z-index:2}
+.ascension-preview-foil::before,.mini-star-art-overlay::before,.detail-star-art-overlay::before{
+  content:"";position:absolute;inset:-45%;transform:translateX(-125%) rotate(14deg);
+  background:linear-gradient(118deg,transparent 34%,color-mix(in srgb,var(--foil-color,#fff) 10%,transparent) 43%,var(--foil-color,#fff) 49%,#ffffffd9 51%,transparent 61%);
+  animation:star-foil-sweep 4.2s ease-in-out infinite;
+}
+.ascension-preview-foil::after,.mini-star-art-overlay::after,.detail-star-art-overlay::after{
+  content:"";position:absolute;inset:0;opacity:.38;
+  background:radial-gradient(circle at 18% 20%,#fff 0 1px,transparent 2px),radial-gradient(circle at 79% 31%,var(--foil-color,#fff) 0 1px,transparent 2px),radial-gradient(circle at 61% 79%,#fff 0 1px,transparent 2px);
+  background-size:47px 53px,67px 71px,83px 89px;animation:star-foil-twinkle 3.1s ease-in-out infinite alternate;
+}
+.star-level-1{--foil-color:#e7c58c}
+.star-level-2{--foil-color:#edf4ff}
+.star-level-3{--foil-color:#72b6ff}
+.star-level-4{--foil-color:#c18aff}
+.star-level-5{--foil-color:#ff85d4}
+.ascension-card-preview.star-level-1 .ascension-preview-foil,
+.ascension-preview-foil.star-level-1{opacity:0}
+.ascension-card-preview.star-level-2 .ascension-preview-foil,
+.ascension-preview-foil.star-level-2,.mini-star-art-overlay.star-art-level-2,.detail-visual.star-level-2 .detail-star-art-overlay{opacity:.16}
+.ascension-card-preview.star-level-3 .ascension-preview-foil,
+.ascension-preview-foil.star-level-3,.mini-star-art-overlay.star-art-level-3,.detail-visual.star-level-3 .detail-star-art-overlay{opacity:.25}
+.ascension-card-preview.star-level-4 .ascension-preview-foil,
+.ascension-preview-foil.star-level-4,.mini-star-art-overlay.star-art-level-4,.detail-visual.star-level-4 .detail-star-art-overlay{opacity:.32}
+.ascension-card-preview.star-level-5 .ascension-preview-foil,
+.ascension-preview-foil.star-level-5,.mini-star-art-overlay.star-art-level-5,.detail-visual.star-level-5 .detail-star-art-overlay{opacity:.46}
+.mini-star-art-overlay.star-art-level-2{--foil-color:#edf4ff}
+.mini-star-art-overlay.star-art-level-3{--foil-color:#72b6ff}
+.mini-star-art-overlay.star-art-level-4{--foil-color:#c18aff}
+.mini-star-art-overlay.star-art-level-5{--foil-color:#ff85d4}
+.ascension-preview-foil.star-level-5::before,.mini-star-art-overlay.star-art-level-5::before,.detail-visual.star-level-5 .detail-star-art-overlay::before{
+  background:linear-gradient(118deg,transparent 14%,#ff85d46b 29%,#a66bff99 39%,#6eb9ffb8 48%,#fff 51%,#ffe1f5 55%,transparent 70%);
+  animation-duration:3.2s;
+}
+.ascension-card-preview.star-level-2{border-color:#e8efff;box-shadow:0 0 0 1px #e1e9ff80,0 0 18px #e1e9ff33,0 12px 24px #0008}
+.ascension-card-preview.star-level-3{border-color:#86caff;box-shadow:0 0 0 1px #86caff99,0 0 22px #6eb9ff6b,0 12px 24px #0008}
+.ascension-card-preview.star-level-4{border:2px solid #d2a5ff;box-shadow:0 0 0 1px #d2a5ff88,0 0 28px #a66bff8c,0 12px 24px #0008}
+.ascension-card-preview.star-level-5{border:2px double #ffd2f0;box-shadow:0 0 0 1px #ff85d4aa,0 0 28px #ff85d4a8,0 0 48px #a66bff60,0 12px 24px #0008}
+.ascension-card-preview.star-level-5::before{border:1px dashed #ffe1f5;inset:5px;box-shadow:inset 0 0 12px #ff85d44d}
+.upgrade-animation-stage.is-charging .ascension-card-preview{animation:ascension-charge .78s ease-in-out infinite alternate;filter:brightness(1.13)}
+.upgrade-animation-stage.is-charging .ascension-preview-foil{opacity:.62}
+.upgrade-animation-stage.is-charging .ascension-preview-foil::before{animation-duration:.72s}
+.upgrade-animation-stage.is-success .ascension-card-preview{animation:ascension-success .95s cubic-bezier(.14,.8,.2,1) both;z-index:3}
+.upgrade-animation-stage.is-success.tier-2 .ascension-card-preview{--preview-rarity:#edf4ff}
+.upgrade-animation-stage.is-success.tier-3 .ascension-card-preview{--preview-rarity:#72b6ff}
+.upgrade-animation-stage.is-success.tier-4 .ascension-card-preview{--preview-rarity:#c18aff}
+.upgrade-animation-stage.is-success.tier-5 .ascension-card-preview{--preview-rarity:#ff85d4;animation:ascension-ultimate 1.15s cubic-bezier(.14,.8,.2,1) both}
+.upgrade-animation-stage.is-success .ascension-preview-foil{opacity:.75}
+.upgrade-animation-stage.is-failed .ascension-card-preview{animation:ascension-fail .58s ease-out both;filter:saturate(.65)}
+@keyframes star-foil-sweep{0%,60%,100%{transform:translateX(-125%) rotate(14deg)}76%{transform:translateX(125%) rotate(14deg)}}
+@keyframes star-foil-twinkle{from{opacity:.18;transform:scale(.98)}to{opacity:.62;transform:scale(1.02)}}
+@keyframes ascension-charge{from{transform:perspective(700px) translateY(0) rotateY(-7deg) scale(.98);filter:brightness(.92)}to{transform:perspective(700px) translateY(-8px) rotateY(8deg) scale(1.035);filter:brightness(1.36)}}
+@keyframes ascension-success{0%{transform:perspective(700px) translateY(4px) rotateY(-12deg) scale(.86);filter:brightness(.65)}45%{transform:perspective(700px) translateY(-12px) rotateY(8deg) scale(1.14);filter:brightness(1.85)}72%{transform:perspective(700px) translateY(2px) rotateY(-3deg) scale(.97);filter:brightness(1.24)}100%{transform:perspective(700px) translateY(0) rotateY(0) scale(1);filter:brightness(1)}}
+@keyframes ascension-ultimate{0%{transform:perspective(700px) scale(.65) rotateY(-24deg);filter:brightness(.3) saturate(.5)}50%{transform:perspective(700px) scale(1.24) rotateY(12deg);filter:brightness(2.6) saturate(1.5)}100%{transform:perspective(700px) scale(1) rotateY(0);filter:brightness(1.15) saturate(1.2)}}
+@keyframes ascension-fail{0%{transform:translateX(0) scale(1.04);filter:brightness(1.4)}28%{transform:translateX(-5px) scale(.98);filter:brightness(.6)}56%{transform:translateX(5px) scale(.97)}100%{transform:translateX(0) scale(1);filter:brightness(.88)}}
+@media(max-width:650px){
+  .upgrade-animation-stage{min-height:138px;padding:12px 10px;gap:8px}
+  .upgrade-animation-orbit{left:9px;width:92px;height:92px}
+  .ascension-card-preview{flex-basis:68px;width:68px;height:103px}
+  .upgrade-animation-sigil{flex-basis:39px;width:39px;height:39px;font-size:20px}
+  .upgrade-animation-copy{gap:4px}
+  .upgrade-animation-copy strong{font-size:11px}
+  .upgrade-animation-copy span{font-size:9px}
+  .upgrade-animation-sparks{right:6px;bottom:5px;letter-spacing:5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .ascension-card-preview,.ascension-preview-foil::before,.ascension-preview-foil::after,.mini-star-art-overlay::before,.mini-star-art-overlay::after,.detail-star-art-overlay::before,.detail-star-art-overlay::after{animation:none!important;transition:none!important}
+  .ascension-preview-foil::before{transform:none}
+  .upgrade-animation-stage.is-charging .ascension-card-preview,.upgrade-animation-stage.is-success .ascension-card-preview,.upgrade-animation-stage.is-failed .ascension-card-preview{animation:none!important;filter:none}
+}

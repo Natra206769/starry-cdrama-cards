@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V9.3</title>
+  <title>Starry C-Drama Cards — V9.4</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -229,6 +229,13 @@
           <div class="upgrade-workbench-heading"><div><p class="upgrade-eyebrow">CURRENTLY SELECTED</p><h3 id="upgradeSelectedCardTitle">Chọn một thẻ</h3><p id="upgradeSelectedCardMeta">Phim · độ hiếm · số lượng</p></div><span class="upgrade-workbench-mark" aria-hidden="true">✦</span></div>
           <div class="upgrade-animation-stage" id="upgradeAnimationStage" data-phase="idle" data-stars="1" aria-live="polite">
             <div class="upgrade-animation-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="ascension-card-preview star-level-1" id="upgradePreviewCard" aria-hidden="true">
+              <img class="ascension-preview-photo" id="upgradePreviewPhoto" alt="" hidden />
+              <span class="ascension-preview-initials" id="upgradePreviewInitials">星光</span>
+              <span class="ascension-preview-foil star-level-1" id="upgradePreviewFoil"></span>
+              <span class="ascension-preview-tier" id="upgradePreviewTier">★ 1/5</span>
+              <span class="ascension-preview-stars" id="upgradePreviewStars">★</span>
+            </div>
             <div class="upgrade-animation-sigil" id="upgradeAnimationSigil" aria-hidden="true">✧</div>
             <div class="upgrade-animation-copy"><strong id="upgradeAnimationTitle">Tinh quang đang chờ</strong><span id="upgradeAnimationMessage">Chọn thao tác nâng sao để bắt đầu nghi thức.</span></div>
             <span class="upgrade-animation-sparks" aria-hidden="true">✦ · ✧ · ✦</span>
@@ -329,6 +336,7 @@
     <div class="detail-dialog-inner">
       <div class="detail-visual" id="detailVisual">
         <img id="detailPhoto" alt="" hidden />
+        <span class="detail-star-art-overlay" id="detailStarArtOverlay" aria-hidden="true"></span>
         <span class="detail-initials" id="detailInitials">星光</span>
         <span class="detail-visual-label">STARRY · CHARACTER FILE</span>
       </div>

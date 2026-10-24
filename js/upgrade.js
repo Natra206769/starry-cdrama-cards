@@ -15,6 +15,47 @@ function getCardProgress(id){
   return progress;
 }
 function requiredLevelExp(level){return level>=MAX_CARD_LEVEL?0:(levelExpRequirements[level-1]||0);}
+function renderUpgradePreview(card){
+  const preview=$("upgradePreviewCard");
+  if(!preview||!card)return;
+  const progress=getCardProgress(card.id);
+  const info=rarityInfo[card.rarity]||rarityInfo.R;
+  preview.hidden=false;
+  preview.style.setProperty("--preview-rarity",info.color);
+  preview.style.setProperty("--preview-art1",card.art1||"#292f46");
+  preview.style.setProperty("--preview-art2",card.art2||"#111522");
+  preview.style.setProperty("--preview-accent",card.accent||info.color);
+  preview.classList.remove("star-level-1","star-level-2","star-level-3","star-level-4","star-level-5","has-photo");
+  preview.classList.add("star-level-"+progress.stars);
+  $("upgradePreviewInitials").textContent=card.initials||makeInitials(card.chinese,card.name);
+  $("upgradePreviewTier").textContent="★ "+progress.stars+"/5";
+  $("upgradePreviewStars").textContent="★".repeat(progress.stars);
+  const foil=$("upgradePreviewFoil");
+  if(foil)foil.className="ascension-preview-foil star-level-"+progress.stars;
+  const image=$("upgradePreviewPhoto");
+  if(!image)return;
+  image.hidden=true;
+  image.removeAttribute("src");
+  image.dataset.fallbackTried="0";
+  image.alt="Ảnh "+card.name+" trong "+(card.movie||"bộ sưu tập");
+  image.onload=()=>preview.classList.add("has-photo");
+  image.onerror=()=>{
+    if(card.photoFallback&&image.dataset.fallbackTried!=="1"){
+      image.dataset.fallbackTried="1";
+      image.src=card.photoFallback;
+    }else{
+      image.hidden=true;
+      preview.classList.remove("has-photo");
+    }
+  };
+  if(card.photo){
+    preview.classList.remove("has-photo");
+    image.hidden=false;
+    image.src=card.photo;
+  }else{
+    preview.classList.remove("has-photo");
+  }
+}
 function renderCardUpgradePanel(card){
   const panel=$("cardUpgradePanel");if(!panel)return;
   const owned=Math.max(0,Number(state.owned[card.id])||0);
@@ -67,9 +108,10 @@ function renderUpgradePage(preferredId){
   $("upgradeNoCards").hidden=ownedCards.length>0;
   $("upgradeWorkbench").hidden=!card;
   renderUpgradeCardSelector();
-  if(!card){$("cardUpgradePanel").hidden=true;return;}
+  if(!card){$("cardUpgradePanel").hidden=true;const preview=$("upgradePreviewCard");if(preview)preview.hidden=true;return;}
   $("upgradeSelectedCardTitle").textContent=card.name;
-  $("upgradeSelectedCardMeta").textContent=`${card.movie||"Bộ sưu tập chân dung"} · ${card.rarity} · đang sở hữu ×${state.owned[card.id]}`;
+  $("upgradeSelectedCardMeta").textContent=(card.movie||"Bộ sưu tập chân dung")+" · "+card.rarity+" · đang sở hữu ×"+state.owned[card.id];
+  renderUpgradePreview(card);
   renderCardUpgradePanel(card);
 }
 function renderUpgradeFodderList(mainCard){

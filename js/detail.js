@@ -13,6 +13,17 @@ function showCharacterDetails(id,allowUnowned=false){
   initials.textContent=card.initials||makeInitials(card.chinese,card.name);photo.hidden=true;photo.removeAttribute("src");photo.dataset.fallbackTried="0";photo.alt="Ảnh "+card.name+" trong "+card.movie;visual.classList.remove("has-detail-photo");
   if(card.photo){photo.hidden=false;photo.src=card.photo;photo.onerror=()=>{if(card.photoFallback&&photo.dataset.fallbackTried!=="1"){photo.dataset.fallbackTried="1";photo.src=card.photoFallback;}else{photo.hidden=true;visual.classList.remove("has-detail-photo");}};photo.onload=()=>visual.classList.add("has-detail-photo");}
   const isOwned=(Number(state.owned[id])||0)>0;
+  const starProgress=isOwned?getCardProgress(id):null;
+  visual.classList.remove("star-level-1","star-level-2","star-level-3","star-level-4","star-level-5");
+  const detailFoil=$("detailStarArtOverlay");
+  if(isOwned&&starProgress){
+    visual.classList.add("star-level-"+starProgress.stars);
+    visual.dataset.stars=String(starProgress.stars);
+    if(detailFoil)detailFoil.className="detail-star-art-overlay star-level-"+starProgress.stars;
+  }else{
+    delete visual.dataset.stars;
+    if(detailFoil)detailFoil.className="detail-star-art-overlay";
+  }
   const favorite=$("detailFavoriteBtn");favorite.hidden=!isOwned;favorite.textContent=state.favorites.includes(id)?"♥ Đã yêu thích · Bỏ đánh dấu":"♡ Thêm yêu thích";favorite.classList.toggle("is-favorite",state.favorites.includes(id));
   $("detailDeleteBtn").hidden=!isOwned;
   $("detailUpgradeBtn").hidden=!isOwned;

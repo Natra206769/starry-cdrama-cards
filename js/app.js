@@ -44,6 +44,7 @@ collectionSearchInput.addEventListener("input",()=>{clearCollectionSearchButton.
 clearCollectionSearchButton.addEventListener("click",()=>{collectionSearchInput.value="";clearCollectionSearchButton.hidden=true;renderCollection();collectionSearchInput.focus();});
 document.querySelectorAll("[data-collection-mode]").forEach(button=>button.addEventListener("click",()=>{
   collectionMode=button.dataset.collectionMode;
+  collectionShelfStatusFilter="all";
   activeFilter="all";
   renderCollection();
 }));
@@ -61,6 +62,7 @@ document.querySelectorAll("[data-collection-display]").forEach(button=>button.ad
 $("collectionMovieGenreFilter").addEventListener("change",event=>{collectionShelfGenreFilter=event.target.value;renderCollection();});
 $("collectionMovieYearFilter").addEventListener("change",event=>{collectionShelfYearFilter=event.target.value;renderCollection();});
 $("collectionMovieSortSelect").addEventListener("change",event=>{collectionShelfSortMode=event.target.value;renderCollection();});
+$("collectionMovieStatusFilter").addEventListener("change",event=>{collectionShelfStatusFilter=event.target.value;renderCollection();});
 $("resetBtn").addEventListener("click",()=>{
   if(!Object.keys(state.owned).length&&!state.favorites.length&&!Object.keys(state.cardProgress||{}).length){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
   if(confirm("Xóa toàn bộ tiến độ sưu tầm và yêu thích? Danh sách thẻ/phim sẽ được giữ nguyên.")){

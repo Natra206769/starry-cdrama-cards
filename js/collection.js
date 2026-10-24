@@ -8,6 +8,7 @@ let collectionDisplayMode = "cards";
 let collectionShelfGenreFilter = "all";
 let collectionShelfYearFilter = "all";
 let collectionShelfSortMode = "title";
+let collectionShelfStatusFilter = "all";
 
 function collectionMatchesFilter(card){
   const owned=(Number(state.owned[card.id])||0)>0;
@@ -204,22 +205,68 @@ function renderCollectionMovieFilterOptions(movies){
     select.value=[...select.options].some(option=>option.value===previous)?previous:"all";collectionShelfYearFilter=select.value;
   }
 }
+function collectionMovieStatus(movie){
+  if(!movie.ownedUnique)return "not-started";
+  if(movie.ownedUnique>=movie.cards.length)return "complete";
+  return "in-progress";
+}
+function collectionMovieMatchesShelfQuery(movie,query){
+  if(collectionShelfYearFilter==="__none__"&&movie.year)return false;
+  if(collectionShelfYearFilter!=="all"&&collectionShelfYearFilter!=="__none__"&&movie.year!==collectionShelfYearFilter)return false;
+  if(collectionShelfGenreFilter==="__none__"&&movie.genres.length)return false;
+  if(collectionShelfGenreFilter!=="all"&&collectionShelfGenreFilter!=="__none__"&&!movie.genres.some(genre=>normalizedSearchKey(genre)===collectionShelfGenreFilter))return false;
+  if(query){
+    const searchable=[movie.movie,movie.year,movie.metadata?.originalTitle,movie.metadata?.description,...movie.genres,...movie.cards.flatMap(card=>[card.name,card.role,card.chinese])].filter(Boolean).join(" ");
+    if(!normalizedSearchKey(searchable).includes(query))return false;
+  }
+  return true;
+}
+function collectionMakeContinueCard(movie){
+  const button=document.createElement("button");button.type="button";button.className="movie-continue-card";
+  const imageWrap=document.createElement("span");imageWrap.className="movie-continue-poster";
+  const fallback=document.createElement("strong");fallback.textContent=movie.posterCard?.initials||makeInitials(movie.posterCard?.chinese,movie.movie);imageWrap.appendChild(fallback);
+  const source=movie.metadata?.poster||movie.posterCard?.photo||movie.posterCard?.photoFallback;
+  if(source){
+    const img=document.createElement("img");img.alt="";img.loading="lazy";img.referrerPolicy="no-referrer";img.src=source;
+    img.onload=()=>imageWrap.classList.add("has-poster");img.onerror=()=>img.remove();imageWrap.appendChild(img);
+  }
+  const copy=document.createElement("span");copy.className="movie-continue-copy";
+  const title=document.createElement("strong");title.textContent=movie.movie;
+  const count=document.createElement("small");count.textContent=movie.ownedUnique+"/"+movie.cards.length+" phiên bản";
+  const progress=document.createElement("span");progress.className="movie-shelf-progress";
+  const fill=document.createElement("span");fill.style.width=(movie.ownedUnique/movie.cards.length*100)+"%";progress.appendChild(fill);
+  const action=document.createElement("span");action.className="movie-continue-action";action.textContent="Tiếp tục →";
+  copy.append(title,count,progress,action);button.append(imageWrap,copy);
+  button.setAttribute("aria-label","Tiếp tục sưu tầm "+movie.movie+", đã có "+movie.ownedUnique+" trên "+movie.cards.length+" phiên bản");
+  button.addEventListener("click",()=>openMovieProfile(movie.movie));
+  return button;
+}
 function renderCollectionMovieShelf(){
   const shelf=$("collectionMovieShelf"),empty=$("emptyState");if(!shelf||!empty)return;
   shelf.replaceChildren();
   const allMovies=collectionMovieGroups();renderCollectionMovieFilterOptions(allMovies);
+  const statusSelect=$("collectionMovieStatusFilter");
+  if(statusSelect)statusSelect.value=collectionShelfStatusFilter;
   const query=normalizedSearchKey($("collectionSearch")?.value||"");
+  const matchesQuery=movie=>collectionMovieMatchesShelfQuery(movie,query);
+  if(collectionShelfStatusFilter==="all"||collectionShelfStatusFilter==="in-progress"){
+    const continueMovies=allMovies.filter(movie=>collectionMovieStatus(movie)==="in-progress"&&matchesQuery(movie))
+      .sort((a,b)=>(b.ownedUnique/b.cards.length)-(a.ownedUnique/a.cards.length)||compareVietnamese(a.movie,b.movie)).slice(0,4);
+    if(continueMovies.length){
+      const section=document.createElement("section");section.className="movie-continue-section";
+      const heading=document.createElement("div");heading.className="movie-continue-heading";
+      const title=document.createElement("h3");title.textContent="Tiếp tục sưu tầm";
+      const caption=document.createElement("p");caption.textContent="Các phim bạn đã bắt đầu, ưu tiên phim gần hoàn thành.";
+      heading.append(title,caption);
+      const cards=document.createElement("div");cards.className="movie-continue-grid";
+      continueMovies.forEach(movie=>cards.appendChild(collectionMakeContinueCard(movie)));
+      section.append(heading,cards);shelf.appendChild(section);
+    }
+  }
   const movies=allMovies.filter(movie=>{
     if(collectionMode==="library"&&!movie.ownedUnique)return false;
-    if(collectionShelfYearFilter==="__none__"&&movie.year)return false;
-    if(collectionShelfYearFilter!=="all"&&collectionShelfYearFilter!=="__none__"&&movie.year!==collectionShelfYearFilter)return false;
-    if(collectionShelfGenreFilter==="__none__"&&movie.genres.length)return false;
-    if(collectionShelfGenreFilter!=="all"&&collectionShelfGenreFilter!=="__none__"&&!movie.genres.some(genre=>normalizedSearchKey(genre)===collectionShelfGenreFilter))return false;
-    if(query){
-      const searchable=[movie.movie,movie.year,movie.metadata?.originalTitle,movie.metadata?.description,...movie.genres,...movie.cards.flatMap(card=>[card.name,card.role,card.chinese])].filter(Boolean).join(" ");
-      if(!normalizedSearchKey(searchable).includes(query))return false;
-    }
-    return true;
+    if(collectionShelfStatusFilter!=="all"&&collectionMovieStatus(movie)!==collectionShelfStatusFilter)return false;
+    return matchesQuery(movie);
   });
   movies.sort((a,b)=>{
     if(collectionShelfSortMode==="year")return (Number(b.year)||0)-(Number(a.year)||0)||compareVietnamese(a.movie,b.movie);
@@ -229,6 +276,9 @@ function renderCollectionMovieShelf(){
   });
   for(const movie of movies){
     const card=document.createElement("button");card.type="button";card.className="movie-shelf-card";
+    const status=collectionMovieStatus(movie);
+    const statusBadge=document.createElement("span");statusBadge.className="movie-shelf-status status-"+status;
+    statusBadge.textContent=status==="complete"?"✓ Hoàn thành":status==="in-progress"?"Đang sưu tầm":"Chưa bắt đầu";
     const info=rarityInfo[movie.posterCard?.rarity]||rarityInfo.R;
     card.style.setProperty("--movie-accent",movie.posterCard?.accent||info.color);
     const poster=document.createElement("span");poster.className="movie-shelf-poster";
@@ -248,7 +298,7 @@ function renderCollectionMovieShelf(){
     const progress=document.createElement("span");progress.className="movie-shelf-progress";progress.setAttribute("role","progressbar");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax",String(movie.cards.length));progress.setAttribute("aria-valuenow",String(movie.ownedUnique));progress.setAttribute("aria-label","Tiến độ sưu tầm "+movie.movie);
     const fill=document.createElement("span");fill.style.width=(movie.cards.length?movie.ownedUnique/movie.cards.length*100:0)+"%";progress.appendChild(fill);
     const action=document.createElement("span");action.className="movie-shelf-action";action.textContent="Mở hồ sơ phim ↗";
-    body.append(title,original,genres,progressText,progress,action);card.append(poster,body);
+    body.append(title,original,genres,progressText,progress,action);card.append(poster,body,statusBadge);
     card.setAttribute("aria-label","Mở hồ sơ phim "+movie.movie+". Đã sưu tầm "+movie.ownedUnique+" trên "+movie.cards.length+" phiên bản.");
     card.addEventListener("click",()=>openMovieProfile(movie.movie));shelf.appendChild(card);
   }

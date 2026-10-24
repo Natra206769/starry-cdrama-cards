@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — V11.2
+STARRY C-DRAMA CARDS — V11.3
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
@@ -14,6 +14,8 @@ TÍNH NĂNG
 - Yêu thích, tiến độ sưu tầm, nâng sao 1★–5★, level, hiệu ứng holographic và xếp hạng toàn kho.
 - Quản lý thẻ mẫu/thẻ tự thêm; nhập hàng loạt CSV/TSV hoặc dán bảng với xem trước, kiểm tra dữ liệu và bỏ qua thẻ trùng mặc định.
 - Danh mục phim độc lập với danh mục thẻ; nhập metadata phim hàng loạt, gộp metadata an toàn và giữ phim chưa có thẻ trong danh mục/kệ/hồ sơ.
+- Tra cứu phim bộ/điện ảnh qua TMDB, xem trước kết quả và poster rồi xác nhận lưu; token API chỉ tồn tại trong phiên tab và không được ghi vào bộ nhớ ứng dụng.
+- Hiển thị attribution TMDB; các trường được nhập từ TMDB tự hết hạn sau 180 ngày nếu chưa được chỉnh sửa thủ công.
 - Sao lưu V5 có xem trước khi khôi phục, phát hiện ID trùng và kiểm tra các mục sở hữu không khớp.
 - Tùy chỉnh bảng màu, mật độ hiển thị; hỗ trợ điều hướng bằng bàn phím và giảm chuyển động.
 
@@ -44,3 +46,10 @@ LỘ TRÌNH PHIÊN BẢN
 - V11.0: tích hợp kệ phim, bộ lọc đã lưu, sao lưu an toàn hơn và tùy chỉnh giao diện.
 - V11.1: nhập thẻ hàng loạt CSV/TSV hoặc dán bảng; xem trước, xác thực và phát hiện trùng trước khi lưu.
 - V11.2: nhập danh mục phim hàng loạt, giữ metadata cũ theo mặc định và hỗ trợ phim chưa có thẻ trong danh mục, kệ phim và hồ sơ phim.
+- V11.3: tra cứu metadata/poster bằng TMDB, xem trước trước khi lưu, không lưu token API và hết hạn trường dữ liệu TMDB sau 180 ngày.
+
+
+TMDB & QUYỀN SỬ DỤNG
+- Tra cứu tự động sử dụng TMDB API Read Access Token do người dùng tự cung cấp; token không được lưu trong localStorage, IndexedDB hoặc bản sao lưu.
+- Với dữ liệu TMDB, ứng dụng hiển thị logo và thông báo không được TMDB chứng thực. Hãy tuân thủ điều khoản và yêu cầu cấp phép hiện hành của TMDB; việc dùng miễn phí nêu trong FAQ chỉ áp dụng cho mục đích phi thương mại có ghi nguồn.
+- Các trường có nguồn TMDB được gắn mốc thời gian và tự được xóa khỏi metadata sau 180 ngày nếu không được người dùng chỉnh sửa thủ công, nhằm giới hạn lưu đệm dữ liệu nguồn.

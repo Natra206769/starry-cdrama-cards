@@ -47,7 +47,13 @@
  function merge(previous,incoming,preserve){
   const old=previous&&typeof previous==="object"?previous:{},oldGenres=Array.isArray(old.genres)?old.genres.map(String):String(old.genres||"").split(/[，,、]/).map(x=>x.trim()).filter(Boolean),out={title:String(old.title||incoming.title||"").trim()};
   for(const key of ["originalTitle","year","description","poster"]){const before=String(old[key]||"").trim(),next=String(incoming[key]||"").trim();out[key]=(preserve&&before)?before:(next||before);}
-  out.genres=preserve&&oldGenres.length?oldGenres:(incoming.genres.length?incoming.genres:oldGenres);return out;
+  out.genres=preserve&&oldGenres.length?oldGenres:(incoming.genres.length?incoming.genres:oldGenres);
+  const priorSource=old.tmdbSource;
+  if(priorSource?.fields&&typeof priorSource.fields==="object"){
+    const retained={};for(const [field,timestamp] of Object.entries(priorSource.fields))if(JSON.stringify(old[field]??(field==="genres"?[]:""))===JSON.stringify(out[field]??(field==="genres"?[]:"")))retained[field]=timestamp;
+    if(Object.keys(retained).length)out.tmdbSource={...priorSource,fields:retained};
+  }
+  return out;
  }
  async function commit(){
   const valid=rows.filter(r=>!skip(r)),bad=rows.filter(r=>r.errors.length).length,repeated=rows.filter(r=>r.duplicateBatch).length,preserve=keepOld();

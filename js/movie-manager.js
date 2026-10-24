@@ -57,6 +57,7 @@ function loadMovieMetadataForm(){
   $("saveMovieMetadataBtn").disabled=!title;
 }
 function renderMovieMetadataManager(){
+  if(typeof expireTmdbCachedMetadata==="function")expireTmdbCachedMetadata();
   const select=$("movieMetadataSelect"),list=$("movieMetadataList");if(!select||!list)return;
   const previous=select.value,entries=movieMetadataEntries(),validKeys=new Set(entries.map(entry=>entry.key));
   select.replaceChildren();const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="Chọn một phim…";select.appendChild(placeholder);
@@ -117,6 +118,15 @@ $("movieMetadataForm").addEventListener("submit",async event=>{
   const genres=[...new Set($("movieMetadataGenres").value.split(/[，,、]/).map(value=>value.trim()).filter(Boolean))];
   const next={title,originalTitle:$("movieMetadataOriginalTitle").value.trim(),year:yearText,genres,description:$("movieMetadataDescription").value.trim(),poster:moviePosterValue};
   const previousData=JSON.parse(JSON.stringify(managerData));
+  const priorMeta=managerData.movieMetadata?.[key],priorSource=priorMeta?.tmdbSource;
+  if(priorSource?.fields&&typeof priorSource.fields==="object"){
+    const retained={};
+    for(const [field,timestamp] of Object.entries(priorSource.fields)){
+      const before=priorMeta[field]??(field==="genres"?[]:""),after=next[field]??(field==="genres"?[]:"");
+      if(JSON.stringify(before)===JSON.stringify(after))retained[field]=timestamp;
+    }
+    if(Object.keys(retained).length)next.tmdbSource={...priorSource,fields:retained};
+  }
   if(!managerData.movieMetadata||typeof managerData.movieMetadata!=="object"||Array.isArray(managerData.movieMetadata))managerData.movieMetadata={};
   managerData.movieMetadata[key]=next;$("saveMovieMetadataBtn").disabled=true;$("movieMetadataSaveState").textContent="Đang lưu…";
   if(await persistManagerData()){

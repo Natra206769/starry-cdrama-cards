@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.2 Movie Import</title>
+  <title>Starry C-Drama Cards — V11.3 TMDB Lookup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -245,6 +245,50 @@
             <div class="bulk-preview-heading"><strong id="movieBulkPreviewSummary">Bản xem trước</strong><small>Dòng trùng trong cùng tệp sẽ được bỏ qua để tránh ghi đè lẫn nhau.</small></div>
             <div class="bulk-preview-table-wrap"><table class="bulk-preview-table"><thead><tr><th>Dòng</th><th>Phim / metadata</th><th>Kiểm tra</th></tr></thead><tbody id="movieBulkPreviewRows"></tbody></table></div>
             <div class="bulk-import-commit-row"><button class="primary-btn" id="commitMovieBulkBtn" type="button" disabled>Lưu danh mục phim</button><span id="movieBulkCommitHint">Chưa có dữ liệu sẵn sàng.</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="tmdb-lookup-panel" id="tmdbLookupPanel">
+        <summary><span aria-hidden="true">✦</span> Tìm thông tin phim tự động <small>TMDB · tên gốc · năm · thể loại · poster</small></summary>
+        <div class="tmdb-lookup-body">
+          <div class="tmdb-lookup-intro">
+            <p>Nhập tên phim để tìm phim bộ hoặc điện ảnh. Chọn đúng kết quả, xem trước thông tin rồi mới lưu vào danh mục Starry.</p>
+            <p class="tmdb-token-help">Tính năng này cần <strong>TMDB API Read Access Token</strong>. <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer">Mở trang API của TMDB ↗</a>. Token chỉ nằm trong ô nhập của phiên hiện tại; ứng dụng không ghi token vào localStorage, IndexedDB hoặc bản sao lưu.</p>
+          </div>
+          <label class="tmdb-token-label" for="tmdbReadAccessToken">TMDB Read Access Token
+            <div class="tmdb-token-input-row"><input id="tmdbReadAccessToken" type="password" autocomplete="off" spellcheck="false" placeholder="Dán token đọc API tại đây" /><button class="outline-btn" id="toggleTmdbTokenVisibility" type="button" aria-pressed="false">Hiện</button></div>
+          </label>
+          <div class="tmdb-search-grid">
+            <label for="tmdbSearchQuery">Tên cần tìm<input id="tmdbSearchQuery" maxlength="120" placeholder="Ví dụ: Trục Ngọc / 逐玉 / Chasing Jade" /></label>
+            <label for="tmdbSearchType">Loại nội dung<select id="tmdbSearchType"><option value="tv">Phim bộ / TV series</option><option value="movie">Phim điện ảnh</option><option value="both">Cả hai loại</option></select></label>
+          </div>
+          <label class="tmdb-target-label" for="tmdbTargetTitle">Tên phim sẽ lưu trong Starry
+            <input id="tmdbTargetTitle" maxlength="100" placeholder="Tên phim dùng để liên kết với các thẻ hiện có" />
+            <small>Giữ đúng tên phim đang dùng trên các thẻ để liên kết metadata chính xác. Có thể sửa tên này trước khi lưu.</small>
+          </label>
+          <div class="tmdb-search-actions"><button class="primary-btn" id="tmdbSearchBtn" type="button">⌕ Tìm trên TMDB</button><button class="outline-btn" id="clearTmdbSearchBtn" type="button">Xóa tìm kiếm</button></div>
+          <p class="bulk-import-status tmdb-search-status" id="tmdbSearchStatus" role="status" aria-live="polite">Chưa thực hiện tìm kiếm. Cần token đọc API để bắt đầu.</p>
+          <div class="tmdb-results" id="tmdbSearchResults" aria-live="polite" hidden></div>
+          <section class="tmdb-selected-result" id="tmdbSelectedResult" hidden aria-label="Xem trước phim được chọn">
+            <div class="tmdb-selected-heading"><strong>Kết quả đã chọn</strong><small id="tmdbSelectedSource">Dữ liệu từ TMDB</small></div>
+            <div class="tmdb-selected-card">
+              <div class="tmdb-selected-poster" id="tmdbSelectedPoster"><span>✦</span></div>
+              <div class="tmdb-selected-copy">
+                <h3 id="tmdbSelectedTitle"></h3>
+                <p id="tmdbSelectedOriginal"></p>
+                <p id="tmdbSelectedFacts"></p>
+                <p id="tmdbSelectedOverview"></p>
+                <a id="tmdbSelectedLink" href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">Mở hồ sơ nguồn ↗</a>
+              </div>
+            </div>
+            <label class="tmdb-preserve-label"><input id="tmdbPreserveExisting" type="checkbox" checked /> Giữ metadata đang có; chỉ bổ sung trường còn trống</label>
+            <button class="primary-btn tmdb-save-btn" id="saveTmdbResultBtn" type="button">Lưu thông tin vào danh mục phim</button>
+          </section>
+          <div class="tmdb-attribution">
+            <a class="tmdb-brand" href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer"><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg" alt="TMDB" loading="lazy" /><span>Thông tin và hình ảnh: TMDB</span></a>
+            <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+            <small>Phù hợp cho dự án phi thương mại theo điều khoản của TMDB. Các trường do TMDB cung cấp sẽ tự hết hạn sau 180 ngày nếu chưa được chỉnh sửa thủ công; bạn có thể tra cứu lại để làm mới.</small>
           </div>
         </div>
       </details>
@@ -543,6 +587,7 @@
   <script src="js/bulk-import.js"></script>
   <script src="js/movie-manager.js"></script>
   <script src="js/bulk-movie-import.js"></script>
+  <script src="js/tmdb-lookup.js"></script>
   <script src="js/main.js"></script>
   <script src="js/pwa.js"></script>
 </body>

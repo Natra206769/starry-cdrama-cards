@@ -40,3 +40,7 @@
   .detail-film-info p{grid-template-columns:86px minmax(0,1fr);gap:7px;font-size:10px;}
   .detail-delete-btn{min-height:44px;}
 }
+
+/* V10.0A — avoid cramped film headers in library list mode */
+.collection-list-view .mini-info{overflow:hidden}
+.collection-list-view .mini-rarity{line-height:1.4}

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V9.4</title>
+  <title>Starry C-Drama Cards — V10.0A Library</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -193,22 +193,45 @@
     <section class="app-page" id="page-collection" data-app-page="collection" hidden>
     <section class="collection-section" id="collection">
       <div class="section-heading">
-        <div><p class="eyebrow left-eyebrow">YOUR DRAMA SETS</p><h2>Bộ sưu tập <em>phim</em></h2><p class="section-subtitle">Các thẻ cùng phim được gom thành một bộ. Tiến độ tính theo số thẻ khác nhau đã sở hữu.</p></div>
-        <button class="reset-btn" id="resetBtn" title="Xóa bộ sưu tập">↻ <span>Đặt lại</span></button>
+        <div><p class="eyebrow left-eyebrow" id="collectionEyebrow">YOUR PERSONAL DRAMA LIBRARY</p><h2><span id="collectionTitlePrefix">Thư viện</span> <em id="collectionTitleEm">của tôi</em></h2><p class="section-subtitle" id="collectionSubtitle">Những thẻ bạn đã sở hữu, các phiên bản đã nâng cấp và phim đang sưu tầm.</p></div>
+        <button class="reset-btn" id="resetBtn" title="Xóa tiến độ sưu tầm">↻ <span>Đặt lại</span></button>
       </div>
-      <div class="collection-tools">
-        <label class="collection-search-wrap" for="collectionSearch"><span aria-hidden="true">⌕</span><input id="collectionSearch" type="search" placeholder="Tìm tên phim, diễn viên, vai diễn…" autocomplete="off" aria-label="Tìm trong bộ sưu tập phim" /><button type="button" id="clearCollectionSearch" class="search-clear" aria-label="Xóa từ khóa tìm kiếm" hidden>×</button></label>
+
+      <div class="collection-overview" id="collectionOverview" aria-label="Tổng quan thư viện"></div>
+
+      <div class="collection-mode-tabs" role="tablist" aria-label="Chế độ thư viện">
+        <button class="collection-mode-tab active" type="button" role="tab" data-collection-mode="library" aria-selected="true"><span aria-hidden="true">▦</span> Thư viện của tôi</button>
+        <button class="collection-mode-tab" type="button" role="tab" data-collection-mode="discover" aria-selected="false"><span aria-hidden="true">✧</span> Khám phá kho thẻ</button>
+      </div>
+
+      <div class="collection-tools collection-tools-v10">
+        <label class="collection-search-wrap" for="collectionSearch"><span aria-hidden="true">⌕</span><input id="collectionSearch" type="search" placeholder="Tìm phim, diễn viên, vai diễn…" autocomplete="off" aria-label="Tìm trong thư viện" /><button type="button" id="clearCollectionSearch" class="search-clear" aria-label="Xóa từ khóa tìm kiếm" hidden>×</button></label>
+        <div class="collection-toolbar-actions">
+          <label class="collection-select-wrap"><span>Sắp xếp</span><select id="collectionSortSelect" aria-label="Sắp xếp thẻ"><option value="rarity">Độ hiếm</option><option value="name">Tên A–Z</option><option value="stars">Số sao</option><option value="level">Level</option><option value="copies">Số bản sao</option></select></label>
+          <div class="collection-view-switch" role="group" aria-label="Kiểu hiển thị">
+            <button type="button" class="collection-view-btn active" data-collection-view="grid" aria-pressed="true" aria-label="Xem dạng lưới" title="Dạng lưới">▦</button>
+            <button type="button" class="collection-view-btn" data-collection-view="list" aria-pressed="false" aria-label="Xem dạng danh sách" title="Dạng danh sách">☰</button>
+          </div>
+        </div>
         <span class="collection-result-count" id="collectionResultCount" aria-live="polite">0 phim · 0 thẻ phù hợp</span>
       </div>
-      <div class="collection-rarity-summary" id="collectionRaritySummary" aria-label="Tổng hợp thẻ theo cấp độ trên toàn hệ thống"></div>
-      <div class="filters" role="group" aria-label="Lọc bộ sưu tập">
-        <button class="filter active" data-filter="all" aria-pressed="true">Tất cả thẻ <span id="countAll">0</span></button>
-        <button class="filter" data-filter="missing" aria-pressed="false">Chưa sưu tầm</button>
-        <button class="filter" data-filter="male" aria-pressed="false">Nam</button>
-        <button class="filter" data-filter="female" aria-pressed="false">Nữ</button>
-        <button class="filter" data-filter="favorites" aria-pressed="false">Đã đánh dấu ♡</button>
+
+      <div class="collection-filter-panel">
+        <div class="filters collection-filter-chips" role="group" aria-label="Lọc thư viện">
+          <button class="filter active" data-filter="all" aria-pressed="true"><span id="countAllLabel">Thẻ của tôi</span> <span id="countAll">0</span></button>
+          <button class="filter" data-filter="missing" aria-pressed="false">Chưa sưu tầm</button>
+          <button class="filter" data-filter="male" aria-pressed="false">Nam</button>
+          <button class="filter" data-filter="female" aria-pressed="false">Nữ</button>
+          <button class="filter" data-filter="favorites" aria-pressed="false">Yêu thích ♡</button>
+        </div>
+        <div class="collection-extra-filters">
+          <label class="collection-select-wrap"><span>Độ hiếm</span><select id="collectionRarityFilter" aria-label="Lọc theo độ hiếm"><option value="all">Tất cả</option><option value="N">N</option><option value="R">R</option><option value="SR">SR</option><option value="SSR">SSR</option><option value="UR">UR</option><option value="SP">SP</option></select></label>
+          <label class="collection-select-wrap"><span>Phong cách</span><select id="collectionStyleFilter" aria-label="Lọc theo phong cách"><option value="all">Tất cả</option></select></label>
+        </div>
       </div>
-      <div class="empty-state" id="emptyState"><div>✧</div><h3>Chưa mở thẻ nào</h3><p>Những thẻ mờ bên dưới đang chờ bạn sưu tầm. Khi sở hữu các thẻ cùng phim, tiến độ của bộ sẽ tăng lên.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
+
+      <div class="collection-rarity-summary" id="collectionRaritySummary" aria-label="Tiến độ sưu tầm theo cấp độ hiếm"></div>
+      <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Các thẻ bạn sở hữu sẽ xuất hiện tại đây. Hãy mở thẻ hoặc chuyển sang Khám phá kho thẻ để xem toàn bộ danh mục.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
       <div class="collection-sets" id="collectionSets"></div>
     </section>
     </section>

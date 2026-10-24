@@ -42,6 +42,18 @@ document.querySelectorAll(".filter").forEach(button=>button.addEventListener("cl
 const collectionSearchInput=$("collectionSearch"),clearCollectionSearchButton=$("clearCollectionSearch");
 collectionSearchInput.addEventListener("input",()=>{clearCollectionSearchButton.hidden=!collectionSearchInput.value;renderCollection();});
 clearCollectionSearchButton.addEventListener("click",()=>{collectionSearchInput.value="";clearCollectionSearchButton.hidden=true;renderCollection();collectionSearchInput.focus();});
+document.querySelectorAll("[data-collection-mode]").forEach(button=>button.addEventListener("click",()=>{
+  collectionMode=button.dataset.collectionMode;
+  activeFilter="all";
+  renderCollection();
+}));
+document.querySelectorAll("[data-collection-view]").forEach(button=>button.addEventListener("click",()=>{
+  collectionViewMode=button.dataset.collectionView;
+  renderCollection();
+}));
+$("collectionSortSelect").addEventListener("change",event=>{collectionSortMode=event.target.value;renderCollection();});
+$("collectionRarityFilter").addEventListener("change",event=>{collectionRarityFilter=event.target.value;renderCollection();});
+$("collectionStyleFilter").addEventListener("change",event=>{collectionStyleFilter=event.target.value;renderCollection();});
 $("resetBtn").addEventListener("click",()=>{
   if(!Object.keys(state.owned).length&&!state.favorites.length&&!Object.keys(state.cardProgress||{}).length){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
   if(confirm("Xóa toàn bộ tiến độ sưu tầm và yêu thích? Danh sách thẻ/phim sẽ được giữ nguyên.")){

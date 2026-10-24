@@ -21,19 +21,27 @@ function collectionMatchesFilter(card){
   }
   return true;
 }
+function readCollectionProgressForSort(id){
+  const saved=state.cardProgress&&typeof state.cardProgress==="object"?state.cardProgress[id]:null;
+  if(!saved||typeof saved!=="object")return {stars:1,level:1};
+  return {
+    stars:Math.max(1,Math.min(5,Math.floor(Number(saved.stars)||1))),
+    level:Math.max(1,Math.min(MAX_CARD_LEVEL,Math.floor(Number(saved.level)||1)))
+  };
+}
 function compareCollectionCards(a,b,rarityOrder){
   const ownedA=Number(state.owned[a.id])||0,ownedB=Number(state.owned[b.id])||0;
   if(collectionSortMode==="name")return compareVietnamese(a.name,b.name)||compareVietnamese(a.movie,b.movie);
   if(collectionSortMode==="copies")return ownedB-ownedA||compareVietnamese(a.name,b.name);
   if(collectionSortMode==="stars"){
     if(Boolean(ownedA)!==Boolean(ownedB))return Number(Boolean(ownedB))-Number(Boolean(ownedA));
-    const starDiff=getCardProgress(b.id).stars-getCardProgress(a.id).stars;
-    return starDiff||(getCardProgress(b.id).level-getCardProgress(a.id).level)||compareVietnamese(a.name,b.name);
+    const progressA=readCollectionProgressForSort(a.id),progressB=readCollectionProgressForSort(b.id);
+    return (progressB.stars-progressA.stars)||(progressB.level-progressA.level)||compareVietnamese(a.name,b.name);
   }
   if(collectionSortMode==="level"){
     if(Boolean(ownedA)!==Boolean(ownedB))return Number(Boolean(ownedB))-Number(Boolean(ownedA));
-    const levelDiff=getCardProgress(b.id).level-getCardProgress(a.id).level;
-    return levelDiff||(getCardProgress(b.id).stars-getCardProgress(a.id).stars)||compareVietnamese(a.name,b.name);
+    const progressA=readCollectionProgressForSort(a.id),progressB=readCollectionProgressForSort(b.id);
+    return (progressB.level-progressA.level)||(progressB.stars-progressA.stars)||compareVietnamese(a.name,b.name);
   }
   return (rarityOrder[a.rarity]??99)-(rarityOrder[b.rarity]??99)||compareVietnamese(a.name,b.name);
 }

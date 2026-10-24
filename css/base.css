@@ -38,3 +38,26 @@ footer{border-top:1px solid #ffffff0d;padding:23px clamp(20px,6vw,90px);display:
 .credits-section a:hover{color:#fff;}
 .credits-note{font-size:10px;color:#878ba1;}
 @media(max-width:650px){.credits-section{font-size:10px;padding:12px;}}
+
+
+/* V10.8 — personalizable accent palettes and card density */
+body[data-ui-theme="rose"]{--gold:#f0a7c6;--line:rgba(240,167,198,.24);--blue:#b9a0ff;--pink:#f0a7c6}
+body[data-ui-theme="ocean"]{--gold:#8dd7ff;--line:rgba(141,215,255,.24);--blue:#8dd7ff;--pink:#9bb8ff}
+body[data-ui-theme="jade"]{--gold:#a8e0bd;--line:rgba(168,224,189,.24);--blue:#84d8d2;--pink:#a8e0bd}
+body[data-ui-theme="violet"]{--gold:#c5a4ff;--line:rgba(197,164,255,.25);--blue:#91b8ff;--pink:#e2a8ff}
+body[data-card-density="compact"] .collection-grid{gap:8px}
+body[data-card-density="compact"] .mini-info{padding-top:8px;padding-bottom:8px}
+body[data-card-density="compact"] .mini-info h3{font-size:clamp(10px,1vw,12px)}
+body[data-card-density="compact"] .mini-info p{font-size:9px}
+.skip-link{position:fixed;top:8px;left:8px;z-index:2000;padding:10px 14px;transform:translateY(-150%);border:1px solid var(--gold);border-radius:8px;background:var(--panel);color:var(--text);font-size:12px}
+.skip-link:focus{transform:translateY(0);outline:2px solid var(--gold);outline-offset:2px}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.ui-preferences-card{grid-column:1/-1;max-width:none}
+.ui-preferences-controls{display:grid;grid-template-columns:minmax(100px,160px) minmax(140px,1fr);gap:10px 13px;align-items:center;margin-top:14px}
+.ui-preferences-controls>label{color:var(--muted);font-size:11px}
+.ui-preferences-controls>select{width:100%;min-height:38px;padding:8px 10px;border:1px solid #ffffff20;border-radius:8px;background:#0c0f1a;color:var(--text);font:inherit;font-size:12px}
+.ui-preferences-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.ui-preferences-actions button{min-height:38px;padding:9px 13px;font-size:11px}
+.ui-preferences-note{grid-column:1/-1;margin:0;color:var(--muted);font-size:10px}
+@media(max-width:600px){.ui-preferences-controls{grid-template-columns:1fr;gap:6px}.ui-preferences-actions{display:grid;grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}

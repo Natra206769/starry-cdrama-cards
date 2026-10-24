@@ -18,7 +18,14 @@ function normalizeManagerData(saved){
   const raw=saved&&typeof saved==="object"?saved:{};
   const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>{const clean=normalizeSavedNameFields({...card});delete clean.costume;return [id,clean];})):{};
   const movieMetadata=raw.movieMetadata&&typeof raw.movieMetadata==="object"&&!Array.isArray(raw.movieMetadata)?raw.movieMetadata:{};
-  return {custom:Array.isArray(raw.custom)?raw.custom.map(card=>normalizeCard(card)):[],overrides,hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[],movieMetadata};
+  const rawPreferences=raw.moviePreferences&&typeof raw.moviePreferences==="object"&&!Array.isArray(raw.moviePreferences)?raw.moviePreferences:{};
+  const moviePreferences=Object.fromEntries(Object.entries(rawPreferences).map(([key,value])=>[String(key),{
+    favorite:Boolean(value&&value.favorite),pinned:Boolean(value&&value.pinned),wantToCollect:Boolean(value&&value.wantToCollect)
+  }]));
+  const collectionPresets=Array.isArray(raw.collectionPresets)?raw.collectionPresets.filter(item=>item&&typeof item==="object"&&String(item.name||"").trim()&&item.settings&&typeof item.settings==="object").slice(0,50).map(item=>({
+    id:String(item.id||""),name:String(item.name).trim().slice(0,60),settings:item.settings
+  })):[];
+  return {custom:Array.isArray(raw.custom)?raw.custom.map(card=>normalizeCard(card)):[],overrides,hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[],movieMetadata,moviePreferences,collectionPresets};
 }
 async function readManagerData(){
   try{

@@ -39,7 +39,8 @@
     </div>
   </header>
 
-  <main>
+  <a class="skip-link" href="#mainContent">Bỏ qua đến nội dung</a>
+  <main id="mainContent">
     <nav class="main-nav" aria-label="Điều hướng chính">
       <button class="nav-tab active" type="button" data-page="open" aria-current="page"><span>✦</span> Mở thẻ</button>
       <button class="nav-tab" type="button" data-page="collection"><span>▦</span> Bộ sưu tập</button>
@@ -259,6 +260,12 @@
         </div>
         <span class="collection-result-count" id="collectionResultCount" aria-live="polite">0 phim · 0 thẻ phù hợp</span>
       </div>
+      <div class="collection-presets" aria-label="Bộ lọc đã lưu">
+        <label for="collectionPresetSelect">Bộ lọc đã lưu</label>
+        <select id="collectionPresetSelect" aria-label="Chọn bộ lọc đã lưu"><option value="">Chọn bộ lọc đã lưu…</option></select>
+        <button type="button" class="outline-btn" id="saveCollectionPresetBtn">☆ Lưu bộ lọc hiện tại</button>
+        <button type="button" class="outline-btn" id="deleteCollectionPresetBtn" disabled>Xóa</button>
+      </div>
 
       <div class="collection-filter-panel">
         <div class="filters collection-filter-chips" role="group" aria-label="Lọc thư viện">
@@ -279,6 +286,7 @@
         <label class="collection-select-wrap"><span>Năm</span><select id="collectionMovieYearFilter" aria-label="Lọc phim theo năm"><option value="all">Tất cả năm</option></select></label>
         <label class="collection-select-wrap"><span>Sắp xếp phim</span><select id="collectionMovieSortSelect" aria-label="Sắp xếp kệ phim"><option value="title">Tên A–Z</option><option value="year">Năm mới nhất</option><option value="progress">Tiến độ sưu tầm</option><option value="cards">Số phiên bản thẻ</option></select></label>
         <label class="collection-select-wrap"><span>Trạng thái</span><select id="collectionMovieStatusFilter" aria-label="Lọc phim theo trạng thái sưu tầm"><option value="all">Tất cả trạng thái</option><option value="in-progress">Đang sưu tầm</option><option value="complete">Hoàn thành</option><option value="not-started">Chưa bắt đầu</option></select></label>
+        <label class="collection-select-wrap"><span>Danh sách phim</span><select id="collectionMovieFocusFilter" aria-label="Lọc phim yêu thích, muốn sưu tầm hoặc đã ghim"><option value="all">Tất cả phim</option><option value="favorites">Phim yêu thích</option><option value="watchlist">Muốn sưu tầm</option><option value="pinned">Phim đã ghim</option></select></label>
       </div>
       <div class="collection-rarity-summary" id="collectionRaritySummary" aria-label="Tiến độ sưu tầm theo cấp độ hiếm"></div>
       <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Các thẻ bạn sở hữu sẽ xuất hiện tại đây. Hãy mở thẻ hoặc chuyển sang Khám phá kho thẻ để xem toàn bộ danh mục.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
@@ -383,6 +391,18 @@
         <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng diễn viên, phim, vai diễn và độ hiếm, ứng dụng sẽ hỏi lại trước khi thêm thẻ có thông tin trùng.</p></article>
         <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Độ hot tính theo số phim khác nhau được ghi nhận trong kho dữ liệu. Điểm Nhan sắc = P / N + N, trong đó P là tổng điểm các biến thể thẻ khác nhau trong kho hiện tại và N là số phim khác nhau của diễn viên. Điểm không phụ thuộc các thẻ người chơi sở hữu.</p></article>
       </div>
+      <section class="info-card ui-preferences-card" aria-labelledby="uiPreferencesTitle">
+        <span>08</span><h3 id="uiPreferencesTitle">Tùy chỉnh giao diện</h3>
+        <p>Chọn màu nhấn và mật độ hiển thị. Tùy chọn lưu riêng trên trình duyệt và có thể đi kèm bản sao lưu V11.0.</p>
+        <div class="ui-preferences-controls">
+          <label for="uiThemeSelect">Bảng màu</label>
+          <select id="uiThemeSelect"><option value="classic">Tinh quang vàng</option><option value="rose">Hoa hồng</option><option value="ocean">Đại dương</option><option value="jade">Ngọc bích</option><option value="violet">Tím thiên hà</option></select>
+          <label for="uiDensitySelect">Mật độ thẻ</label>
+          <select id="uiDensitySelect"><option value="comfortable">Thoáng</option><option value="compact">Gọn</option></select>
+          <div class="ui-preferences-actions"><button type="button" class="primary-btn" id="saveUiPrefsBtn">Lưu giao diện</button><button type="button" class="outline-btn" id="resetUiPrefsBtn">Đặt mặc định</button></div>
+          <p class="ui-preferences-note" id="uiPreferencesNote" aria-live="polite">Tùy chỉnh được lưu riêng, không thay đổi dữ liệu sưu tầm.</p>
+        </div>
+      </section>
       <details class="credits-section">
     <summary>✦ Nguồn ảnh mẫu & giấy phép sử dụng</summary>
     <p>Các ảnh được tải trực tiếp từ Wikimedia Commons. Giao diện có cắt khung ảnh bằng CSS; vui lòng mở trang nguồn để xem thông tin đầy đủ và điều kiện giấy phép.</p>

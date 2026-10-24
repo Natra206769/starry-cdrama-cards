@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — V10.2
+STARRY C-DRAMA CARDS — V11.0
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
@@ -6,10 +6,14 @@ TÍNH NĂNG
 - Thư viện cá nhân và danh mục khám phá toàn bộ thẻ; tìm kiếm, lọc, sắp xếp và xem dạng lưới/danh sách.
 - Kệ phim trực quan bằng poster; lọc theo năm/thể loại/trạng thái, sắp xếp theo tên, năm, tiến độ hoặc số phiên bản.
 - Lối tắt “Tiếp tục sưu tầm” cho phim đang dang dở và nhãn trạng thái chưa bắt đầu/đang sưu tầm/hoàn thành.
+- Yêu thích, ghim và đánh dấu muốn sưu tầm phim; ưu tiên phim ghim/yêu thích trên kệ.
+- Thống kê phim hoàn thành và thẻ còn thiếu; hồ sơ phim có danh sách phiên bản còn thiếu và thao tác yêu thích/ghim.
+- Bộ lọc sưu tầm có thể lưu, áp dụng lại hoặc xóa; dữ liệu bộ lọc và phim yêu thích nằm trong IndexedDB và bản sao lưu.
 - Trang phim và hồ sơ diễn viên liên kết với từng phiên bản thẻ.
 - Quản lý metadata dùng chung theo phim: poster, tên gốc, năm phát hành, thể loại, mô tả.
 - Yêu thích, tiến độ sưu tầm, nâng sao 1★–5★, level, hiệu ứng holographic và xếp hạng toàn kho.
-- Quản lý thẻ mẫu/thẻ tự thêm; sao lưu và khôi phục JSON bao gồm dữ liệu phim.
+- Quản lý thẻ mẫu/thẻ tự thêm; sao lưu V5 có xem trước khi khôi phục, phát hiện ID trùng và kiểm tra các mục sở hữu không khớp.
+- Tùy chỉnh bảng màu, mật độ hiển thị; hỗ trợ điều hướng bằng bàn phím và giảm chuyển động.
 
 MÃ NGUỒN
 - index.html, css/: giao diện và bố cục.
@@ -21,7 +25,18 @@ MÃ NGUỒN
 - js/pwa.js, service-worker.js: PWA và cập nhật.
 
 DỮ LIỆU & PHÁT HÀNH
-- Sở hữu/yêu thích/nâng cấp lưu trong localStorage; thẻ cá nhân, ảnh và metadata phim lưu trong IndexedDB của trình duyệt/thiết bị. Dữ liệu sao lưu JSON có cả metadata phim.
+- Sở hữu/yêu thích/nâng cấp và tùy chỉnh giao diện lưu trong localStorage; thẻ cá nhân, ảnh, metadata, yêu thích/ghim phim và bộ lọc đã lưu nằm trong IndexedDB của trình duyệt/thiết bị. Bản sao lưu JSON V5 bao gồm cả hai nhóm dữ liệu.
 - Không đổi STORAGE_KEY, DB_NAME, DB_VERSION hoặc xóa localStorage/IndexedDB nếu chưa có migration tương thích.
 - Triển khai index.html, css/, js/, data/, service-worker.js, manifest.webmanifest, favicon và icons/ lên GitHub Pages.
 - Mỗi bản phát hành phải tăng CACHE_NAME trong service-worker.js.
+
+
+LỘ TRÌNH PHIÊN BẢN
+- V10.3: yêu thích, ghim phim và danh sách muốn sưu tầm.
+- V10.4: hồ sơ phim hiển thị rõ phiên bản còn thiếu và thao tác liên quan.
+- V10.5: thống kê phim hoàn thành, phim đang sưu tầm và thẻ còn thiếu.
+- V10.6: lưu, áp dụng và xóa bộ lọc tìm kiếm.
+- V10.7: bản sao lưu V5 có bản xem trước, cảnh báo trùng và kiểm tra dữ liệu sở hữu.
+- V10.8: bảng màu và mật độ hiển thị tùy chỉnh.
+- V10.9: cải thiện điều hướng bàn phím, focus và hỗ trợ giảm chuyển động.
+- V11.0: tích hợp các cải tiến, kiểm tra mã nguồn và cập nhật cache PWA.

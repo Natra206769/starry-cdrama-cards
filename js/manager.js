@@ -197,20 +197,66 @@ $("restoreDefaultsBtn").addEventListener("click",async()=>{
   const previous=JSON.parse(JSON.stringify(managerData));managerData.hidden=[];managerData.overrides={};managerData.deleted=[];
   if(await persistManagerData()){rebuildCharacters();showToast("Đã khôi phục các thẻ mẫu.");}else managerData=normalizeManagerData(previous);
 });
+function summarizeBackupForRestore(backup){
+  const raw=backup.managerData||{},custom=Array.isArray(raw.custom)?raw.custom:[],ids=new Set(),duplicateIds=new Set(),signatures=new Set(),duplicateEntries=new Set();
+  custom.forEach(card=>{
+    const id=String(card?.id||"");
+    if(id&&(ids.has(id)||baseCharacters.some(base=>base.id===id)))duplicateIds.add(id);
+    if(id)ids.add(id);
+    const signature=normalizedSearchKey([card?.name,card?.movie,card?.role,card?.rarity].join("|"));
+    if(signature&&signatures.has(signature))duplicateEntries.add(signature);
+    if(signature)signatures.add(signature);
+  });
+  const owned=backup.state?.owned&&typeof backup.state.owned==="object"&&!Array.isArray(backup.state.owned)?backup.state.owned:{};
+  const copies=Object.values(owned).reduce((sum,value)=>sum+Math.max(0,Number(value)||0),0);
+  const unique=Object.values(owned).filter(value=>(Number(value)||0)>0).length;
+  const hidden=new Set(Array.isArray(raw.hidden)?raw.hidden:[]),deleted=new Set(Array.isArray(raw.deleted)?raw.deleted:[]);
+  const allowedIds=new Set(baseCharacters.filter(card=>!hidden.has(card.id)&&!deleted.has(card.id)).map(card=>card.id));
+  custom.forEach(card=>{if(card?.id)allowedIds.add(String(card.id));});
+  const staleOwned=Object.entries(owned).filter(([id,value])=>(Number(value)||0)>0&&!allowedIds.has(id)).length;
+  return {customCount:custom.length,metadataCount:Object.keys(raw.movieMetadata&&typeof raw.movieMetadata==="object"?raw.movieMetadata:{}).length,
+    preferenceCount:Object.keys(raw.moviePreferences&&typeof raw.moviePreferences==="object"?raw.moviePreferences:{}).length,
+    presetCount:Array.isArray(raw.collectionPresets)?raw.collectionPresets.length:0,copies,unique,duplicateIds:duplicateIds.size,
+    duplicateEntries:duplicateEntries.size,staleOwned};
+}
 $("exportBtn").addEventListener("click",()=>{
-  const backup={app:"Starry C-Drama Cards",version:4,createdAt:new Date().toISOString(),managerData,state};
-  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="starry-cbiz-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("Đã tạo bản sao lưu JSON.");
+  const backup={app:"Starry C-Drama Cards",version:5,createdAt:new Date().toISOString(),managerData,state,uiPreferences};
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="starry-cbiz-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("Đã tạo bản sao lưu JSON V5.");
 });
 $("importBtn").addEventListener("click",()=>$("importFile").click());
 $("importFile").addEventListener("change",async event=>{
   const file=event.target.files?.[0];if(!file)return;
   try{
-    const backup=JSON.parse(await file.text());if(backup.app!=="Starry C-Drama Cards"||!backup.managerData||!backup.state)throw new Error("Tệp không đúng định dạng sao lưu của game.");
-    if(!confirm("Khôi phục sẽ thay thế thẻ cá nhân, dữ liệu phim đã quản lý, chỉnh sửa, danh sách thẻ đã xóa/ẩn và bộ sưu tập hiện tại. Bạn có chắc không?"))return;
+    const backup=JSON.parse(await file.text());
+    if(backup.app!=="Starry C-Drama Cards"||!backup.managerData||typeof backup.managerData!=="object"||!backup.state||typeof backup.state!=="object"||Array.isArray(backup.state))
+      throw new Error("Tệp không đúng định dạng sao lưu của game.");
+    const report=summarizeBackupForRestore(backup);
+    const created=backup.createdAt?new Date(backup.createdAt).toLocaleString():"Không rõ";
+    const summary="BẢN XEM TRƯỚC KHÔI PHỤC\n\nNgày tạo: "+created+
+      "\nThẻ tự thêm: "+report.customCount+"\nHồ sơ metadata phim: "+report.metadataCount+
+      "\nPhim yêu thích/ghim: "+report.preferenceCount+"\nBộ lọc đã lưu: "+report.presetCount+
+      "\nThẻ sở hữu khác nhau: "+report.unique+"\nTổng bản sao: "+report.copies+
+      "\nID thẻ trùng: "+report.duplicateIds+"\nThẻ tự thêm trùng thông tin: "+report.duplicateEntries+
+      "\nMục sở hữu không khớp danh mục trong tệp: "+report.staleOwned+
+      "\n\nKhôi phục sẽ thay thế dữ liệu hiện tại. Bạn chỉ nên tiếp tục khi đây là đúng tệp sao lưu.";
+    if(!confirm(summary))return;
+    if(report.duplicateIds||report.duplicateEntries||report.staleOwned){
+      const warning="CẢNH BÁO KIỂM TRA\n"+
+        (report.duplicateIds?"• Có "+report.duplicateIds+" ID thẻ bị trùng.\n":"")+
+        (report.duplicateEntries?"• Có "+report.duplicateEntries+" thẻ tự thêm trùng thông tin.\n":"")+
+        (report.staleOwned?"• Có "+report.staleOwned+" mục sở hữu không khớp danh mục.\n":"")+
+        "\nTiếp tục có thể tạo dữ liệu lặp hoặc mục sở hữu bị bỏ qua. Bạn vẫn muốn khôi phục?";
+      if(!confirm(warning))return;
+    }
     const previous=JSON.parse(JSON.stringify(managerData));managerData=normalizeManagerData(backup.managerData);
     if(await persistManagerData()){
-      state={owned:backup.state.owned&&typeof backup.state.owned==="object"?backup.state.owned:{},favorites:Array.isArray(backup.state.favorites)?backup.state.favorites:[],cardProgress:backup.state.cardProgress&&typeof backup.state.cardProgress==="object"?backup.state.cardProgress:{}};
-      saveState();clearCharacterForm();rebuildCharacters();showToast("Đã khôi phục dữ liệu từ bản sao lưu.");
+      const rawOwned=backup.state.owned&&typeof backup.state.owned==="object"&&!Array.isArray(backup.state.owned)?backup.state.owned:{};
+      state={owned:rawOwned,favorites:Array.isArray(backup.state.favorites)?backup.state.favorites:[],cardProgress:backup.state.cardProgress&&typeof backup.state.cardProgress==="object"&&!Array.isArray(backup.state.cardProgress)?backup.state.cardProgress:{}};
+      saveState();
+      if(backup.uiPreferences&&typeof backup.uiPreferences==="object"){
+        uiPreferences=normalizeUiPreferences(backup.uiPreferences);persistUiPreferences();applyUiPreferencesToPage();
+      }
+      clearCharacterForm();rebuildCharacters();showToast("Đã khôi phục dữ liệu từ bản sao lưu.");
     }else managerData=normalizeManagerData(previous);
   }catch(error){showToast(error.message||"Không thể đọc tệp sao lưu.");}
   finally{event.target.value="";}

@@ -113,6 +113,18 @@ function renderLibraryProfile(){
   if(isMovie){const actors=libraryUniqueBy(cards,card=>normalizedSearchKey(card.name));stats.append(libraryBuildStat("Diễn viên",actors.length),libraryBuildStat("Phiên bản thẻ",cards.length),libraryBuildStat("Đã sở hữu",ownedCount),libraryBuildStat("Bản sao",copies));}
   else{const movies=libraryUniqueBy(cards.filter(card=>!isGenericCollectionTitle(card.movie)),card=>normalizedSearchKey(card.movie));stats.append(libraryBuildStat("Phim",movies.length),libraryBuildStat("Phiên bản thẻ",cards.length),libraryBuildStat("Phiên bản đã có",ownedCount),libraryBuildStat("Bản sao",copies));}
   copy.appendChild(stats);
+  if(isMovie){
+    const preference=getMoviePreference(profile.value),actions=document.createElement("div");actions.className="library-movie-actions";
+    const makePreferenceButton=(field,onText,offText)=>{
+      const button=document.createElement("button");button.type="button";button.className="outline-btn library-movie-preference"+(preference[field]?" is-active":"");
+      button.textContent=preference[field]?onText:offText;button.setAttribute("aria-pressed",String(preference[field]));
+      button.addEventListener("click",()=>toggleMoviePreference(profile.value,field));return button;
+    };
+    actions.append(makePreferenceButton("favorite","♥ Đã yêu thích","♡ Yêu thích phim"),
+      makePreferenceButton("wantToCollect","✓ Trong danh sách muốn sưu tầm","＋ Muốn sưu tầm"),
+      makePreferenceButton("pinned","⌖ Đã ghim lên kệ","⌁ Ghim lên kệ"));
+    copy.appendChild(actions);
+  }
   const progress=document.createElement("div");progress.className="library-profile-progress";progress.setAttribute("role","progressbar");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax",String(cards.length));progress.setAttribute("aria-valuenow",String(ownedCount));progress.setAttribute("aria-label","Tiến độ sưu tầm của "+profile.value);
   const progressFill=document.createElement("span");progressFill.style.width=(cards.length?ownedCount/cards.length*100:0)+"%";progress.appendChild(progressFill);copy.appendChild(progress);
   if(isMovie){
@@ -132,6 +144,25 @@ function renderLibraryProfile(){
     const section=libraryMakeSection("Các phim đã xuất hiện",movies.length+" phim"),chipList=document.createElement("div");chipList.className="library-profile-chip-list";
     movies.forEach(movie=>{const variants=cards.filter(card=>normalizedSearchKey(card.movie)===normalizedSearchKey(movie.movie)),movieOwned=variants.filter(card=>(Number(state.owned[card.id])||0)>0).length;chipList.appendChild(libraryMakeChip(movie.movie,variants.length+" phiên bản · "+movieOwned+" đã có",variants.length,()=>openMovieProfile(movie.movie,{returnToCard:profile.returnToCard})));});
     if(!movies.length){const empty=document.createElement("p");empty.className="library-profile-empty";empty.textContent="Các thẻ hiện tại chưa gắn tên phim riêng.";section.section.appendChild(empty);}else section.section.appendChild(chipList);body.appendChild(section);
+  }
+  if(isMovie){
+    const missingCards=cards.filter(card=>(Number(state.owned[card.id])||0)<=0);
+    const missingSection=libraryMakeSection("Còn thiếu",missingCards.length+" phiên bản");
+    if(!missingCards.length){
+      const complete=document.createElement("p");complete.className="library-profile-empty";complete.textContent="Bạn đã sở hữu tất cả phiên bản thẻ thuộc phim này. ✦";missingSection.section.appendChild(complete);
+    }else{
+      const missingList=document.createElement("div");missingList.className="library-profile-missing-list";
+      missingCards.sort((a,b)=>compareVietnamese(a.name,b.name)).forEach(card=>{
+        const item=document.createElement("button");item.type="button";item.className="library-profile-missing-item";
+        const name=document.createElement("strong");name.textContent=card.name;
+        const detail=document.createElement("small");detail.textContent=[card.rarity,card.role].filter(Boolean).join(" · ")||"Chưa sưu tầm";
+        const action=document.createElement("span");action.textContent="Xem thẻ ↗";
+        item.append(name,detail,action);item.addEventListener("click",()=>{closeLibraryProfile();showCharacterDetails(card.id,true);});
+        missingList.appendChild(item);
+      });
+      missingSection.section.appendChild(missingList);
+    }
+    body.appendChild(missingSection);
   }
   const rarityOrder={SP:0,UR:1,SSR:2,SR:3,R:4,N:5},ordered=cards.slice().sort((a,b)=>(rarityOrder[a.rarity]??99)-(rarityOrder[b.rarity]??99)||compareVietnamese(a.name,b.name));
   const section=libraryMakeSection(isMovie?"Các thẻ thuộc phim":"Các phiên bản thẻ của diễn viên",ordered.length+" phiên bản"),grid=document.createElement("div");grid.className="library-profile-card-grid";

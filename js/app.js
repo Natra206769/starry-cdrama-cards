@@ -9,6 +9,19 @@ function updateStats(){
   if($("page-leaderboard")?.classList.contains("active"))renderLeaderboard();
 }
 function showToast(message){const toast=$("toast");toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2800);}
+function applyUiPreferencesToPage(){
+  uiPreferences=normalizeUiPreferences(uiPreferences);
+  document.body.dataset.uiTheme=uiPreferences.theme;document.body.dataset.cardDensity=uiPreferences.density;
+  if($("uiThemeSelect"))$("uiThemeSelect").value=uiPreferences.theme;
+  if($("uiDensitySelect"))$("uiDensitySelect").value=uiPreferences.density;
+}
+function saveUiPreferencesFromControls(){
+  uiPreferences=normalizeUiPreferences({theme:$("uiThemeSelect")?.value,density:$("uiDensitySelect")?.value});
+  if(persistUiPreferences()){
+    applyUiPreferencesToPage();$("uiPreferencesNote").textContent="Đã lưu giao diện trên thiết bị này.";showToast("Đã áp dụng giao diện.");
+  }else{$("uiPreferencesNote").textContent="Không thể lưu tùy chỉnh. Hãy kiểm tra dung lượng trình duyệt.";showToast("Không lưu được tùy chỉnh giao diện.");}
+}
+applyUiPreferencesToPage();
 
 
 function showAppPage(pageName){
@@ -63,6 +76,16 @@ $("collectionMovieGenreFilter").addEventListener("change",event=>{collectionShel
 $("collectionMovieYearFilter").addEventListener("change",event=>{collectionShelfYearFilter=event.target.value;renderCollection();});
 $("collectionMovieSortSelect").addEventListener("change",event=>{collectionShelfSortMode=event.target.value;renderCollection();});
 $("collectionMovieStatusFilter").addEventListener("change",event=>{collectionShelfStatusFilter=event.target.value;renderCollection();});
+$("collectionMovieFocusFilter").addEventListener("change",event=>{collectionShelfFocusFilter=event.target.value;renderCollection();});
+$("collectionPresetSelect").addEventListener("change",event=>{collectionSelectedPresetId=event.target.value;if(collectionSelectedPresetId)applyCollectionPreset(collectionSelectedPresetId);else renderCollectionPresetOptions();});
+$("saveCollectionPresetBtn").addEventListener("click",saveCollectionPreset);
+$("deleteCollectionPresetBtn").addEventListener("click",deleteCollectionPreset);
+$("saveUiPrefsBtn").addEventListener("click",saveUiPreferencesFromControls);
+$("resetUiPrefsBtn").addEventListener("click",()=>{
+  uiPreferences={theme:"classic",density:"comfortable"};
+  if(persistUiPreferences()){applyUiPreferencesToPage();$("uiPreferencesNote").textContent="Đã khôi phục giao diện mặc định.";showToast("Đã đặt lại giao diện.");}
+  else showToast("Không thể lưu tùy chỉnh giao diện.");
+});
 $("resetBtn").addEventListener("click",()=>{
   if(!Object.keys(state.owned).length&&!state.favorites.length&&!Object.keys(state.cardProgress||{}).length){showToast("Bạn chưa có tiến độ nào cần đặt lại.");return;}
   if(confirm("Xóa toàn bộ tiến độ sưu tầm và yêu thích? Danh sách thẻ/phim sẽ được giữ nguyên.")){

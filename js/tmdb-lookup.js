@@ -54,8 +54,9 @@
    const types=type==="both"?["tv","movie"]:[type];
    const payloads=await Promise.all(types.map(async kind=>({kind,data:await apiRequest("search/"+kind,{query,language:"vi-VN",include_adult:"false",page:"1"},token)})));
    if(request!==requestNumber)return;
-   searchResults=payloads.flatMap(payload=>(Array.isArray(payload.data.results)?payload.data.results:[]).filter(item=>!item.adult).map(item=>({type:payload.kind,item})));
-   searchResults.sort((a,b)=>(Number(b.item.popularity)||0)-(Number(a.item.popularity)||0));
+   searchResults=payloads.flatMap(payload=>(Array.isArray(payload.data.results)?payload.data.results:[]).filter(item=>!item.adult).map((item,index)=>({type:payload.kind,item,rank:index})));
+   // Preserve TMDB relevance order within each search instead of promoting popular but unrelated titles.
+   searchResults.sort((a,b)=>a.rank-b.rank||(a.type===b.type?0:(a.type==="tv"?-1:1)));
    searchResults=searchResults.slice(0,12);
    renderSearchResults();
    setStatus(searchResults.length?"Tìm thấy "+searchResults.length+" kết quả. Chọn một kết quả để xem dữ liệu chi tiết trước khi lưu.":"Không tìm thấy kết quả. Thử tên gốc, tên tiếng Trung hoặc tên tiếng Anh.",searchResults.length?"ready":"");

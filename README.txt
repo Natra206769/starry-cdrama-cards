@@ -1,4 +1,11 @@
-STARRY C-DRAMA CARDS — BẢN V9.0
+STARRY C-DRAMA CARDS — BẢN V9.1
+
+CẬP NHẬT V9.1 — MỤC NÂNG CẤP RIÊNG & HIỆU ỨNG SAO
+- Tách khu nâng sao/nâng level thành mục Nâng cấp trên thanh điều hướng; có danh sách thẻ đang sở hữu và tìm kiếm để chọn thẻ chính. Hồ sơ thẻ có nút mở nhanh sang mục này.
+- Sửa lỗi zoom tự động trên điện thoại khi chạm ô tìm kiếm bằng cỡ chữ 16px cho các ô tìm kiếm chính trên màn hình nhỏ.
+- Thẻ đã sở hữu trong Bộ sưu tập có viền thứ cấp theo cấp sao: 1★ ánh vàng dịu, 2★ bạc, 3★ xanh, 4★ tím, 5★ hồng/tinh quang; khung không thay thế viền độ hiếm gốc.
+- Thêm nghi thức tích tụ trước khi đập sao, hiệu ứng riêng khi trượt và hiệu ứng thành công tăng dần theo sao đạt được; 5★ có viền đôi và ánh lấp lánh. Tôn trọng prefers-reduced-motion.
+- Tăng cache Service Worker lên v16 để trình duyệt tải CSS/JS mới. Không thay đổi khóa localStorage, cơ sở dữ liệu IndexedDB hay cấu trúc sao lưu.
 
 CẬP NHẬT V9.0 — BỘ SƯU TẬP & DANH MỤC THẺ
 - Bộ sưu tập phim được sắp xếp theo bảng chữ cái tiếng Việt, không phân biệt hoa/thường; có tìm kiếm tức thời theo phim, diễn viên, tên tiếng Trung, vai diễn, phong cách và độ hiếm.
@@ -7,9 +14,9 @@ CẬP NHẬT V9.0 — BỘ SƯU TẬP & DANH MỤC THẺ
 - Bỏ trường phiên bản trang phục khỏi biểu mẫu, bộ sưu tập, hồ sơ, danh sách quản lý và logic phát hiện trùng. Khi thêm mới, thẻ trùng thông tin được kiểm tra theo diễn viên + phim + vai diễn + độ hiếm. Điểm xếp hạng coi thẻ khác nhau theo phim + vai diễn + độ hiếm trong nhóm từng diễn viên. Thẻ cũ không bị tự ý xóa và tiến độ/ID cũ được giữ nguyên.
 - Phong cách mới gồm Cổ trang, Thanh xuân vườn trường, Công sở, Tiên hiệp, Dân quốc và Khác. Giá trị “Hiện đại” tồn tại từ dữ liệu cũ không được tự phân loại; khi sửa, ứng dụng yêu cầu chọn loại phù hợp.
 - Bảng xếp hạng sử dụng toàn bộ kho thẻ hệ thống, không đọc tiến độ sở hữu hay số bản trùng. P là tổng điểm các thẻ khác nhau theo độ hiếm (N=1, R=2, SR=4, SSR=7, UR=12, SP=20); N là số phim khác nhau. Điểm Nhan sắc = P / N + N.
-- Nâng cache Service Worker lên v14 để nhận bản mới. Giữ nguyên key localStorage, tên/phiên bản IndexedDB và cơ chế xác nhận cập nhật của người dùng.
+- Nâng cache Service Worker lên v16 để nhận bản mới. Giữ nguyên key localStorage, tên/phiên bản IndexedDB và cơ chế xác nhận cập nhật của người dùng.
 
-CÁCH TRIỂN KHAI V9.0
+CÁCH TRIỂN KHAI V9.1
 1. Trước khi cập nhật bản đang dùng, vào Quản lý thẻ → Sao lưu để xuất tệp JSON.
 2. Triển khai đồng bộ các tệp index.html, style.css, script.js, service-worker.js, README.txt, manifest.webmanifest, favicon và thư mục icons/ tại thư mục gốc GitHub Pages.
 3. Sau khi GitHub Pages triển khai, mở app có Internet và chọn cập nhật khi thông báo xuất hiện. Nếu còn giao diện cũ, đóng hẳn app rồi mở lại/tải lại trang.

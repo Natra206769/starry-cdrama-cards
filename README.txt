@@ -1,3 +1,10 @@
+STARRY C-DRAMA CARDS — BẢN V9.2
+
+CẬP NHẬT V9.2 — VIỀN SAO ĐỘNG & NÂNG SAO KHÓ HƠN
+- Viền theo cấp sao của thẻ trong Bộ sưu tập giờ chuyển động và mạnh dần theo sao: 1★ thở nhẹ ánh vàng, 2★ thở bạc kèm vệt sáng quét, 3★ vòng sáng xanh chạy quanh viền, 4★ hai vệt sáng tím chạy nhanh hơn, 5★ vòng sáng nhiều màu quay quanh viền đôi cùng ánh hồng phát sáng. Tôn trọng prefers-reduced-motion (tắt chuyển động).
+- Nâng sao khó hơn: 1★→2★ 80% (2 phôi), 2★→3★ 60% (3 phôi), 3★→4★ 40% (4 phôi), 4★→5★ 25% (6 phôi). Phôi vẫn mất cả khi thất bại; thẻ chính không mất sao.
+- Tăng cache Service Worker lên v17. Không đổi khóa localStorage, IndexedDB hay cấu trúc sao lưu; tiến độ sao hiện có được giữ nguyên.
+
 STARRY C-DRAMA CARDS — BẢN V9.1
 
 CẬP NHẬT V9.1 — MỤC NÂNG CẤP RIÊNG & HIỆU ỨNG SAO
@@ -218,7 +225,7 @@ CẬP NHẬT V9.0 — TỔNG HỢP ĐỘ HIẾM TOÀN HỆ THỐNG
 
 
 V9.0 — NÂNG CẤP THẺ
-- Nâng sao: 1★→2★ (100%, 1 phôi), 2★→3★ (85%, 2 phôi), 3★→4★ (70%, 3 phôi), 4★→5★ (55%, 4 phôi). Mỗi lần thử độc lập; phôi tiêu hao cả khi thất bại; thẻ chính không mất sao.
+- Nâng sao: 1★→2★ (80%, 2 phôi), 2★→3★ (60%, 3 phôi), 3★→4★ (40%, 4 phôi), 4★→5★ (25%, 6 phôi). Mỗi lần thử độc lập; phôi tiêu hao cả khi thất bại; thẻ chính không mất sao.
 - Nâng level: dùng thẻ khác làm phôi, bất kể phim/độ hiếm; mỗi thẻ phôi giữ lại tối thiểu một bản; không có tỉ lệ trượt.
 - EXP/phôi: N 10, R 20, SR 40, SSR 80, UR 150, SP 250. Yêu cầu EXP Lv.1→10: 30, 50, 75, 100, 140, 180, 230, 290, 360.
 - Tiến độ sao/level được lưu cùng dữ liệu bộ sưu tập trong localStorage và đi theo bản sao lưu JSON. Dữ liệu bộ sưu tập cũ tự khởi tạo ở 1★/Lv.1.

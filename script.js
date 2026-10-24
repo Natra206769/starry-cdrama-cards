@@ -538,10 +538,10 @@ function renderCharacterRelations(card){
 
 // V9.1 — standalone enhancement workshop. Legacy collections without cardProgress start at 1★ / Lv.1.
 const starUpgradeRules = {
-  1:{rate:100,cost:1,next:2},
-  2:{rate:85,cost:2,next:3},
-  3:{rate:70,cost:3,next:4},
-  4:{rate:55,cost:4,next:5}
+  1:{rate:80,cost:2,next:2},
+  2:{rate:60,cost:3,next:3},
+  3:{rate:40,cost:4,next:4},
+  4:{rate:25,cost:6,next:5}
 };
 const levelExpByRarity = {N:10,R:20,SR:40,SSR:80,UR:150,SP:250};
 const levelExpRequirements = [30,50,75,100,140,180,230,290,360];

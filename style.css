@@ -1210,17 +1210,28 @@ main {
 .mini-card .mini-star-frame{position:absolute;z-index:5;inset:4px;border:1px solid #f0d6a33d;border-radius:9px;pointer-events:none;box-shadow:inset 0 0 12px #f0d6a30a;transition:border-color .2s,box-shadow .2s}
 .mini-card .mini-star-frame::before{content:"";position:absolute;inset:4px;border:1px solid #f0d6a31c;border-radius:6px}
 .mini-card .mini-star-frame::after{content:"";position:absolute;inset:-2px;border-radius:inherit;opacity:0;pointer-events:none}
-.mini-card .mini-star-frame.star-frame-1{border-color:#f0d6a33d}
-.mini-card .mini-star-frame.star-frame-2{border:1px solid #e1e9ffb3;box-shadow:inset 0 0 16px #cbdcff1a,0 0 8px #cbdcff18}
+/* Animated star rims: the more stars, the faster, brighter and richer the motion. */
+@property --star-frame-angle{syntax:"<angle>";inherits:false;initial-value:0deg}
+.mini-card .mini-star-frame.star-frame-1{border-color:#f0d6a366;animation:star-frame-breathe 5.2s ease-in-out infinite}
+.mini-card .mini-star-frame.star-frame-2{border:1px solid #e1e9ffb3;box-shadow:inset 0 0 16px #cbdcff1a,0 0 8px #cbdcff18;animation:star-frame-breathe 3.6s ease-in-out infinite}
 .mini-card .mini-star-frame.star-frame-2::before{border-color:#f0f4ff77}
-.mini-card .mini-star-frame.star-frame-3{border:1px solid #86caffdd;box-shadow:inset 0 0 18px #6eb9ff20,0 0 10px #6eb9ff50}
+.mini-card .mini-star-frame.star-frame-2::after{opacity:.7;background:linear-gradient(118deg,transparent 34%,#ffffff22 48%,#ffffff66 50%,transparent 62%);animation:star-frame-glint 4.6s ease-in-out infinite}
+.mini-card .mini-star-frame.star-frame-3{border:1px solid #86caffdd;box-shadow:inset 0 0 18px #6eb9ff20,0 0 10px #6eb9ff50;animation:star-frame-pulse-blue 3s ease-in-out infinite}
 .mini-card .mini-star-frame.star-frame-3::before{border-color:#d6f1ff99;box-shadow:inset 0 0 10px #7ac9ff1e}
-.mini-card .mini-star-frame.star-frame-4{border:2px solid #d2a5ffff;box-shadow:inset 0 0 20px #a66bff2c,0 0 12px #a66bff66}
+.mini-card .mini-star-frame.star-frame-4{border:2px solid #d2a5ffff;box-shadow:inset 0 0 20px #a66bff2c,0 0 12px #a66bff66;animation:star-frame-pulse-violet 2.6s ease-in-out infinite}
 .mini-card .mini-star-frame.star-frame-4::before{border:1px solid #f8e5ffb5;inset:5px}
 .mini-card .mini-star-frame.star-frame-5{inset:3px;border:2px double #ffacdfff;box-shadow:inset 0 0 23px #ff85d43a,0 0 13px #ff85d48a,0 0 26px #a66bff35;animation:star-frame-five 2.2s ease-in-out infinite}
 .mini-card .mini-star-frame.star-frame-5::before{inset:6px;border:1px dashed #ffe1f5c9}
-.mini-card .mini-star-frame.star-frame-5::after{opacity:.8;background:linear-gradient(118deg,transparent 32%,#fff2 48%,#fff8 50%,transparent 63%);animation:star-frame-glint 3.2s ease-in-out infinite}
+/* Travelling light ring: a conic gradient masked down to the border area and rotated. */
+.mini-card .mini-star-frame.star-frame-3::after,.mini-card .mini-star-frame.star-frame-4::after,.mini-card .mini-star-frame.star-frame-5::after{opacity:1;box-sizing:border-box;inset:-1px;padding:2px;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude;animation:star-frame-spin 4.4s linear infinite}
+.mini-card .mini-star-frame.star-frame-3::after{background:conic-gradient(from var(--star-frame-angle),transparent 0 66%,#6eb9ff00 66%,#6eb9ffcc 90%,#eaf7ff 100%)}
+.mini-card .mini-star-frame.star-frame-4::after{inset:-2px;padding:2px;animation-duration:3.2s;background:conic-gradient(from var(--star-frame-angle),transparent 0 30%,#a66bffcc 42%,#f4e4ff 50%,transparent 52% 80%,#a66bffcc 92%,#f4e4ff 100%)}
+.mini-card .mini-star-frame.star-frame-5::after{inset:-2px;padding:3px;animation-duration:2.4s;background:conic-gradient(from var(--star-frame-angle),#ff85d4,#a66bff,#6eb9ff,#ffe1f5,#ff85d4)}
 .mini-card.is-locked .mini-star-frame{display:none}
+@keyframes star-frame-breathe{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes star-frame-pulse-blue{0%,100%{filter:brightness(.92);box-shadow:inset 0 0 14px #6eb9ff18,0 0 6px #6eb9ff40}50%{filter:brightness(1.2);box-shadow:inset 0 0 22px #6eb9ff34,0 0 15px #6eb9ff88}}
+@keyframes star-frame-pulse-violet{0%,100%{filter:brightness(.9);box-shadow:inset 0 0 16px #a66bff22,0 0 8px #a66bff4d}50%{filter:brightness(1.22);box-shadow:inset 0 0 24px #a66bff44,0 0 18px #a66bff99}}
+@keyframes star-frame-spin{to{--star-frame-angle:360deg}}
 @keyframes star-frame-five{0%,100%{filter:brightness(.9);box-shadow:inset 0 0 17px #ff85d426,0 0 8px #ff85d45c}50%{filter:brightness(1.22);box-shadow:inset 0 0 24px #ff85d448,0 0 18px #ff85d4a6,0 0 30px #a66bff44}}
 @keyframes star-frame-glint{0%,58%,100%{transform:translateX(-70%);opacity:0}70%{opacity:1}88%{transform:translateX(70%);opacity:0}}
 .detail-upgrade-btn{width:100%;margin:8px 0 3px;font-size:10px;min-height:39px;padding:10px 13px}
@@ -1244,3 +1255,4 @@ main {
   #collectionSearch,.upgrade-card-search-wrap input,.upgrade-search-wrap input,.manager-search{font-size:16px!important;line-height:1.35}
 }
 @media(prefers-reduced-motion:reduce){.mini-card .mini-star-frame.star-frame-5,.mini-card .mini-star-frame.star-frame-5::after,.upgrade-animation-stage.is-charging .upgrade-animation-orbit,.upgrade-animation-stage.is-charging .upgrade-animation-sigil,.upgrade-animation-stage.is-charging::after,.upgrade-animation-stage.is-charging .upgrade-animation-copy strong,.upgrade-animation-stage.is-success,.upgrade-animation-stage.is-success .upgrade-animation-sigil,.upgrade-animation-stage.is-success::after,.upgrade-animation-stage.is-success .upgrade-animation-sparks,.upgrade-animation-stage.is-success.tier-5 .upgrade-animation-orbit,.upgrade-animation-stage.is-failed,.upgrade-animation-stage.is-failed .upgrade-animation-sigil{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.mini-card .mini-star-frame[class*="star-frame-"],.mini-card .mini-star-frame[class*="star-frame-"]::after{animation:none!important}.mini-card .mini-star-frame.star-frame-2::after{opacity:0}}

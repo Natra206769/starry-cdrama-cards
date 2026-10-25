@@ -73,7 +73,7 @@ function renderMovieProfileFallback(profile,error){
   root.replaceChildren();
   const cards=libraryMovieCards(profile.value);
   const metadata=typeof getMovieMetadata==="function"?getMovieMetadata(profile.value):null;
-  const heading=document.createElement("section");heading.className="library-profile-hero";
+  const heading=document.createElement("section");heading.className="library-profile-section";
   const copy=document.createElement("div");copy.className="library-profile-hero-copy";
   const title=document.createElement("h2");title.id="libraryProfileTitle";title.textContent=profile.value;
   const description=document.createElement("p");description.className="library-profile-description";

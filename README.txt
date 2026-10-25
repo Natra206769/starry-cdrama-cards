@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — V11.3.5
+STARRY C-DRAMA CARDS — V11.3.6
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
@@ -58,3 +58,4 @@ TMDB & QUYỀN SỬ DỤNG
 V11.3.4 — Khắc phục nút mở hồ sơ phim trong Bộ sưu tập: mở hộp thoại trước khi dựng nội dung, bổ sung chế độ hồ sơ tương thích nếu phần hiển thị chi tiết gặp lỗi, và tách sự kiện nhấn khỏi các phần tử cha.
 
 - V11.3.5: chuẩn hóa cách tính xếp hạng từ dữ liệu toàn kho; bổ sung bảng phim theo dàn diễn viên/điểm độ hiếm, tìm kiếm, Top 3 cải tiến và nhấn hàng để mở hồ sơ phim/diễn viên.
+- V11.3.6: tinh gọn bố cục Bộ sưu tập, thu gọn công cụ phụ và tinh chỉnh điểm xếp hạng phim.

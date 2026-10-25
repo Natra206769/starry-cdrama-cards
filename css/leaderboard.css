@@ -116,3 +116,14 @@
   .leaderboard-kind-tabs .leaderboard-chip{flex:1;min-width:0;}
   .leaderboard-search-wrap input{font-size:16px;}
 }
+
+
+/* V11.3.6 — tighter leaderboard layout. */
+.leaderboard-controls{gap:10px;margin:20px 0 12px}
+.leaderboard-podium{gap:10px;margin:22px 0 15px}
+.leaderboard-podium .leaderboard-entry{min-height:204px;padding:13px 10px}
+.leaderboard-podium .leaderboard-entry.rank-1{min-height:224px}
+@media(max-width:650px){
+  .leaderboard-controls{margin:16px 0 10px}
+  .leaderboard-podium{gap:6px;margin:16px 0 12px}
+}

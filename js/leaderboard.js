@@ -61,11 +61,38 @@ function buildMovieRankingData(){
       if(key&&!byMovie.has(key))byMovie.set(key,{key,title:entry.title,cards:[],actors:new Set()});
     }
   }
-  return [...byMovie.values()].map(movie=>{
+
+  // Count each co-star pair once per distinct movie, regardless of card variants.
+  const movies=[...byMovie.values()];
+  const pairFilmCounts=new Map();
+  for(const movie of movies){
+    const actors=[...movie.actors].filter(Boolean).sort();
+    for(let i=0;i<actors.length;i++){
+      for(let j=i+1;j<actors.length;j++){
+        const pairKey=actors[i]+"::"+actors[j];
+        if(!pairFilmCounts.has(pairKey))pairFilmCounts.set(pairKey,new Set());
+        pairFilmCounts.get(pairKey).add(movie.key);
+      }
+    }
+  }
+
+  return movies.map(movie=>{
     movie.systemCards=leaderboardDistinctCards(movie.cards,"movie");
     movie.actorCount=movie.actors.size;
     movie.cardCount=movie.systemCards.length;
     movie.cardPoints=movie.systemCards.reduce((sum,card)=>sum+(leaderboardRarityPoints[String(card.rarity||"N").toUpperCase()]||1),0);
+
+    // Hidden bonus: +0.25 per recurring co-star pair in each shared film.
+    // Only pairs with at least two distinct shared films qualify.
+    movie.pairBonus=0;
+    const actors=[...movie.actors].filter(Boolean).sort();
+    for(let i=0;i<actors.length;i++){
+      for(let j=i+1;j<actors.length;j++){
+        const pairKey=actors[i]+"::"+actors[j];
+        if((pairFilmCounts.get(pairKey)?.size||0)>=2)movie.pairBonus+=0.25;
+      }
+    }
+    movie.rankingPoints=movie.cardPoints+movie.pairBonus;
     movie.metadata=typeof getMovieMetadata==="function"?getMovieMetadata(movie.title):null;
     return movie;
   });
@@ -122,7 +149,7 @@ function makeLeaderboardEntry(item,rank,podium=false){
   const score=document.createElement("strong");
   const label=document.createElement("span");
   if(leaderboardKind==="movie"){
-    score.textContent=String(leaderboardMode==="cast"?item.actorCount:item.cardPoints);
+    score.textContent=leaderboardMode==="cast"?String(item.actorCount):item.rankingPoints.toLocaleString("vi-VN",{maximumFractionDigits:2});
     label.textContent=leaderboardMode==="cast"?"DIỄN VIÊN":"ĐIỂM THẺ";
   }else{
     score.textContent=leaderboardMode==="hot"?String(item.hotScore):item.beautyScore.toLocaleString("vi-VN",{maximumFractionDigits:2});
@@ -163,7 +190,7 @@ function renderLeaderboard(){
   if(leaderboardKind==="movie"){
     sorted=allMovies.filter(movie=>leaderboardTextKey(movie.title).includes(query))
       .filter(movie=>leaderboardMode==="cast"?movie.actorCount>0:movie.cardCount>0)
-      .sort((a,b)=>(leaderboardMode==="cast"?b.actorCount-a.actorCount:b.cardPoints-a.cardPoints)||b.cardCount-a.cardCount||compareVietnamese(a.title,b.title));
+      .sort((a,b)=>(leaderboardMode==="cast"?b.actorCount-a.actorCount:b.rankingPoints-a.rankingPoints)||b.cardCount-a.cardCount||compareVietnamese(a.title,b.title));
     $("leaderboardActorCount").textContent=sorted.length;
     $("leaderboardCountLabel").textContent="phim";
     $("leaderboardRules").textContent=leaderboardMode==="cast"

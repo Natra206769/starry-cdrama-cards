@@ -40,6 +40,7 @@ function makeArt(rarity){
   const art=(rarityInfo[rarity]||rarityInfo.SR).art;
   return {art1:art[0],art2:art[1],accent:art[2]};
 }
+function rarityCssKey(rarity){return String(rarity||"R").trim().toLowerCase().replace(/\+/g,"-plus").replace(/[^a-z0-9-]/g,"");}
 function normalizeCard(card,fallback={}){
   const result={...fallback,...(card||{})};
   result.name=titleCaseName(result.name||"Chưa đặt tên");
@@ -51,7 +52,8 @@ function normalizeCard(card,fallback={}){
   result.initials=result.initials||makeInitials(result.chinese,result.name);
   result.gender=result.gender||"other";
   result.style=result.style||"Khác";
-  result.rarity=rarityInfo[result.rarity]?result.rarity:"SR";
+  const savedRarity=String(result.rarity||"SR").toUpperCase();
+  result.rarity=savedRarity==="N"?"R":(rarityInfo[savedRarity]?savedRarity:"SR");
   return result;
 }
 

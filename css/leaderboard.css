@@ -127,3 +127,13 @@
   .leaderboard-controls{margin:16px 0 10px}
   .leaderboard-podium{gap:6px;margin:16px 0 12px}
 }
+
+
+/* V11.4.0 — fiery champion treatment for the #1 actor or film. */
+.leaderboard-entry.rank-1{isolation:isolate;overflow:visible;border-color:#ff9256b8;background:radial-gradient(ellipse at 50% 0%,#ff6b3517,transparent 68%),linear-gradient(125deg,#ff8b401b,#d8bb8608);animation:leaderboard-champion-fire 2.15s ease-in-out infinite}
+.leaderboard-entry.rank-1::before{content:"🔥";position:absolute;z-index:3;top:-15px;right:12px;font-size:20px;line-height:1;filter:drop-shadow(0 0 5px #ff4d21) drop-shadow(0 0 12px #ff8b354d);pointer-events:none;animation:leaderboard-flame-flicker .85s ease-in-out infinite alternate}
+.leaderboard-entry.rank-1 .leaderboard-rank-badge{color:#fff0ce;border-color:#ff8e49;background:linear-gradient(145deg,#ff813026,#d8bb8610);box-shadow:0 0 16px #ff6b3529}
+.leaderboard-entry.rank-1 .leaderboard-avatar{border-color:#ff9a57;box-shadow:0 0 0 2px #ff8b3528,0 0 22px #ff552d52,0 0 38px #ffb04a20}
+@keyframes leaderboard-champion-fire{0%,100%{box-shadow:inset 0 0 28px #ff74200b,0 0 14px #ff5d2620,0 8px 28px #0002}50%{box-shadow:inset 0 0 38px #ff74201c,0 0 25px #ff5d2650,0 8px 30px #0003}}
+@keyframes leaderboard-flame-flicker{0%{transform:translateY(1px) rotate(-5deg) scale(.94)}100%{transform:translateY(-2px) rotate(5deg) scale(1.08)}}
+@media(prefers-reduced-motion:reduce){.leaderboard-entry.rank-1,.leaderboard-entry.rank-1::before{animation:none!important}}

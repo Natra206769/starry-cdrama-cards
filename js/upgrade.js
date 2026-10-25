@@ -89,7 +89,7 @@ function renderUpgradeCardSelector(){
   for(const card of matching){
     const progress=getCardProgress(card.id),info=rarityInfo[card.rarity]||rarityInfo.R;
     const button=document.createElement("button");button.type="button";button.className="upgrade-card-option"+(card.id===currentUpgradeId?" is-selected":"");button.dataset.cardId=card.id;button.dataset.search=normalizedSearchKey([card.name,card.chinese,card.movie,card.role,card.rarity].join(" "));button.style.setProperty("--rarity",info.color);button.setAttribute("aria-pressed",String(card.id===currentUpgradeId));
-    const tier=document.createElement("span");tier.className="upgrade-card-tier rarity-"+String(card.rarity||"R").toLowerCase();tier.textContent=card.rarity||"N";
+    const tier=document.createElement("span");tier.className="upgrade-card-tier rarity-"+rarityCssKey(card.rarity||"R");tier.textContent=card.rarity||"R";
     const copy=document.createElement("span");copy.className="upgrade-card-option-copy";
     const name=document.createElement("strong");name.textContent=card.name;
     const movie=document.createElement("small");movie.textContent=`${card.movie||"Bộ sưu tập chân dung"} · sở hữu ×${state.owned[card.id]}`;

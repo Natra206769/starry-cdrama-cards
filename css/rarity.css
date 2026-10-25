@@ -207,3 +207,15 @@
 
 .character-card.rarity-sr .rarity-overlay::before { border-style: solid !important; transform: none !important; }
 .batch-card.rarity-sr::before { border-style: solid !important; }
+
+
+/* V11.4.0 — SSR+ is a separate label, but reuses SSR's frame and visual treatment. */
+.mini-card.rarity-ssr-plus{border-color:#c18affcc;box-shadow:0 0 0 1px #c18aff20,0 0 16px #a56bff2c;background-image:radial-gradient(ellipse at 50% 0%,#c18aff20,transparent 70%),linear-gradient(150deg,var(--art1,#292f46),#111522 75%)}
+.mini-card.rarity-ssr-plus::before{opacity:.76;border-width:1.5px;box-shadow:inset 0 0 15px #c18aff18}
+.mini-card.rarity-ssr-plus .mini-rarity{color:#c18aff}
+.batch-card.rarity-ssr-plus{box-shadow:inset 0 0 26px #c18aff20,0 0 15px #c18aff52,0 10px 30px #0006}
+.batch-card.rarity-ssr-plus .batch-starfield{opacity:.86;background-size:37px 43px,59px 67px;animation:star-drift 2.4s ease-in-out infinite}
+.batch-card.rarity-ssr-plus::before{border-width:2px;box-shadow:inset 0 0 24px #c18aff35,0 0 20px #c18aff45;animation:frame-pulse 1.6s ease-in-out infinite}
+.batch-card.rarity-ssr-plus::after{opacity:.75;animation:rare-shimmer 2.1s ease-out .2s 1}
+.spotlight-art.rarity-ssr-plus{--rarity:#c18aff}
+@media(prefers-reduced-motion:reduce){.batch-card.rarity-ssr-plus,.batch-card.rarity-ssr-plus::before,.batch-card.rarity-ssr-plus::after,.batch-card.rarity-ssr-plus .batch-starfield{animation:none!important}}

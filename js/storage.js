@@ -3,6 +3,7 @@
 */
 
 // IndexedDB stores custom cards, modified built-in cards, visibility and deleted built-ins.
+function normalizeStoredRarity(card){if(card&&typeof card==="object"&&String(card.rarity||"").toUpperCase()==="N")card.rarity="R";return card;}
 function openDatabase(){
   if(dbPromise)return dbPromise;
   dbPromise=new Promise((resolve,reject)=>{
@@ -16,7 +17,7 @@ async function dbGet(key){const database=await openDatabase();return new Promise
 async function dbPut(key,value){const database=await openDatabase();return new Promise((resolve,reject)=>{const tx=database.transaction(DB_STORE,"readwrite");tx.objectStore(DB_STORE).put(value,key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error("Không thể lưu dữ liệu"));tx.onabort=()=>reject(tx.error||new Error("Đã hủy lưu dữ liệu"));});}
 function normalizeManagerData(saved){
   const raw=saved&&typeof saved==="object"?saved:{};
-  const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>{const clean=normalizeSavedNameFields({...card});delete clean.costume;return [id,clean];})):{};
+  const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>{const clean=normalizeStoredRarity(normalizeSavedNameFields({...card}));delete clean.costume;return [id,clean];})):{};
   const movieMetadata=raw.movieMetadata&&typeof raw.movieMetadata==="object"&&!Array.isArray(raw.movieMetadata)?raw.movieMetadata:{};
   const rawPreferences=raw.moviePreferences&&typeof raw.moviePreferences==="object"&&!Array.isArray(raw.moviePreferences)?raw.moviePreferences:{};
   const moviePreferences=Object.fromEntries(Object.entries(rawPreferences).map(([key,value])=>[String(key),{
@@ -34,8 +35,8 @@ async function readManagerData(){
     // Migrate only the three requested display-name fields. All other user data, including photos,
     // IDs, ownership, favorites, hidden/deleted flags and custom metadata, stays intact.
     const migrated=JSON.parse(JSON.stringify(saved));
-    if(Array.isArray(migrated.custom))migrated.custom.forEach(normalizeSavedNameFields);
-    if(migrated.overrides&&typeof migrated.overrides==="object")Object.values(migrated.overrides).forEach(normalizeSavedNameFields);
+    if(Array.isArray(migrated.custom))migrated.custom.forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);});
+    if(migrated.overrides&&typeof migrated.overrides==="object")Object.values(migrated.overrides).forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);});
     const changed=JSON.stringify(migrated)!==JSON.stringify(saved);
     if(changed){
       try{await dbPut("managerData",migrated);}

@@ -38,10 +38,10 @@ function openCard(){
   if(!card){btn.disabled=false;if(tenBtn)tenBtn.disabled=false;return;}
   const stage=document.querySelector(".stage");
   stage.style.setProperty("--rarity",rarityInfo[card.rarity].color);
-  const openingClasses=Object.values(rarityInfo).map(info=>"opening-rarity-"+info.effect);
+  const openingClasses=Object.keys(rarityInfo).map(rarity=>"opening-rarity-"+rarityCssKey(rarity));
   stage.classList.remove(...openingClasses);
   $("cardBack").classList.remove("charging");
-  stage.classList.add("opening-rarity-"+card.rarity.toLowerCase());
+  stage.classList.add("opening-rarity-"+rarityCssKey(card.rarity));
   $("cardBack").classList.add("charging");
   const revealDelay=rarityInfo[card.rarity]?.revealDelay||650;
   setTimeout(()=>{
@@ -58,8 +58,8 @@ function openCard(){
 }
 function renderBatchSpotlight(card,result){
   const info=rarityInfo[card.rarity]||rarityInfo.R,art=$("batchSpotlightArt"),spotlight=$("batchSpotlight");
-  spotlight.className="batch-spotlight rarity-"+card.rarity.toLowerCase();spotlight.style.setProperty("--rarity",info.color);
-  art.className="spotlight-art rarity-"+card.rarity.toLowerCase();
+  spotlight.className="batch-spotlight rarity-"+rarityCssKey(card.rarity);spotlight.style.setProperty("--rarity",info.color);
+  art.className="spotlight-art rarity-"+rarityCssKey(card.rarity);
   art.style.setProperty("--rarity",info.color);art.style.setProperty("--art1",card.art1||info.art[0]);art.style.setProperty("--art2",card.art2||info.art[1]);art.style.setProperty("--accent",card.accent||info.art[2]);
   art.querySelectorAll("img.spotlight-photo").forEach(image=>image.remove());art.classList.remove("has-photo");
   $("batchSpotlightInitials").textContent=card.initials||makeInitials(card.chinese,card.name);
@@ -77,7 +77,7 @@ function openTenCards(){
   $("revealHint").textContent="Mười lá bài đang được gọi về…";$("summonKicker").hidden=false;$("skipBatchBtn").hidden=false;lastBatchCards=[];
   const pulled=Array.from({length:10},()=>weightedRandom()).filter(Boolean);
   if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});$("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;return;}
-  const rarityRank={N:0,R:1,SR:2,SSR:3,UR:4,SP:5};
+  const rarityRank={R:1,SR:2,SSR:3,"SSR+":4,UR:5,SP:6};
   const orderedPulled=pulled.map((card,index)=>({card,index})).sort((a,b)=>rarityRank[b.card.rarity]-rarityRank[a.card.rarity]||a.index-b.index).map(item=>item.card);
   const highlight=orderedPulled[0],seen=new Map();
   const results=orderedPulled.map(card=>{
@@ -88,11 +88,11 @@ function openTenCards(){
   lastBatchCards=orderedPulled.slice();
   const duplicateCount=results.filter(result=>result.duplicate).length;
   const newCount=results.length-duplicateCount;
-  const stage=document.querySelector(".stage"),openingClasses=Object.values(rarityInfo).map(info=>"opening-rarity-"+info.effect);
+  const stage=document.querySelector(".stage"),openingClasses=Object.keys(rarityInfo).map(rarity=>"opening-rarity-"+rarityCssKey(rarity));
   // Intentionally use the exact same rarity classes and delay as openCard(). The former
   // batch-summoning class overrode some tier effects and made UR/SP feel rushed.
   stage.classList.remove(...openingClasses,"batch-summoning");stage.style.setProperty("--rarity",rarityInfo[highlight.rarity].color);
-  $("cardBack").classList.remove("charging");stage.classList.add("opening-rarity-"+highlight.rarity.toLowerCase());$("cardBack").classList.add("charging");
+  $("cardBack").classList.remove("charging");stage.classList.add("opening-rarity-"+rarityCssKey(highlight.rarity));$("cardBack").classList.add("charging");
   const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
   const wait=reducedMotion?80:rarityInfo[highlight.rarity].revealDelay;
   let heroCommitted=false,spotlightShown=false,allResultsShown=false;
@@ -145,7 +145,7 @@ function renderBatchResults(results){
   const grid=$("batchGrid");grid.replaceChildren();
   for(const result of results){
     const card=normalizeCard(result.card),info=rarityInfo[card.rarity]||rarityInfo.R;
-    const article=document.createElement("article");article.className="batch-card rarity-"+card.rarity.toLowerCase();
+    const article=document.createElement("article");article.className="batch-card rarity-"+rarityCssKey(card.rarity);
     article.setAttribute("role","button");article.setAttribute("tabindex","0");article.setAttribute("aria-label","Xem chi tiết thẻ "+card.name+" trong phim "+card.movie);article.title="Nhấn để xem hồ sơ chi tiết";
     const openDetails=()=>showCharacterDetails(card.id);article.addEventListener("click",openDetails);article.addEventListener("keydown",event=>{if((event.key==="Enter"||event.key===" ")&&event.target===article){event.preventDefault();openDetails();}});
     article.style.setProperty("--rarity",info.color);article.style.setProperty("--art1",card.art1||info.art[0]);article.style.setProperty("--art2",card.art2||info.art[1]);article.style.setProperty("--accent",card.accent||info.art[2]);

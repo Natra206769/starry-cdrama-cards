@@ -1,8 +1,8 @@
-STARRY C-DRAMA CARDS — V11.3.6
+STARRY C-DRAMA CARDS — V11.4.0
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
-- Mở 1 hoặc 10 thẻ theo độ hiếm N / R / SR / SSR / UR / SP.
+- Mở 1 hoặc 10 thẻ theo độ hiếm R / SR / SSR / SSR+ / UR / SP (N cũ tự chuyển thành R).
 - Thư viện cá nhân và danh mục khám phá toàn bộ thẻ; tìm kiếm, lọc, sắp xếp và xem dạng lưới/danh sách.
 - Kệ phim trực quan bằng poster; lọc theo năm/thể loại/trạng thái, sắp xếp theo tên, năm, tiến độ hoặc số phiên bản.
 - Lối tắt “Tiếp tục sưu tầm” cho phim đang dang dở và nhãn trạng thái chưa bắt đầu/đang sưu tầm/hoàn thành.
@@ -25,7 +25,7 @@ MÃ NGUỒN
 - js/collection.js, js/library.js: thư viện, trang phim, hồ sơ diễn viên và liên kết.
 - js/movie-manager.js: quản lý metadata phim; js/detail.js: hồ sơ phiên bản thẻ.
 - js/gacha.js, rarity.js, upgrade.js: mở thẻ, độ hiếm và nâng cấp.
-- js/leaderboard.js: xếp hạng phim và diễn viên; js/manager.js, storage.js, state.js: quản lý và lưu trữ.
+- js/leaderboard.js: xếp hạng điểm phim, điểm Nhan sắc và bảng diễn viên tổng thể; giới hạn 100 mục mỗi bảng.
 - js/pwa.js, service-worker.js: PWA và cập nhật.
 
 DỮ LIỆU & PHÁT HÀNH
@@ -59,3 +59,13 @@ V11.3.4 — Khắc phục nút mở hồ sơ phim trong Bộ sưu tập: mở h�
 
 - V11.3.5: chuẩn hóa cách tính xếp hạng từ dữ liệu toàn kho; bổ sung bảng phim theo dàn diễn viên/điểm độ hiếm, tìm kiếm, Top 3 cải tiến và nhấn hàng để mở hồ sơ phim/diễn viên.
 - V11.3.6: tinh gọn bố cục Bộ sưu tập, thu gọn công cụ phụ và tinh chỉnh điểm xếp hạng phim.
+
+
+V11.4.0 — Hệ độ hiếm và bảng xếp hạng
+- Loại bỏ N; mọi thẻ N trong dữ liệu cũ được tự động chuyển sang R, không đổi ID hay số lượng sở hữu.
+- Thêm SSR+; khung và hiệu ứng của SSR+ dùng chung với SSR. Có thể gán cấp này khi sửa thẻ hoặc nhập CSV/TSV.
+- Điểm độ hiếm mới: R 3, SR 5, SSR 9, SSR+ 11, UR 17, SP 25.
+- Bảng phim chỉ xếp theo điểm phim; bỏ tiêu chí dàn diễn viên và không hiển thị bộ lọc giới tính.
+- Bảng diễn viên bỏ xếp hạng độ hot; thêm chế độ Tổng thể gộp nam và nữ, cùng bộ lọc riêng nam/nữ.
+- Hiệu ứng rực cháy dành cho hạng 1; mọi bảng xếp hạng giới hạn tối đa 100 mục.
+- Giữ nguyên STORAGE_KEY / DB_NAME / DB_VERSION; tăng CACHE_NAME của service worker để phát hành cập nhật.

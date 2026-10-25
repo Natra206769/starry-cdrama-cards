@@ -115,7 +115,8 @@ function applyCollectionPreset(id){
   collectionViewMode=["grid","list"].includes(settings.collectionViewMode)?settings.collectionViewMode:"grid";
   collectionSortMode=["rarity","name","stars","level","copies"].includes(settings.collectionSortMode)?settings.collectionSortMode:"rarity";
   activeFilter=["all","missing","male","female","favorites"].includes(settings.activeFilter)?settings.activeFilter:"all";
-  collectionRarityFilter=["all","N","R","SR","SSR","UR","SP"].includes(settings.collectionRarityFilter)?settings.collectionRarityFilter:"all";
+  const savedRarity=settings.collectionRarityFilter==="N"?"R":settings.collectionRarityFilter;
+  collectionRarityFilter=["all","R","SR","SSR","SSR+","UR","SP"].includes(savedRarity)?savedRarity:"all";
   collectionStyleFilter=String(settings.collectionStyleFilter||"all");
   collectionShelfGenreFilter=String(settings.collectionShelfGenreFilter||"all");
   collectionShelfYearFilter=String(settings.collectionShelfYearFilter||"all");
@@ -242,7 +243,7 @@ function renderCollectionRaritySummary(){
     // Hide rarity tiers that do not exist anywhere in the system catalog.
     if(!tierCards.length)continue;
     const owned=tierCards.filter(card=>(Number(state.owned[card.id])||0)>0).length;
-    const item=document.createElement("div");item.className="collection-rarity-total rarity-"+rarity.toLowerCase();
+    const item=document.createElement("div");item.className="collection-rarity-total rarity-"+rarityCssKey(rarity);
     const label=document.createElement("strong");label.textContent=rarity;
     const count=document.createElement("span");count.textContent=`${owned} / ${tierCards.length}`;
     const caption=document.createElement("small");caption.textContent="đã có / tổng";
@@ -445,7 +446,7 @@ function renderCollection(){
     if(!grouped.has(key))grouped.set(key,{movie,cards:[]});
     grouped.get(key).cards.push(card);
   }
-  const rarityOrder={SP:0,UR:1,SSR:2,SR:3,R:4,N:5};
+  const rarityOrder={SP:0,UR:1,"SSR+":2,SSR:3,SR:4,R:5};
   const movieGroups=[...grouped.values()].sort((a,b)=>compareVietnamese(a.movie,b.movie));
   let visibleCount=0,visibleMovies=0;
   for(const {movie,cards:allCards} of movieGroups){
@@ -478,7 +479,7 @@ function renderCollection(){
       if(!tierCards.length)continue;
       const ownedTier=tierCards.filter(card=>(Number(state.owned[card.id])||0)>0).length;
       const missingTier=tierCards.length-ownedTier;
-      const stat=document.createElement("span");stat.className="film-rarity-stat rarity-"+rarity.toLowerCase();
+      const stat=document.createElement("span");stat.className="film-rarity-stat rarity-"+rarityCssKey(rarity);
       const tier=document.createElement("strong");tier.textContent=rarity;
       const quantity=document.createElement("small");quantity.textContent=`${ownedTier} có / ${missingTier} thiếu`;
       stat.append(tier,quantity);stats.appendChild(stat);
@@ -488,7 +489,7 @@ function renderCollection(){
     const grid=document.createElement("div");grid.className="collection-grid"+(collectionViewMode==="list"?" collection-list-view":"");
     for(const card of cards){
       const owned=(Number(state.owned[card.id])||0)>0;const info=rarityInfo[card.rarity]||rarityInfo.R;
-      const article=document.createElement("article");article.className="mini-card rarity-"+String(card.rarity||"SR").toLowerCase()+(owned?"":" is-locked");
+      const article=document.createElement("article");article.className="mini-card rarity-"+rarityCssKey(card.rarity||"SR")+(owned?"":" is-locked");
       if(owned){
         const progress=getCardProgress(card.id);article.classList.add("owned-star-level-"+progress.stars);
         const starFrame=document.createElement("span");starFrame.className="mini-star-frame star-frame-"+progress.stars;starFrame.setAttribute("aria-hidden","true");article.appendChild(starFrame);
@@ -561,7 +562,7 @@ function renderCharacterRelations(card){
     for(const related of items){
       const button=document.createElement("button");button.type="button";button.className="detail-relation-card";button.setAttribute("role","listitem");
       button.setAttribute("aria-label","Xem hồ sơ "+related.name+" trong "+related.movie);
-      const mark=document.createElement("span");mark.className="relation-rarity rarity-"+String(related.rarity||"R").toLowerCase();mark.textContent=related.rarity||"N";
+      const mark=document.createElement("span");mark.className="relation-rarity rarity-"+rarityCssKey(related.rarity||"R");mark.textContent=related.rarity||"R";
       const info=document.createElement("span");info.className="detail-relation-info";
       const name=document.createElement("strong");name.textContent=related.name;
       const meta=document.createElement("small");meta.textContent=type==="same-actor"?[related.movie,related.role].filter(Boolean).join(" · "):([related.role].filter(Boolean).join(" · ")||related.movie);

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.3.5 Leaderboards</title>
+  <title>Starry C-Drama Cards — V11.4.0 Rarity &amp; Rankings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -377,7 +377,7 @@
           <button class="filter" data-filter="favorites" aria-pressed="false">Yêu thích ♡</button>
         </div>
         <div class="collection-extra-filters">
-          <label class="collection-select-wrap"><span>Độ hiếm</span><select id="collectionRarityFilter" aria-label="Lọc theo độ hiếm"><option value="all">Tất cả</option><option value="N">N</option><option value="R">R</option><option value="SR">SR</option><option value="SSR">SSR</option><option value="UR">UR</option><option value="SP">SP</option></select></label>
+          <label class="collection-select-wrap"><span>Độ hiếm</span><select id="collectionRarityFilter" aria-label="Lọc theo độ hiếm"><option value="all">Tất cả</option><option value="R">R</option><option value="SR">SR</option><option value="SSR">SSR</option><option value="SSR+">SSR+</option><option value="UR">UR</option><option value="SP">SP</option></select></label>
           <label class="collection-select-wrap"><span>Phong cách</span><select id="collectionStyleFilter" aria-label="Lọc theo phong cách"><option value="all">Tất cả</option></select></label>
         </div>
       </div>
@@ -444,7 +444,7 @@
             <div class="upgrade-fodder-list" id="upgradeFodderList" aria-label="Chọn thẻ làm phôi"></div>
             <div class="upgrade-level-footer"><div><small>EXP phôi đã chọn</small><strong id="upgradeSelectedExp">0 EXP</strong><span id="upgradeLevelSummary">Chọn thẻ làm phôi để tiếp tục.</span></div><button class="primary-btn upgrade-action-btn" id="upgradeLevelBtn" type="button" disabled>Nâng level</button></div>
           </section>
-          <p class="upgrade-footnote" id="upgradeFootnote">Nâng sao: 1★→2★ 80% (2 phôi), 2★→3★ 60% (3), 3★→4★ 40% (4), 4★→5★ 25% (6). Nâng level: N 10 · R 20 · SR 40 · SSR 80 · UR 150 · SP 250 EXP mỗi phôi.</p>
+          <p class="upgrade-footnote" id="upgradeFootnote">Nâng sao: 1★→2★ 80% (2 phôi), 2★→3★ 60% (3), 3★→4★ 40% (4), 4★→5★ 25% (6). Nâng level: R 20 · SR 40 · SSR 80 · SSR+ 100 · UR 150 · SP 250 EXP mỗi phôi.</p>
         </section>
 
         </div>
@@ -454,7 +454,7 @@
     <section class="app-page" id="page-leaderboard" data-app-page="leaderboard" hidden>
       <section class="leaderboard-section" id="leaderboard">
         <div class="section-heading leaderboard-page-heading">
-          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Dữ liệu lấy từ toàn bộ danh mục phim và thẻ.</p></div>
+          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Xếp hạng theo điểm toàn kho; mỗi bảng hiển thị tối đa 100 mục.</p></div>
           <div class="leaderboard-total"><span>✦</span><strong id="leaderboardActorCount">0</strong><small id="leaderboardCountLabel">diễn viên</small></div>
         </div>
         <div class="leaderboard-kind-tabs" role="group" aria-label="Loại bảng xếp hạng">
@@ -463,18 +463,13 @@
         </div>
         <label class="leaderboard-search-wrap" for="leaderboardSearch"><span aria-hidden="true">⌕</span><input id="leaderboardSearch" type="search" placeholder="Tìm diễn viên hoặc phim…" autocomplete="off" aria-label="Tìm trong bảng xếp hạng" /></label>
         <div class="leaderboard-controls">
-          <div class="leaderboard-control-group" id="leaderboardGenderControls" role="group" aria-label="Chọn giới tính diễn viên">
-            <button class="leaderboard-chip active" type="button" data-rank-gender="female" aria-pressed="true">✿ Diễn viên nữ</button>
-            <button class="leaderboard-chip" type="button" data-rank-gender="male" aria-pressed="false">✦ Diễn viên nam</button>
-          </div>
-          <div class="leaderboard-control-group leaderboard-mode-group" id="leaderboardModeControls" role="group" aria-label="Chọn tiêu chí xếp hạng">
-            <button class="leaderboard-mode active" type="button" data-rank-mode="hot" aria-pressed="true"><span>🔥</span><strong>Độ hot</strong><small>Số phim khác nhau</small></button>
-            <button class="leaderboard-mode" type="button" data-rank-mode="beauty" aria-pressed="false"><span>✧</span><strong>Nhan sắc</strong><small>Điểm theo phim & thẻ</small></button>
-            <button class="leaderboard-mode" type="button" data-rank-mode="cast" aria-pressed="false" hidden><span>♟</span><strong>Dàn diễn viên</strong><small>Số diễn viên khác nhau</small></button>
-            <button class="leaderboard-mode" type="button" data-rank-mode="points" aria-pressed="false" hidden><span>✧</span><strong>Điểm kho thẻ</strong><small>Điểm độ hiếm</small></button>
+          <div class="leaderboard-control-group" id="leaderboardGenderControls" role="group" aria-label="Phạm vi xếp hạng diễn viên">
+            <button class="leaderboard-chip active" type="button" data-rank-gender="all" aria-pressed="true">✦ Tổng thể</button>
+            <button class="leaderboard-chip" type="button" data-rank-gender="female" aria-pressed="false">✿ Diễn viên nữ</button>
+            <button class="leaderboard-chip" type="button" data-rank-gender="male" aria-pressed="false">✧ Diễn viên nam</button>
           </div>
         </div>
-        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Độ hot được tính từ số phim khác nhau trong toàn bộ kho hệ thống.</div>
+        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Điểm Nhan sắc = P / N + N, tính từ toàn bộ danh mục hệ thống.</div>
         <div class="leaderboard-podium" id="leaderboardPodium" aria-label="Ba vị trí dẫn đầu"></div>
         <ol class="leaderboard-list" id="leaderboardList" aria-label="Bảng xếp hạng"></ol>
         <div class="leaderboard-empty" id="leaderboardEmpty" hidden>
@@ -499,7 +494,7 @@
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
         <article class="info-card"><span>05</span><h3>Mối liên kết</h3><p>Hồ sơ tự nối các thẻ của cùng diễn viên và các diễn viên có cùng tên phim. Hãy nhập tên phim nhất quán để tạo mạng lưới bạn diễn chính xác.</p></article>
         <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng diễn viên, phim, vai diễn và độ hiếm, ứng dụng sẽ hỏi lại trước khi thêm thẻ có thông tin trùng.</p></article>
-        <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Độ hot tính theo số phim khác nhau được ghi nhận trong kho dữ liệu. Bảng phim và diễn viên dùng toàn bộ dữ liệu hệ thống. Độ hot tính theo số phim khác nhau; điểm Nhan sắc = P / N + N, trong đó P là tổng điểm độ hiếm của các biến thể thẻ khác nhau và N là số phim khác nhau. Điểm không phụ thuộc thẻ người chơi sở hữu hay bản sao.</p></article>
+        <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Điểm phim là tổng điểm các biến thể thẻ khác nhau cộng điểm cặp bạn diễn tái hợp. Điểm Nhan sắc = P / N + N, với P là tổng điểm thẻ khác nhau và N là số phim khác nhau. Có bảng Tổng thể gộp diễn viên nam và nữ; mỗi bảng chỉ hiển thị tối đa 100 mục. Điểm dùng toàn bộ kho hệ thống, không phụ thuộc thẻ bạn sở hữu.</p></article>
       </div>
       <section class="info-card ui-preferences-card" aria-labelledby="uiPreferencesTitle">
         <span>08</span><h3 id="uiPreferencesTitle">Tùy chỉnh giao diện</h3>

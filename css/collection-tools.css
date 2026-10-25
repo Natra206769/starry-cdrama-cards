@@ -312,3 +312,8 @@
   .collection-stat-card>small{font-size:8px}
   .collection-presets-panel .collection-presets{align-items:stretch;gap:7px}
 }
+
+
+/* SSR+ shares SSR's collection accent and movie rarity chip styling. */
+.collection-rarity-total.rarity-ssr-plus{--tier-color:#c18aff;border-color:#c18aff55}.collection-rarity-total.rarity-ssr-plus>strong{color:#c18aff}
+.film-rarity-stat.rarity-ssr-plus{border-color:#c18aff55}.film-rarity-stat.rarity-ssr-plus strong{color:#c18aff}

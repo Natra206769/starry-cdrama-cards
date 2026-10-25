@@ -70,3 +70,17 @@
 @media(max-width:850px){.main-nav{margin-left:-28px;margin-right:-28px;justify-content:flex-start;overflow-x:auto}.nav-tab{padding:10px 15px}.info-cards{gap:10px}}
 @media(max-width:650px){.main-nav{margin-left:-17px;margin-right:-17px;top:0;gap:6px;padding:9px 10px}.nav-tab{min-height:40px;padding:9px 12px;font-size:11px;gap:6px;border-radius:11px}.nav-tab span{font-size:13px}.info-page-heading{padding:29px 0 18px}.info-cards{grid-template-columns:1fr}.info-card{min-height:0;padding:17px}.rarity-overlay:before{inset:4px}}
 @media(prefers-reduced-motion:reduce){.app-page.active{animation:none}.stage:before,.stage:after,.rarity-overlay:before,.rarity-overlay:after{animation:none!important}}
+
+
+/* SSR+ uses the same frame and summon sequence as SSR. */
+.character-card.rarity-ssr-plus{border-color:#c18aff;box-shadow:0 0 0 1px #c18affc9,0 0 22px #a56bff8a,0 0 46px #a56bff45,0 25px 60px #0009;animation:reveal-ssr 1.12s cubic-bezier(.12,.8,.18,1) both}
+.character-card.rarity-ssr-plus .rarity-overlay{opacity:.9}
+.character-card.rarity-ssr-plus .rarity-overlay:before{inset:4px;border-width:2px;box-shadow:inset 0 0 18px #c18aff55,0 0 16px #c18aff77;animation:frame-pulse 2.3s ease-in-out infinite}
+.character-card.rarity-ssr-plus .rarity-overlay:after{opacity:.85;animation:star-drift 2.9s linear infinite}
+.character-card.rarity-ssr-plus:after{content:"";position:absolute;inset:-1px;z-index:5;pointer-events:none;background:linear-gradient(115deg,transparent 12%,rgba(255,255,255,0) 32%,rgba(255,255,255,.34) 46%,rgba(255,255,255,0) 59%,transparent 76%);transform:translateX(-130%);animation:rare-shimmer 1.8s ease-out .15s 1}
+.stage.opening-rarity-ssr-plus:before{opacity:.82;animation:ring-awaken 1.3s ease-out both;box-shadow:0 0 24px #b481ff90,inset 0 0 22px #b481ff35}
+.stage.opening-rarity-ssr-plus:after{opacity:.8;animation:stage-sparkles .55s ease-in-out infinite}
+.stage.opening-rarity-ssr-plus .stage-glow{opacity:.55;background:#a56bff;transform:scale(1.25)}
+.stage.opening-rarity-ssr-plus .card-back{animation:card-charge .98s ease-in-out both;border-color:#c18aff;box-shadow:0 0 25px #a56bffbb,0 0 55px #a56bff66}
+.stage.opening-rarity-ssr-plus .back-seal{animation:seal-charge 1s ease-in-out infinite;color:#ead5ff}
+@media(prefers-reduced-motion:reduce){.character-card.rarity-ssr-plus,.character-card.rarity-ssr-plus .rarity-overlay:before,.character-card.rarity-ssr-plus .rarity-overlay:after,.stage.opening-rarity-ssr-plus:before,.stage.opening-rarity-ssr-plus:after,.stage.opening-rarity-ssr-plus .card-back,.stage.opening-rarity-ssr-plus .back-seal{animation:none!important}}

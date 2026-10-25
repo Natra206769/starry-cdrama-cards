@@ -1,15 +1,14 @@
-/* leaderboard.js — Xếp hạng toàn kho phim và diễn viên.
-   Chỉ dùng danh mục hệ thống; dữ liệu sở hữu của người chơi không ảnh hưởng thứ hạng. */
-let leaderboardGender = "female";
-let leaderboardMode = "hot";
+/* leaderboard.js — Film and actor rankings use the complete system catalog, never player ownership. */
+let leaderboardGender = "all";
 let leaderboardKind = "actor";
 let leaderboardQuery = "";
+const MAX_LEADERBOARD_ENTRIES = 100;
 
 function leaderboardTextKey(value){return normalizedSearchKey(String(value||"").trim());}
 function leaderboardMovieTitle(card){const title=String(card.movie||"").trim();return title&&!isGenericCollectionTitle(title)?title:"";}
 function leaderboardCardIdentity(card,scope){
   const movie=leaderboardTextKey(card.movie),actor=leaderboardTextKey(card.name),role=leaderboardTextKey(card.role);
-  const rarity=String(card.rarity||"N").toUpperCase();
+  const rarity=String(card.rarity||"R").toUpperCase();
   return scope==="actor" ? [movie,role,rarity].join("::") : [actor,role,rarity].join("::");
 }
 function leaderboardDistinctCards(cards,scope){
@@ -20,9 +19,8 @@ function leaderboardDistinctCards(cards,scope){
   });
   return [...map.values()];
 }
-function leaderboardCardPoints(cards){
-  return leaderboardDistinctCards(cards,"movie").reduce((sum,card)=>sum+(leaderboardRarityPoints[String(card.rarity||"N").toUpperCase()]||1),0);
-}
+function rarityPoints(card){return leaderboardRarityPoints[String(card.rarity||"R").toUpperCase()]??3;}
+
 function buildActorRankingData(){
   const byName=new Map();
   for(const card of characters){
@@ -34,18 +32,17 @@ function buildActorRankingData(){
   }
   return [...byName.values()].map(actor=>{
     actor.systemCards=leaderboardDistinctCards(actor.cards,"actor");
-    // Gender is inferred from distinct catalog entries, not player-owned copies.
     for(const card of actor.systemCards)if(card.gender==="male"||card.gender==="female")actor.genderCounts[card.gender]++;
     actor.gender=actor.genderCounts.female>actor.genderCounts.male?"female":actor.genderCounts.male>actor.genderCounts.female?"male":(actor.systemCards.find(card=>card.gender==="male"||card.gender==="female")?.gender||"other");
-    actor.hotScore=actor.movies.size;
-    actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+(leaderboardRarityPoints[String(card.rarity||"N").toUpperCase()]||1),0);
+    actor.filmCount=actor.movies.size;
+    actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+rarityPoints(card),0);
     actor.cardCount=actor.systemCards.length;
-    // Keep the existing agreed formula: score = P / N + N.
-    // P: rarity-weighted points from distinct catalog variants; N: distinct concrete films.
-    actor.beautyScore=actor.hotScore>0?(actor.catalogCardPoints/actor.hotScore)+actor.hotScore:0;
+    // Nhan sắc (entertainment metric) = P / N + N, where P is the distinct-card points and N is distinct films.
+    actor.beautyScore=actor.filmCount>0?(actor.catalogCardPoints/actor.filmCount)+actor.filmCount:0;
     return actor;
   });
 }
+
 function buildMovieRankingData(){
   const byMovie=new Map();
   for(const card of characters){
@@ -54,7 +51,6 @@ function buildMovieRankingData(){
     const movie=byMovie.get(key);movie.cards.push(card);
     const actor=leaderboardTextKey(card.name);if(actor)movie.actors.add(actor);
   }
-  // Include explicitly registered film records even when no cards are linked yet.
   if(typeof movieMetadataEntries==="function"){
     for(const entry of movieMetadataEntries()){
       const key=leaderboardTextKey(entry.title);
@@ -62,7 +58,6 @@ function buildMovieRankingData(){
     }
   }
 
-  // Count each co-star pair once per distinct movie, regardless of card variants.
   const movies=[...byMovie.values()];
   const pairFilmCounts=new Map();
   for(const movie of movies){
@@ -80,10 +75,7 @@ function buildMovieRankingData(){
     movie.systemCards=leaderboardDistinctCards(movie.cards,"movie");
     movie.actorCount=movie.actors.size;
     movie.cardCount=movie.systemCards.length;
-    movie.cardPoints=movie.systemCards.reduce((sum,card)=>sum+(leaderboardRarityPoints[String(card.rarity||"N").toUpperCase()]||1),0);
-
-    // Hidden bonus: +0.25 per recurring co-star pair in each shared film.
-    // Only pairs with at least two distinct shared films qualify.
+    movie.cardPoints=movie.systemCards.reduce((sum,card)=>sum+rarityPoints(card),0);
     movie.pairBonus=0;
     const actors=[...movie.actors].filter(Boolean).sort();
     for(let i=0;i<actors.length;i++){
@@ -97,6 +89,7 @@ function buildMovieRankingData(){
     return movie;
   });
 }
+
 function compareVietnamese(a,b){return String(a).localeCompare(String(b),"vi",{sensitivity:"base"});}
 function leaderboardAvatarSource(item){
   if(leaderboardKind==="movie"){
@@ -105,8 +98,8 @@ function leaderboardAvatarSource(item){
     const card=item.systemCards.find(card=>card.photo);
     return card?{src:card.photo,alt:"Ảnh minh họa phim "+item.title,accent:card.accent||"#d8bb86",fallback:""}:null;
   }
-  const rarityOrder={SP:6,UR:5,SSR:4,SR:3,R:2,N:1};
-  const card=[...(item.systemCards||item.cards||[])].sort((a,b)=>(rarityOrder[String(b.rarity||"N").toUpperCase()]||0)-(rarityOrder[String(a.rarity||"N").toUpperCase()]||0)||compareVietnamese(a.movie,b.movie))[0];
+  const rarityOrder={SP:6,UR:5,"SSR+":4,SSR:3,SR:2,R:1};
+  const card=[...(item.systemCards||item.cards||[])].sort((a,b)=>(rarityOrder[String(b.rarity||"R").toUpperCase()]||0)-(rarityOrder[String(a.rarity||"R").toUpperCase()]||0)||compareVietnamese(a.movie,b.movie))[0];
   return card?{src:card.photo||"",alt:"Ảnh đại diện thẻ của "+item.name,accent:card.accent||"#c18aff",initials:card.initials||makeInitials(card.chinese,item.name),fallback:card.photoFallback||""}:{src:"",alt:"",accent:"#c18aff",initials:makeInitials("",item.name),fallback:""};
 }
 function makeLeaderboardAvatar(item){
@@ -142,24 +135,23 @@ function makeLeaderboardEntry(item,rank,podium=false){
   if(leaderboardKind==="movie"){
     const meta=item.metadata||{};
     sub.textContent=[meta.year,item.actorCount+" diễn viên",item.cardCount+" biến thể"].filter(Boolean).join(" · ");
-  }else if(leaderboardMode==="hot")sub.textContent=item.hotScore+" phim khác nhau · "+item.cardCount+" biến thể trong kho";
-  else sub.textContent="N = "+item.hotScore+" phim · P = "+item.catalogCardPoints+" điểm thẻ";
+  }else sub.textContent="N = "+item.filmCount+" phim · P = "+item.catalogCardPoints+" điểm thẻ";
   identity.append(name,sub);
   const metric=document.createElement("div");metric.className="leaderboard-metric";
-  const score=document.createElement("strong");
-  const label=document.createElement("span");
+  const score=document.createElement("strong"),label=document.createElement("span");
   if(leaderboardKind==="movie"){
-    score.textContent=leaderboardMode==="cast"?String(item.actorCount):item.rankingPoints.toLocaleString("vi-VN",{maximumFractionDigits:2});
-    label.textContent=leaderboardMode==="cast"?"DIỄN VIÊN":"ĐIỂM THẺ";
+    score.textContent=item.rankingPoints.toLocaleString("vi-VN",{maximumFractionDigits:2});
+    label.textContent="ĐIỂM PHIM";
   }else{
-    score.textContent=leaderboardMode==="hot"?String(item.hotScore):item.beautyScore.toLocaleString("vi-VN",{maximumFractionDigits:2});
-    label.textContent=leaderboardMode==="hot"?"PHIM":"ĐIỂM";
+    score.textContent=item.beautyScore.toLocaleString("vi-VN",{maximumFractionDigits:2});
+    label.textContent="ĐIỂM NHAN SẮC";
   }
   metric.append(score,label);element.append(badge,avatar,identity,metric);
   element.addEventListener("click",()=>leaderboardOpenEntry(item));
   element.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();leaderboardOpenEntry(item);}});
   return element;
 }
+
 function renderLeaderboard(){
   const page=$("page-leaderboard");if(!page)return;
   const podium=$("leaderboardPodium"),list=$("leaderboardList"),empty=$("leaderboardEmpty");
@@ -170,46 +162,30 @@ function renderLeaderboard(){
   document.querySelectorAll("[data-rank-gender]").forEach(button=>{
     const active=button.dataset.rankGender===leaderboardGender;button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));
   });
-  document.querySelectorAll("[data-rank-mode]").forEach(button=>{
-    const active=button.dataset.rankMode===leaderboardMode;button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));
-  });
   const genderControls=$("leaderboardGenderControls");
-  const modeGroup=$("leaderboardModeControls");
   if(genderControls)genderControls.hidden=leaderboardKind!=="actor";
-  if(modeGroup){
-    modeGroup.querySelectorAll("[data-rank-mode]").forEach(button=>{
-      const isMovieMode=button.dataset.rankMode==="cast"||button.dataset.rankMode==="points";
-      button.hidden=leaderboardKind==="movie"?!isMovieMode:isMovieMode;
-    });
-  }
-  const query=leaderboardTextKey($("leaderboardSearch")?.value||"");
-  leaderboardQuery=query;
-  const allActors=buildActorRankingData();
-  const allMovies=buildMovieRankingData();
-  let sorted;
+  const query=leaderboardTextKey($("leaderboardSearch")?.value||"");leaderboardQuery=query;
+  const allActors=buildActorRankingData(),allMovies=buildMovieRankingData();
+  let sorted=[];
   if(leaderboardKind==="movie"){
-    sorted=allMovies.filter(movie=>leaderboardTextKey(movie.title).includes(query))
-      .filter(movie=>leaderboardMode==="cast"?movie.actorCount>0:movie.cardCount>0)
-      .sort((a,b)=>(leaderboardMode==="cast"?b.actorCount-a.actorCount:b.rankingPoints-a.rankingPoints)||b.cardCount-a.cardCount||compareVietnamese(a.title,b.title));
-    $("leaderboardActorCount").textContent=sorted.length;
-    $("leaderboardCountLabel").textContent="phim";
-    $("leaderboardRules").textContent=leaderboardMode==="cast"
-      ?"Dàn diễn viên = số tên diễn viên khác nhau được liên kết với từng phim trong toàn bộ kho thẻ. Mỗi diễn viên chỉ tính một lần cho mỗi phim; không phụ thuộc bộ sưu tập cá nhân."
-      :"Điểm kho thẻ = tổng điểm độ hiếm của các biến thể thẻ khác nhau thuộc phim (N = 1 · R = 2 · SR = 4 · SSR = 7 · UR = 12 · SP = 20). Bản sao sở hữu không được cộng điểm.";
+    const matches=allMovies.filter(movie=>movie.cardCount>0&&leaderboardTextKey(movie.title).includes(query))
+      .sort((a,b)=>b.rankingPoints-a.rankingPoints||b.cardCount-a.cardCount||compareVietnamese(a.title,b.title));
+    sorted=matches.slice(0,MAX_LEADERBOARD_ENTRIES);
+    $("leaderboardActorCount").textContent=String(sorted.length);
+    $("leaderboardCountLabel").textContent="phim · top 100";
+    $("leaderboardRules").textContent="Điểm phim = tổng điểm các biến thể thẻ khác nhau (R 3 · SR 5 · SSR 9 · SSR+ 11 · UR 17 · SP 25) + 0,25 cho mỗi cặp diễn viên từng cùng xuất hiện trong ít nhất 2 phim. Bản sao sở hữu không được cộng điểm. Hiển thị tối đa 100 phim.";
   }else{
-    const actors=allActors.filter(actor=>actor.gender===leaderboardGender);
-    sorted=actors.filter(actor=>actor.hotScore>0&&leaderboardTextKey(actor.name).includes(query))
-      .sort((a,b)=>(leaderboardMode==="hot"?b.hotScore-a.hotScore:b.beautyScore-a.beautyScore)||b.hotScore-a.hotScore||b.catalogCardPoints-a.catalogCardPoints||compareVietnamese(a.name,b.name));
-    $("leaderboardActorCount").textContent=sorted.length;
-    $("leaderboardCountLabel").textContent="diễn viên";
-    $("leaderboardRules").textContent=leaderboardMode==="hot"
-      ?"Độ hot = số phim khác nhau có tên diễn viên trong toàn bộ kho hệ thống. Mỗi phim chỉ tính một lần; dữ liệu sở hữu và bản sao của người chơi không ảnh hưởng thứ hạng."
-      :"Điểm Nhan sắc (chỉ số giải trí) = P / N + N. P là tổng điểm độ hiếm của các biến thể thẻ khác nhau trong kho hệ thống (N = 1 · R = 2 · SR = 4 · SSR = 7 · UR = 12 · SP = 20); N là số phim khác nhau. Không đánh giá khách quan ngoại hình.";
+    const matches=allActors.filter(actor=>(leaderboardGender==="all"||actor.gender===leaderboardGender)&&actor.filmCount>0&&leaderboardTextKey(actor.name).includes(query))
+      .sort((a,b)=>b.beautyScore-a.beautyScore||b.filmCount-a.filmCount||b.catalogCardPoints-a.catalogCardPoints||compareVietnamese(a.name,b.name));
+    sorted=matches.slice(0,MAX_LEADERBOARD_ENTRIES);
+    $("leaderboardActorCount").textContent=String(sorted.length);
+    $("leaderboardCountLabel").textContent="diễn viên · top 100";
+    $("leaderboardRules").textContent="Điểm Nhan sắc (chỉ số giải trí) = P / N + N. P là tổng điểm độ hiếm của các biến thể thẻ khác nhau trong toàn kho (R 3 · SR 5 · SSR 9 · SSR+ 11 · UR 17 · SP 25); N là số phim khác nhau. Tổng thể gộp diễn viên nam và nữ. Hiển thị tối đa 100 diễn viên.";
   }
   empty.hidden=sorted.length>0;
   if(!sorted.length){
-    $("leaderboardEmptyTitle").textContent=query?"Không tìm thấy kết quả phù hợp":leaderboardKind==="movie"?"Chưa có dữ liệu phim để xếp hạng":leaderboardMode==="hot"?"Chưa có dữ liệu phim cụ thể":"Chưa có dữ liệu phim để tính điểm";
-    $("leaderboardEmptyText").textContent=query?"Thử từ khóa khác hoặc xóa nội dung tìm kiếm.":leaderboardKind==="movie"?"Thêm phim có thẻ liên kết hoặc bổ sung dữ liệu phim trong mục Quản lý thẻ.":"Hãy gắn tên phim cụ thể vào thẻ trong kho. Thứ hạng luôn dựa trên toàn bộ dữ liệu hệ thống, không phải thẻ bạn sở hữu.";
+    $("leaderboardEmptyTitle").textContent=query?"Không tìm thấy kết quả phù hợp":leaderboardKind==="movie"?"Chưa có dữ liệu phim để xếp hạng":"Chưa có dữ liệu diễn viên để tính điểm";
+    $("leaderboardEmptyText").textContent=query?"Thử từ khóa khác hoặc xóa nội dung tìm kiếm.":leaderboardKind==="movie"?"Thêm phim có thẻ liên kết hoặc bổ sung dữ liệu phim trong mục Quản lý thẻ.":"Hãy gắn tên phim cụ thể vào thẻ trong kho. Thứ hạng dùng toàn bộ dữ liệu hệ thống, không phải thẻ bạn sở hữu.";
     return;
   }
   if(sorted.length>=3){
@@ -221,8 +197,7 @@ function renderLeaderboard(){
     list.hidden=false;sorted.forEach((item,index)=>list.appendChild(makeLeaderboardEntry(item,index+1,false)));
   }
 }
-for(const button of document.querySelectorAll("[data-rank-kind]"))button.addEventListener("click",()=>{leaderboardKind=button.dataset.rankKind;leaderboardMode=leaderboardKind==="movie"?"cast":"hot";renderLeaderboard();});
+for(const button of document.querySelectorAll("[data-rank-kind]"))button.addEventListener("click",()=>{leaderboardKind=button.dataset.rankKind;renderLeaderboard();});
 for(const button of document.querySelectorAll("[data-rank-gender]"))button.addEventListener("click",()=>{leaderboardGender=button.dataset.rankGender;renderLeaderboard();});
-for(const button of document.querySelectorAll("[data-rank-mode]"))button.addEventListener("click",()=>{leaderboardMode=button.dataset.rankMode;renderLeaderboard();});
 $("leaderboardSearch")?.addEventListener("input",renderLeaderboard);
 $("leaderboardAddCardsBtn").addEventListener("click",()=>{showAppPage("manager");startAddCharacter();});

@@ -24,7 +24,7 @@
  }
  function genderOf(s){const k=normalizedSearchKey(s);if(["female","f","nu"].includes(k))return "female";if(["male","m","nam"].includes(k))return "male";if(!k||["other","khac","group","nhom"].includes(k))return "other";return null;}
  function styleOf(s){const k=normalizedSearchKey(s);if(!k)return {value:"Khác",warning:"Thiếu phong cách, dùng “Khác”."};const hit=styles.find(x=>normalizedSearchKey(x)===k);if(hit)return {value:hit,warning:""};if(["hien dai","modern","contemporary","other"].includes(k))return {value:"Khác",warning:"Phong cách được đổi thành “Khác”."};return {value:"Khác",warning:"Phong cách chưa nhận diện, dùng “Khác”."};}
- function rarityOf(s){const k=normalizedSearchKey(s).toUpperCase(),map={"NORMAL":"N","COMMON":"R","RARE":"SR","SUPER RARE":"SSR","LEGENDARY":"UR","SPECIAL":"SP","THUONG":"N","PHO BIEN":"R","HIEM":"SR","SIEU HIEM":"SSR","HUYEN THOAI":"UR","DAC BIET":"SP"},v=map[k]||k;return rarityInfo[v]?v:null;}
+ function rarityOf(s){const k=normalizedSearchKey(s).toUpperCase(),map={"NORMAL":"R","COMMON":"R","RARE":"SR","SUPER RARE":"SSR","LEGENDARY":"UR","SPECIAL":"SP","THUONG":"R","PHO BIEN":"R","HIEM":"SR","SIEU HIEM":"SSR","HUYEN THOAI":"UR","DAC BIET":"SP"},raw=map[k]||k,v=raw==="N"?"R":raw;return rarityInfo[v]?v:null;}
  function photoOf(s){if(!s)return {value:"",error:""};try{const u=new URL(s);return ["http:","https:"].includes(u.protocol)?{value:u.href,error:""}:{value:"",error:"Ảnh URL phải bắt đầu bằng http:// hoặc https://."};}catch{return {value:"",error:"Ảnh URL không hợp lệ."};}}
  function signature(c){return normalizedSearchKey([c.name,c.movie,c.role,c.rarity].join("|"));}
  function parseSource(text){
@@ -37,7 +37,7 @@
    const get=f=>map[f]===undefined?"":String(cells[map[f]]||"").trim(),name=titleCaseName(get("name")),movie=titleCaseName(get("movie")),role=titleCaseName(get("role")),chinese=get("chinese"),gender=genderOf(get("gender")),style=styleOf(get("style")),rarity=rarityOf(get("rarity")||"SSR"),quote=get("quote"),photo=photoOf(get("photo")),errors=[],warnings=[];
    if(!name)errors.push("Thiếu tên diễn viên.");if(!movie)errors.push("Thiếu tên phim.");
    if(name.length>60)errors.push("Tên diễn viên quá 60 ký tự.");if(movie.length>100)errors.push("Tên phim quá 100 ký tự.");if(role.length>80)errors.push("Vai diễn quá 80 ký tự.");if(chinese.length>30)errors.push("Tên tiếng Trung quá 30 ký tự.");if(quote.length>180)errors.push("Mô tả quá 180 ký tự.");
-   if(!gender)errors.push("Giới tính không hợp lệ.");if(!rarity)errors.push("Độ hiếm phải là N/R/SR/SSR/UR/SP.");if(photo.error)errors.push(photo.error);if(style.warning)warnings.push(style.warning);
+   if(!gender)errors.push("Giới tính không hợp lệ.");if(!rarity)errors.push("Độ hiếm phải là R/SR/SSR/SSR+/UR/SP.");if(photo.error)errors.push(photo.error);if(style.warning)warnings.push(style.warning);
    const card={name,movie,role,chinese,gender:gender||"other",style:style.value,rarity:rarity||"SSR",quote:quote||"Một ngôi sao, một câu chuyện.",photo:photo.value},sig=signature(card);
    const duplicateExisting=Boolean(name&&movie&&existing.has(sig)),duplicateBatch=Boolean(name&&movie&&seen.has(sig));if(name&&movie)seen.add(sig);
    return {line:i+2,card,errors,warnings,duplicateExisting,duplicateBatch};

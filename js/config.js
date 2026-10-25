@@ -13,16 +13,15 @@ const DB_STORE="appData";
 
 // ---- Độ hiếm: nhãn, màu, trọng số rút thẻ (tổng 1000), thời gian lật thẻ ----
 /* Single source for tier order, labels, collection/reveal palettes and gacha weights.
-   Weights total 1000: N 39.8%, R 28.7%, SR 18%, SSR 10.2%, UR 3%, SP 0.3%.
-   When SP exists in the deck, its chance is kept at exactly 0.3%; remaining tiers
-   share the remaining 99.7% in proportion to their configured weights. */
+   R absorbs the retired N tier. SSR+ shares the SSR visual frame but has a distinct tier key.
+   Configured weights total 1000; when SP exists, its chance remains exactly 0.3%. */
 const rarityInfo = {
-  N:  {label:"N · NORMAL",     shortLabel:"Thường",     color:"#b8c4d9", weight:398, luck:8,   revealDelay:530, effect:"n",  toastPrefix:"✧ THƯỜNG! ",     art:["#39455c","#111522","#b8c4d9"]},
-  R:  {label:"R · COMMON",     shortLabel:"Phổ biến",   color:"#aab5c9", weight:287, luck:25,  revealDelay:700, effect:"r",  toastPrefix:"✧ ",             art:["#67513f","#1c1a1b","#e6c69c"]},
-  SR: {label:"SR · RARE",      shortLabel:"Hiếm",       color:"#72b6ff", weight:180, luck:50,  revealDelay:980, effect:"sr", toastPrefix:"✧ HIẾM! ",       art:["#214b57","#101a25","#6ec6c2"]},
-  SSR:{label:"SSR · SUPER RARE",shortLabel:"Siêu hiếm", color:"#c18aff", weight:102, luck:78,  revealDelay:1320,effect:"ssr",toastPrefix:"✦ SIÊU HIẾM! ",  art:["#45415e","#171526","#b7a9ef"]},
-  UR: {label:"UR · LEGENDARY", shortLabel:"Huyền thoại",color:"#ffca75", weight:30,  luck:94,  revealDelay:1750,effect:"ur", toastPrefix:"✨ HUYỀN THOẠI! ",art:["#5a3d29","#1b1520","#ffca75"]},
-  SP: {label:"SP · SPECIAL",   shortLabel:"Đặc biệt",   color:"#ff85d4", weight:3,   luck:100, revealDelay:2300,effect:"sp", toastPrefix:"🌟 ĐẶC BIỆT! ",  art:["#682a67","#190f2b","#ff85d4"]}
+  R:   {label:"R · RARE",        shortLabel:"Hiếm",       color:"#aab5c9", weight:685, luck:25,  revealDelay:700,  effect:"r",   toastPrefix:"✧ HIẾM! ",        art:["#67513f","#1c1a1b","#e6c69c"]},
+  SR:  {label:"SR · SUPER RARE", shortLabel:"Siêu hiếm",  color:"#72b6ff", weight:180, luck:50,  revealDelay:980,  effect:"sr",  toastPrefix:"✦ SIÊU HIẾM! ",   art:["#214b57","#101a25","#6ec6c2"]},
+  SSR: {label:"SSR · SUPER RARE",shortLabel:"Siêu hiếm",  color:"#c18aff", weight:80,  luck:78,  revealDelay:1320, effect:"ssr", toastPrefix:"✦ SIÊU HIẾM! ",   art:["#45415e","#171526","#b7a9ef"]},
+  "SSR+":{label:"SSR+ · SUPER RARE+",shortLabel:"Siêu hiếm+",color:"#c18aff",weight:22,luck:88,revealDelay:1450,effect:"ssr",toastPrefix:"✦ SIÊU HIẾM+! ",art:["#45415e","#171526","#b7a9ef"]},
+  UR:  {label:"UR · ULTRA RARE",  shortLabel:"Cực hiếm",   color:"#ffca75", weight:30,  luck:94,  revealDelay:1750, effect:"ur",  toastPrefix:"✨ HUYỀN THOẠI! ", art:["#5a3d29","#1b1520","#ffca75"]},
+  SP:  {label:"SP · SPECIAL",     shortLabel:"Đặc biệt",   color:"#ff85d4", weight:3,   luck:100, revealDelay:2300, effect:"sp",  toastPrefix:"🌟 ĐẶC BIỆT! ",    art:["#682a67","#190f2b","#ff85d4"]}
 };
 // Tổng trọng số danh nghĩa. SP được giữ đúng rarityInfo.SP.weight / TOTAL_RARITY_WEIGHT khi kho có SP.
 const TOTAL_RARITY_WEIGHT = 1000;
@@ -35,15 +34,15 @@ const starUpgradeRules = {
   3:{rate:40,cost:4,next:4},
   4:{rate:25,cost:6,next:5}
 };
-const levelExpByRarity = {N:10,R:20,SR:40,SSR:80,UR:150,SP:250};
+const levelExpByRarity = {R:20,SR:40,SSR:80,"SSR+":100,UR:150,SP:250};
 const levelExpRequirements = [30,50,75,100,140,180,230,290,360];
 const MAX_CARD_LEVEL = 10;
 
 // ---- Điểm Nhan sắc theo độ hiếm của mỗi biến thể thẻ trong bảng xếp hạng ----
-const leaderboardRarityPoints = {N:1,R:2,SR:4,SSR:7,UR:12,SP:20};
+const leaderboardRarityPoints = {R:3,SR:5,SSR:9,"SSR+":11,UR:17,SP:25};
 
 // ---- Thời gian (ms) giữ màn hình khi mở x10: thẻ chính sau khi lật, và màn spotlight ----
-const BATCH_REVEAL_HOLD_MS = {N:750,R:800,SR:1000,SSR:1320,UR:1750,SP:2050};
+const BATCH_REVEAL_HOLD_MS = {R:800,SR:1000,SSR:1320,"SSR+":1450,UR:1750,SP:2050};
 const BATCH_REVEAL_HOLD_DEFAULT_MS = 1100;
-const BATCH_SPOTLIGHT_HOLD_MS = {SSR:2050,UR:2300,SP:2600};
+const BATCH_SPOTLIGHT_HOLD_MS = {SSR:2050,"SSR+":2050,UR:2300,SP:2600};
 const BATCH_SPOTLIGHT_HOLD_DEFAULT_MS = 1750;

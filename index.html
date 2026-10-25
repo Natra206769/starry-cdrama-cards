@@ -358,12 +358,15 @@
         </div>
         <span class="collection-result-count" id="collectionResultCount" aria-live="polite">0 phim · 0 thẻ phù hợp</span>
       </div>
-      <div class="collection-presets" aria-label="Bộ lọc đã lưu">
-        <label for="collectionPresetSelect">Bộ lọc đã lưu</label>
-        <select id="collectionPresetSelect" aria-label="Chọn bộ lọc đã lưu"><option value="">Chọn bộ lọc đã lưu…</option></select>
-        <button type="button" class="outline-btn" id="saveCollectionPresetBtn">☆ Lưu bộ lọc hiện tại</button>
-        <button type="button" class="outline-btn" id="deleteCollectionPresetBtn" disabled>Xóa</button>
-      </div>
+      <details class="collection-presets-panel">
+        <summary>Bộ lọc đã lưu</summary>
+        <div class="collection-presets" aria-label="Bộ lọc đã lưu">
+          <label for="collectionPresetSelect">Bộ lọc</label>
+          <select id="collectionPresetSelect" aria-label="Chọn bộ lọc đã lưu…"><option value="">Chọn bộ lọc đã lưu…</option></select>
+          <button type="button" class="outline-btn" id="saveCollectionPresetBtn">☆ Lưu bộ lọc hiện tại</button>
+          <button type="button" class="outline-btn" id="deleteCollectionPresetBtn" disabled>Xóa</button>
+        </div>
+      </details>
 
       <div class="collection-filter-panel">
         <div class="filters collection-filter-chips" role="group" aria-label="Lọc thư viện">
@@ -386,7 +389,10 @@
         <label class="collection-select-wrap"><span>Trạng thái</span><select id="collectionMovieStatusFilter" aria-label="Lọc phim theo trạng thái sưu tầm"><option value="all">Tất cả trạng thái</option><option value="in-progress">Đang sưu tầm</option><option value="complete">Hoàn thành</option><option value="not-started">Chưa bắt đầu</option></select></label>
         <label class="collection-select-wrap"><span>Danh sách phim</span><select id="collectionMovieFocusFilter" aria-label="Lọc phim yêu thích, muốn sưu tầm hoặc đã ghim"><option value="all">Tất cả phim</option><option value="favorites">Phim yêu thích</option><option value="watchlist">Muốn sưu tầm</option><option value="pinned">Phim đã ghim</option></select></label>
       </div>
-      <div class="collection-rarity-summary" id="collectionRaritySummary" aria-label="Tiến độ sưu tầm theo cấp độ hiếm"></div>
+      <details class="collection-rarity-panel" id="collectionRarityPanel">
+        <summary>Tiến độ theo độ hiếm</summary>
+        <div class="collection-rarity-summary" id="collectionRaritySummary" aria-label="Tiến độ sưu tầm theo cấp độ hiếm"></div>
+      </details>
       <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Các thẻ bạn sở hữu sẽ xuất hiện tại đây. Hãy mở thẻ hoặc chuyển sang Khám phá kho thẻ để xem toàn bộ danh mục.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
       <div class="collection-movie-shelf" id="collectionMovieShelf" hidden aria-label="Kệ phim"></div>
       <div class="collection-sets" id="collectionSets"></div>
@@ -448,7 +454,7 @@
     <section class="app-page" id="page-leaderboard" data-app-page="leaderboard" hidden>
       <section class="leaderboard-section" id="leaderboard">
         <div class="section-heading leaderboard-page-heading">
-          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Xếp hạng minh bạch từ toàn bộ kho phim và thẻ của hệ thống.</p></div>
+          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Dữ liệu lấy từ toàn bộ danh mục phim và thẻ.</p></div>
           <div class="leaderboard-total"><span>✦</span><strong id="leaderboardActorCount">0</strong><small id="leaderboardCountLabel">diễn viên</small></div>
         </div>
         <div class="leaderboard-kind-tabs" role="group" aria-label="Loại bảng xếp hạng">
@@ -477,7 +483,6 @@
           <p id="leaderboardEmptyText">Thêm tên phim cụ thể hoặc dữ liệu phim để bắt đầu bảng xếp hạng.</p>
           <button class="secondary-btn" id="leaderboardAddCardsBtn" type="button">＋ Thêm / cập nhật thẻ</button>
         </div>
-        <p class="leaderboard-disclaimer">Các bảng phim và diễn viên dùng dữ liệu trong toàn hệ thống. Bản sao và tiến độ sưu tầm cá nhân không ảnh hưởng thứ hạng; “Nhan sắc” là chỉ số giải trí theo công thức, không phải đánh giá khách quan về ngoại hình.</p>
       </section>
     </section>
 

@@ -54,3 +54,5 @@ TMDB & QUYỀN SỬ DỤNG
 - Tra cứu tự động sử dụng TMDB API Read Access Token do người dùng tự cung cấp; token không được lưu trong localStorage, IndexedDB hoặc bản sao lưu.
 - Với dữ liệu TMDB, ứng dụng hiển thị logo và thông báo không được TMDB chứng thực. Hãy tuân thủ điều khoản và yêu cầu cấp phép hiện hành của TMDB; việc dùng miễn phí nêu trong FAQ chỉ áp dụng cho mục đích phi thương mại có ghi nguồn.
 - Các trường có nguồn TMDB được gắn mốc thời gian và tự được xóa khỏi metadata sau 180 ngày nếu không được người dùng chỉnh sửa thủ công, nhằm giới hạn lưu đệm dữ liệu nguồn.
+
+V11.3.4 — Khắc phục nút mở hồ sơ phim trong Bộ sưu tập: mở hộp thoại trước khi dựng nội dung, bổ sung chế độ hồ sơ tương thích nếu phần hiển thị chi tiết gặp lỗi, và tách sự kiện nhấn khỏi các phần tử cha.

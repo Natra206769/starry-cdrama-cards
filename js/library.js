@@ -68,13 +68,59 @@ function libraryBuildStat(label,value){
   const stat=document.createElement("div");stat.className="library-profile-stat";const strong=document.createElement("strong");strong.textContent=String(value);
   const small=document.createElement("small");small.textContent=label;stat.append(strong,small);return stat;
 }
+function renderMovieProfileFallback(profile,error){
+  const root=$("libraryProfileContent");if(!root)return;
+  root.replaceChildren();
+  const cards=libraryMovieCards(profile.value);
+  const metadata=typeof getMovieMetadata==="function"?getMovieMetadata(profile.value):null;
+  const heading=document.createElement("section");heading.className="library-profile-hero";
+  const copy=document.createElement("div");copy.className="library-profile-hero-copy";
+  const title=document.createElement("h2");title.id="libraryProfileTitle";title.textContent=profile.value;
+  const description=document.createElement("p");description.className="library-profile-description";
+  description.textContent=metadata?.description||"Hồ sơ phim đã mở ở chế độ tương thích. Các thẻ liên kết được liệt kê bên dưới.";
+  copy.append(title,description);
+  const details=[metadata?.originalTitle,metadata?.year,(metadata?.genres||[]).join(" · ")].filter(Boolean);
+  if(details.length){const meta=document.createElement("p");meta.className="library-profile-metadata";meta.textContent=details.join(" · ");copy.appendChild(meta);}
+  heading.appendChild(copy);root.appendChild(heading);
+  const section=libraryMakeSection("Các thẻ thuộc phim",cards.length+" phiên bản");
+  if(cards.length){
+    const list=document.createElement("div");list.className="library-profile-missing-list";
+    cards.slice().sort((a,b)=>compareVietnamese(a.name,b.name)).forEach(card=>{
+      const button=document.createElement("button");button.type="button";button.className="library-profile-missing-item";
+      const name=document.createElement("strong");name.textContent=card.name;
+      const detail=document.createElement("small");detail.textContent=[card.rarity,card.role].filter(Boolean).join(" · ")||"Xem hồ sơ thẻ";
+      const action=document.createElement("span");action.textContent="Xem thẻ ↗";
+      button.append(name,detail,action);
+      button.addEventListener("click",()=>{closeLibraryProfile();showCharacterDetails(card.id,true);});
+      list.appendChild(button);
+    });
+    section.section.appendChild(list);
+  }else{
+    const empty=document.createElement("p");empty.className="library-profile-empty";
+    empty.textContent="Phim đã có trong danh mục nhưng chưa có thẻ nào được liên kết.";
+    section.section.appendChild(empty);
+  }
+  root.appendChild(section);
+  if(error)console.error("Không thể dựng hồ sơ phim đầy đủ; đã dùng chế độ tương thích.",error);
+}
 function openMovieProfile(movieName,options={}){
-  const cards=libraryMovieCards(movieName),metadata=typeof getMovieMetadata==="function"?getMovieMetadata(movieName):null;
+  const name=String(movieName||"").trim();
+  if(!name){showToast("Tên phim chưa có nên không thể mở hồ sơ.");return;}
+  const cards=libraryMovieCards(name),metadata=typeof getMovieMetadata==="function"?getMovieMetadata(name):null;
   if(!cards.length&&!metadata){showToast("Không tìm thấy hồ sơ phim trong danh mục.");return;}
-  currentLibraryProfile={type:"movie",value:cards[0]?.movie||metadata?.title||movieName,returnToCard:options.returnToCard||null};
-  if($("characterDetailDialog").open)closeCharacterDetails();
-  renderLibraryProfile();const dialog=$("libraryProfileDialog");
-  if(typeof dialog.showModal==="function"){if(!dialog.open)dialog.showModal();}else dialog.setAttribute("open","");
+  currentLibraryProfile={type:"movie",value:cards[0]?.movie||metadata?.title||name,returnToCard:options.returnToCard||null};
+  if($("characterDetailDialog")?.open)closeCharacterDetails();
+  const dialog=$("libraryProfileDialog");
+  try{
+    if(typeof dialog.showModal==="function"){if(!dialog.open)dialog.showModal();}
+    else dialog.setAttribute("open","");
+  }catch(error){dialog.setAttribute("open","");}
+  try{
+    renderLibraryProfile();
+  }catch(error){
+    renderMovieProfileFallback(currentLibraryProfile,error);
+    showToast("Đã mở hồ sơ phim ở chế độ tương thích.");
+  }
 }
 function openActorProfile(cardOrId,options={}){
   const cards=libraryActorCards(cardOrId);if(!cards.length){showToast("Không tìm thấy diễn viên trong kho thẻ.");return;}

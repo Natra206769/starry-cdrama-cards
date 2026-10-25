@@ -409,7 +409,7 @@ function renderCollectionMovieShelf(){
     const action=document.createElement("span");action.className="movie-shelf-action";action.textContent="Mở hồ sơ phim ↗";
     body.append(title,original,genres,progressText,progress,action);
     const openButton=document.createElement("button");openButton.type="button";openButton.className="movie-shelf-open";openButton.setAttribute("aria-label","Mở hồ sơ phim "+movie.movie+". Đã sưu tầm "+movie.ownedUnique+" trên "+movie.cards.length+" phiên bản.");
-    openButton.append(poster,body);openButton.addEventListener("click",()=>openMovieProfile(movie.movie));
+    openButton.append(poster,body);openButton.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();openMovieProfile(movie.movie);});
     const actions=document.createElement("div");actions.className="movie-shelf-actions";
     const preference=getMoviePreference(movie.movie);
     const createMovieAction=(field,activeIcon,inactiveIcon,activeLabel,inactiveLabel)=>{
@@ -468,7 +468,7 @@ function renderCollection(){
     const title=document.createElement("h3");title.textContent=movie;
     titleRow.appendChild(title);
     const openMovieBtn=document.createElement("button");openMovieBtn.type="button";openMovieBtn.className="film-open-profile";openMovieBtn.textContent="Chi tiết ↗";openMovieBtn.setAttribute("aria-label","Mở trang phim "+movie);
-    openMovieBtn.addEventListener("click",()=>openMovieProfile(movie));
+    openMovieBtn.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();openMovieProfile(movie);});
     titleRow.appendChild(openMovieBtn);
     const count=document.createElement("p");count.className="film-set-count";count.textContent=`${ownedUnique} / ${allCards.length} thẻ đã sưu tầm · ${missingUnique} thẻ còn thiếu`;
     titleWrap.append(eyebrow,titleRow,count);

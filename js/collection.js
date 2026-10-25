@@ -159,9 +159,10 @@ function syncCollectionControls(){
   if(filters)filters.hidden=!shelfMode;
   if(shelf)shelf.hidden=!shelfMode;
   if(sets)sets.hidden=shelfMode;
-  const cardFilters=document.querySelector(".collection-filter-panel"),raritySummary=$("collectionRaritySummary");
+  const cardFilters=document.querySelector(".collection-filter-panel"),raritySummary=$("collectionRaritySummary"),rarityPanel=$("collectionRarityPanel");
   if(cardFilters)cardFilters.hidden=shelfMode;
-  if(raritySummary)raritySummary.hidden=shelfMode;
+  if(rarityPanel)rarityPanel.hidden=shelfMode;
+  if(raritySummary)raritySummary.hidden=false;
   const cardSort=$("collectionSortSelect")?.closest(".collection-select-wrap");
   if(cardSort)cardSort.hidden=shelfMode;
   const viewSwitch=document.querySelector(".collection-view-switch");
@@ -196,19 +197,12 @@ function renderCollectionOverview(){
   const movies=new Set(sourceCards.map(card=>String(card.movie||"").trim()).filter(movie=>movie&&!isGenericCollectionTitle(movie)));
   const actors=new Set(sourceCards.map(card=>normalizedSearchKey(card.name)).filter(Boolean));
   const uniqueOwned=ownedCards.length;
-  const copies=Object.values(state.owned).reduce((sum,value)=>sum+(Number(value)||0),0);
   const completion=characters.length?Math.round(uniqueOwned/characters.length*100):0;
-  const movieGroups=collectionMovieGroups();
-  const completedMovies=movieGroups.filter(movie=>movie.cards.length>0&&movie.ownedUnique===movie.cards.length).length;
-  const inProgressMovies=movieGroups.filter(movie=>movie.ownedUnique>0&&movie.ownedUnique<movie.cards.length).length;
   const stats=[
     {label:collectionMode==="library"?"Phim trong thư viện":"Phim trong kho",value:movies.size,detail:"Bộ phim khác nhau"},
     {label:collectionMode==="library"?"Diễn viên đã có":"Diễn viên trong kho",value:actors.size,detail:"Tên diễn viên khác nhau"},
     {label:collectionMode==="library"?"Thẻ trong thư viện":"Tổng biến thể thẻ",value:collectionMode==="library"?uniqueOwned:characters.length,detail:"Thẻ khác nhau"},
-    {label:"Bản sao sở hữu",value:copies,detail:"Tính cả thẻ trùng"},
-    {label:"Tiến độ sưu tầm",value:completion+"%",detail:uniqueOwned+" / "+characters.length+" thẻ"},
-    {label:"Phim hoàn thành",value:completedMovies,detail:inProgressMovies+" phim đang sưu tầm"},
-    {label:"Thẻ còn thiếu",value:Math.max(0,characters.length-uniqueOwned),detail:"Phiên bản chưa sở hữu"}
+    {label:"Tiến độ sưu tầm",value:completion+"%",detail:uniqueOwned+" / "+characters.length+" thẻ"}
   ];
   overview.replaceChildren();
   for(const item of stats){

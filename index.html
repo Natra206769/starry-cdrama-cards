@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.3 TMDB Lookup</title>
+  <title>Starry C-Drama Cards — V11.3.5 Leaderboards</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -448,29 +448,36 @@
     <section class="app-page" id="page-leaderboard" data-app-page="leaderboard" hidden>
       <section class="leaderboard-section" id="leaderboard">
         <div class="section-heading leaderboard-page-heading">
-          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Khám phá những diễn viên nổi bật trong dữ liệu phim của hệ thống.</p></div>
-          <div class="leaderboard-total"><span>✦</span><strong id="leaderboardActorCount">0</strong><small>diễn viên</small></div>
+          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Xếp hạng minh bạch từ toàn bộ kho phim và thẻ của hệ thống.</p></div>
+          <div class="leaderboard-total"><span>✦</span><strong id="leaderboardActorCount">0</strong><small id="leaderboardCountLabel">diễn viên</small></div>
         </div>
+        <div class="leaderboard-kind-tabs" role="group" aria-label="Loại bảng xếp hạng">
+          <button class="leaderboard-chip active" type="button" data-rank-kind="actor" aria-pressed="true">✦ Diễn viên</button>
+          <button class="leaderboard-chip" type="button" data-rank-kind="movie" aria-pressed="false">▣ Phim</button>
+        </div>
+        <label class="leaderboard-search-wrap" for="leaderboardSearch"><span aria-hidden="true">⌕</span><input id="leaderboardSearch" type="search" placeholder="Tìm diễn viên hoặc phim…" autocomplete="off" aria-label="Tìm trong bảng xếp hạng" /></label>
         <div class="leaderboard-controls">
-          <div class="leaderboard-control-group" role="group" aria-label="Chọn giới tính diễn viên">
+          <div class="leaderboard-control-group" id="leaderboardGenderControls" role="group" aria-label="Chọn giới tính diễn viên">
             <button class="leaderboard-chip active" type="button" data-rank-gender="female" aria-pressed="true">✿ Diễn viên nữ</button>
             <button class="leaderboard-chip" type="button" data-rank-gender="male" aria-pressed="false">✦ Diễn viên nam</button>
           </div>
-          <div class="leaderboard-control-group leaderboard-mode-group" role="group" aria-label="Chọn cách xếp hạng">
+          <div class="leaderboard-control-group leaderboard-mode-group" id="leaderboardModeControls" role="group" aria-label="Chọn tiêu chí xếp hạng">
             <button class="leaderboard-mode active" type="button" data-rank-mode="hot" aria-pressed="true"><span>🔥</span><strong>Độ hot</strong><small>Số phim khác nhau</small></button>
             <button class="leaderboard-mode" type="button" data-rank-mode="beauty" aria-pressed="false"><span>✧</span><strong>Nhan sắc</strong><small>Điểm theo phim & thẻ</small></button>
+            <button class="leaderboard-mode" type="button" data-rank-mode="cast" aria-pressed="false" hidden><span>♟</span><strong>Dàn diễn viên</strong><small>Số diễn viên khác nhau</small></button>
+            <button class="leaderboard-mode" type="button" data-rank-mode="points" aria-pressed="false" hidden><span>✧</span><strong>Điểm kho thẻ</strong><small>Điểm độ hiếm</small></button>
           </div>
         </div>
-        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Độ hot được tính theo số phim khác nhau trong kho dữ liệu hệ thống; mỗi tên phim chỉ tính một lần.</div>
+        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Độ hot được tính từ số phim khác nhau trong toàn bộ kho hệ thống.</div>
         <div class="leaderboard-podium" id="leaderboardPodium" aria-label="Ba vị trí dẫn đầu"></div>
-        <ol class="leaderboard-list" id="leaderboardList" aria-label="Bảng xếp hạng các diễn viên"></ol>
+        <ol class="leaderboard-list" id="leaderboardList" aria-label="Bảng xếp hạng"></ol>
         <div class="leaderboard-empty" id="leaderboardEmpty" hidden>
           <span class="leaderboard-empty-star" aria-hidden="true">✧</span>
           <h3 id="leaderboardEmptyTitle">Chưa có đủ dữ liệu xếp hạng</h3>
-          <p id="leaderboardEmptyText">Hãy thêm tên phim cụ thể hoặc sưu tầm thẻ để bắt đầu bảng xếp hạng.</p>
+          <p id="leaderboardEmptyText">Thêm tên phim cụ thể hoặc dữ liệu phim để bắt đầu bảng xếp hạng.</p>
           <button class="secondary-btn" id="leaderboardAddCardsBtn" type="button">＋ Thêm / cập nhật thẻ</button>
         </div>
-        <p class="leaderboard-disclaimer">Bảng “Nhan sắc” là chỉ số giải trí tính từ dữ liệu phim và các biến thể thẻ có trong kho hệ thống; không phải đánh giá khách quan về ngoại hình diễn viên.</p>
+        <p class="leaderboard-disclaimer">Các bảng phim và diễn viên dùng dữ liệu trong toàn hệ thống. Bản sao và tiến độ sưu tầm cá nhân không ảnh hưởng thứ hạng; “Nhan sắc” là chỉ số giải trí theo công thức, không phải đánh giá khách quan về ngoại hình.</p>
       </section>
     </section>
 
@@ -487,7 +494,7 @@
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
         <article class="info-card"><span>05</span><h3>Mối liên kết</h3><p>Hồ sơ tự nối các thẻ của cùng diễn viên và các diễn viên có cùng tên phim. Hãy nhập tên phim nhất quán để tạo mạng lưới bạn diễn chính xác.</p></article>
         <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng diễn viên, phim, vai diễn và độ hiếm, ứng dụng sẽ hỏi lại trước khi thêm thẻ có thông tin trùng.</p></article>
-        <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Độ hot tính theo số phim khác nhau được ghi nhận trong kho dữ liệu. Điểm Nhan sắc = P / N + N, trong đó P là tổng điểm các biến thể thẻ khác nhau trong kho hiện tại và N là số phim khác nhau của diễn viên. Điểm không phụ thuộc các thẻ người chơi sở hữu.</p></article>
+        <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Độ hot tính theo số phim khác nhau được ghi nhận trong kho dữ liệu. Bảng phim và diễn viên dùng toàn bộ dữ liệu hệ thống. Độ hot tính theo số phim khác nhau; điểm Nhan sắc = P / N + N, trong đó P là tổng điểm độ hiếm của các biến thể thẻ khác nhau và N là số phim khác nhau. Điểm không phụ thuộc thẻ người chơi sở hữu hay bản sao.</p></article>
       </div>
       <section class="info-card ui-preferences-card" aria-labelledby="uiPreferencesTitle">
         <span>08</span><h3 id="uiPreferencesTitle">Tùy chỉnh giao diện</h3>

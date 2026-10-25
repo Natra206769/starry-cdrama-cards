@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — V11.3
+STARRY C-DRAMA CARDS — V11.3.5
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
@@ -25,7 +25,7 @@ MÃ NGUỒN
 - js/collection.js, js/library.js: thư viện, trang phim, hồ sơ diễn viên và liên kết.
 - js/movie-manager.js: quản lý metadata phim; js/detail.js: hồ sơ phiên bản thẻ.
 - js/gacha.js, rarity.js, upgrade.js: mở thẻ, độ hiếm và nâng cấp.
-- js/leaderboard.js: xếp hạng; js/manager.js, storage.js, state.js: quản lý và lưu trữ.
+- js/leaderboard.js: xếp hạng phim và diễn viên; js/manager.js, storage.js, state.js: quản lý và lưu trữ.
 - js/pwa.js, service-worker.js: PWA và cập nhật.
 
 DỮ LIỆU & PHÁT HÀNH
@@ -56,3 +56,5 @@ TMDB & QUYỀN SỬ DỤNG
 - Các trường có nguồn TMDB được gắn mốc thời gian và tự được xóa khỏi metadata sau 180 ngày nếu không được người dùng chỉnh sửa thủ công, nhằm giới hạn lưu đệm dữ liệu nguồn.
 
 V11.3.4 — Khắc phục nút mở hồ sơ phim trong Bộ sưu tập: mở hộp thoại trước khi dựng nội dung, bổ sung chế độ hồ sơ tương thích nếu phần hiển thị chi tiết gặp lỗi, và tách sự kiện nhấn khỏi các phần tử cha.
+
+- V11.3.5: chuẩn hóa cách tính xếp hạng từ dữ liệu toàn kho; bổ sung bảng phim theo dàn diễn viên/điểm độ hiếm, tìm kiếm, Top 3 cải tiến và nhấn hàng để mở hồ sơ phim/diễn viên.

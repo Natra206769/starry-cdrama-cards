@@ -95,3 +95,24 @@
 }
 
 .leaderboard-podium[hidden],.leaderboard-list[hidden]{display:none!important;}
+
+
+/* V11.3.5 — searchable, clickable movie + actor ranking categories */
+.leaderboard-kind-tabs{display:flex;gap:8px;margin:22px 0 12px;}
+.leaderboard-kind-tabs .leaderboard-chip{min-width:128px;}
+.leaderboard-search-wrap{display:flex;align-items:center;gap:10px;min-width:0;margin:0 0 16px;padding:0 14px;border:1px solid #ffffff1a;border-radius:12px;background:#ffffff05;color:var(--gold);}
+.leaderboard-search-wrap>span{font-size:21px;line-height:1;}
+.leaderboard-search-wrap input{width:100%;min-width:0;padding:13px 0;border:0;outline:none;background:transparent;color:var(--text);font:inherit;font-size:12px;}
+.leaderboard-search-wrap input::placeholder{color:#858aa3;}
+.leaderboard-entry[role="button"]{cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s;}
+.leaderboard-entry[role="button"]:hover{transform:translateY(-2px);border-color:#e7c58c8a;box-shadow:0 10px 28px #0003,0 0 22px #d8bb8610;}
+.leaderboard-entry[role="button"]:focus-visible{outline:2px solid #e7c58c;outline-offset:3px;}
+.leaderboard-podium .rank-1{box-shadow:inset 0 0 34px #d8bb860b,0 8px 28px #0002;}
+.leaderboard-podium .rank-1 .leaderboard-avatar{box-shadow:0 0 0 2px #e7c58c2b,0 0 28px color-mix(in srgb,var(--avatar-accent,#d8bb86) 26%,transparent);}
+.leaderboard-podium .rank-2 .leaderboard-rank-badge{border-color:#c7d1e366;color:#d5dfef;background:#c7d1e30b;}
+.leaderboard-podium .rank-3 .leaderboard-rank-badge{border-color:#c58c5c66;color:#e5b38b;background:#c58c5c0b;}
+.leaderboard-entry[hidden],.leaderboard-mode[hidden]{display:none!important;}
+@media(max-width:650px){
+  .leaderboard-kind-tabs .leaderboard-chip{flex:1;min-width:0;}
+  .leaderboard-search-wrap input{font-size:16px;}
+}

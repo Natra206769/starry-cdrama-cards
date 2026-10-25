@@ -154,6 +154,7 @@ function makeLeaderboardEntry(item,rank,podium=false){
 
 function renderLeaderboard(){
   const page=$("page-leaderboard");if(!page)return;
+  page.classList.toggle("is-movie-ranking",leaderboardKind==="movie");
   const podium=$("leaderboardPodium"),list=$("leaderboardList"),empty=$("leaderboardEmpty");
   podium.replaceChildren();list.replaceChildren();podium.hidden=true;list.hidden=true;
   document.querySelectorAll("[data-rank-kind]").forEach(button=>{

@@ -137,3 +137,102 @@
 @keyframes leaderboard-champion-fire{0%,100%{box-shadow:inset 0 0 28px #ff74200b,0 0 14px #ff5d2620,0 8px 28px #0002}50%{box-shadow:inset 0 0 38px #ff74201c,0 0 25px #ff5d2650,0 8px 30px #0003}}
 @keyframes leaderboard-flame-flicker{0%{transform:translateY(1px) rotate(-5deg) scale(.94)}100%{transform:translateY(-2px) rotate(5deg) scale(1.08)}}
 @media(prefers-reduced-motion:reduce){.leaderboard-entry.rank-1,.leaderboard-entry.rank-1::before{animation:none!important}}
+
+
+/* V11.4.1 — champion fire wraps the whole entry; 2nd and 3rd place get distinct animated treatments. */
+.leaderboard-entry.rank-1{
+  isolation:isolate;overflow:visible;border:2px solid transparent;
+  background:linear-gradient(135deg,#1b1318f5,#141522f5) padding-box,
+    conic-gradient(from 0deg,#ff3616,#ffca58,#ff6422,#fff0a0,#e72a12,#ff9b28,#ff3616) border-box;
+  box-shadow:0 0 0 1px #ff6b2b55,0 0 18px #ff4d253f,0 0 34px #e7371728;
+  animation:leaderboard-fire-card 1.05s ease-in-out infinite alternate;
+}
+.leaderboard-entry.rank-1::before{
+  content:"";position:absolute;inset:-7px;z-index:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 0% 0%,#ff4218d9 0%,transparent 36%),
+    radial-gradient(ellipse at 50% 0%,#ffb52caa 0%,transparent 37%),
+    radial-gradient(ellipse at 100% 0%,#ff4b18cf 0%,transparent 36%),
+    radial-gradient(ellipse at 0% 50%,#ff7b22a8 0%,transparent 34%),
+    radial-gradient(ellipse at 100% 50%,#ff7b22a8 0%,transparent 34%),
+    radial-gradient(ellipse at 0% 100%,#ff4218d9 0%,transparent 36%),
+    radial-gradient(ellipse at 50% 100%,#ffae28a8 0%,transparent 37%),
+    radial-gradient(ellipse at 100% 100%,#ff4218d9 0%,transparent 36%);
+  filter:blur(7px) saturate(1.65);opacity:.82;
+  animation:leaderboard-fire-glow .62s ease-in-out infinite alternate;
+}
+.leaderboard-entry.rank-1::after{
+  content:"";position:absolute;inset:1px;z-index:1;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 6% 0%,#ffda743d 0%,transparent 26%),
+    radial-gradient(ellipse at 34% 100%,#ff4b263d 0%,transparent 28%),
+    radial-gradient(ellipse at 72% 0%,#ff6a263d 0%,transparent 24%),
+    radial-gradient(ellipse at 100% 62%,#ffb53233 0%,transparent 23%),
+    linear-gradient(115deg,transparent 20%,#ffac3a00 38%,#fff0a032 48%,#ff622b33 54%,transparent 70%);
+  mix-blend-mode:screen;opacity:.8;
+  animation:leaderboard-flame-dance .48s steps(2,end) infinite alternate;
+}
+.leaderboard-entry.rank-1>*{position:relative;z-index:2}
+.leaderboard-entry.rank-1 .leaderboard-rank-badge{color:#fff1ce;border-color:#ffb34d;background:#ff64221c;box-shadow:0 0 16px #ff6b354b}
+.leaderboard-entry.rank-1 .leaderboard-avatar{border-color:#ff9a48;box-shadow:0 0 0 2px #ff8b353d,0 0 22px #ff552d75,0 0 38px #ffb04a36}
+
+.leaderboard-entry.rank-2{
+  isolation:isolate;border-color:#9bcff0a6;
+  background:linear-gradient(120deg,#b9e7ff0e,#ffffff03 45%,#96cce913);
+  box-shadow:inset 0 0 24px #8cd5ff0a,0 0 15px #8bcfff20;
+  animation:leaderboard-silver-pulse 1.9s ease-in-out infinite;
+}
+.leaderboard-entry.rank-2::before{
+  content:"";position:absolute;inset:3px;z-index:0;border:1px solid #a7e0ff8c;border-radius:9px;pointer-events:none;
+  box-shadow:inset 0 0 20px #a9e5ff1a,0 0 16px #8bd5ff22;
+  animation:leaderboard-silver-glint 2.4s ease-in-out infinite;
+}
+.leaderboard-entry.rank-2::after{
+  content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(112deg,transparent 24%,#d9f5ff00 38%,#dff8ff48 49%,#9edaff1d 54%,transparent 68%);
+  transform:translateX(-125%);animation:leaderboard-silver-sweep 3.1s ease-in-out infinite;
+}
+.leaderboard-entry.rank-2>*{position:relative;z-index:2}
+.leaderboard-entry.rank-2 .leaderboard-rank-badge{border-color:#b4e4ffad;color:#e3f6ff;box-shadow:0 0 14px #80d6ff24}
+.leaderboard-entry.rank-2 .leaderboard-avatar{border-color:#aadfff;box-shadow:0 0 16px #8bcfff32}
+
+.leaderboard-entry.rank-3{
+  isolation:isolate;border-color:#d99a678f;
+  background:linear-gradient(135deg,#d98a4b12,#fff4df02 53%,#b95a2a13);
+  box-shadow:inset 0 0 22px #ffac5810,0 0 13px #e9823b18;
+  animation:leaderboard-bronze-pulse 1.55s ease-in-out infinite;
+}
+.leaderboard-entry.rank-3::before{
+  content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(circle at 12% 18%,#ffe0a9bf 0 1px,transparent 2px),
+    radial-gradient(circle at 83% 24%,#ffb36bba 0 1.5px,transparent 2.5px),
+    radial-gradient(circle at 28% 82%,#ff7a3c9c 0 1px,transparent 2px),
+    radial-gradient(circle at 91% 76%,#ffd194b8 0 1px,transparent 2px);
+  background-size:65px 71px,83px 91px,97px 89px,73px 79px;
+  opacity:.45;animation:leaderboard-bronze-sparks 2.2s linear infinite;
+}
+.leaderboard-entry.rank-3::after{
+  content:"";position:absolute;inset:3px;z-index:1;border:1px solid #ffbd8061;border-radius:9px;pointer-events:none;
+  box-shadow:inset 0 0 18px #ff9b4d12,0 0 12px #d9793a16;
+  animation:leaderboard-bronze-frame 1.35s ease-in-out infinite alternate;
+}
+.leaderboard-entry.rank-3>*{position:relative;z-index:2}
+.leaderboard-entry.rank-3 .leaderboard-rank-badge{border-color:#d99b71b3;color:#f5c39c;box-shadow:0 0 12px #dc85401b}
+.leaderboard-entry.rank-3 .leaderboard-avatar{border-color:#d99b71;box-shadow:0 0 15px #df8a4730}
+
+@keyframes leaderboard-fire-card{0%{filter:brightness(1) saturate(1.05)}100%{filter:brightness(1.13) saturate(1.35)}}
+@keyframes leaderboard-fire-glow{0%{opacity:.5;transform:scale(.995)}100%{opacity:1;transform:scale(1.018)}}
+@keyframes leaderboard-flame-dance{0%{opacity:.48;background-position:0 0,0 100%,100% 0,100% 100%,0 0}100%{opacity:.88;background-position:8px -5px,-7px 100%,100% 7px,100% -5px,0 0}}
+@keyframes leaderboard-silver-pulse{0%,100%{box-shadow:inset 0 0 20px #8cd5ff08,0 0 10px #8bcfff16}50%{box-shadow:inset 0 0 30px #8cd5ff18,0 0 22px #8bcfff3d}}
+@keyframes leaderboard-silver-glint{0%,100%{opacity:.35}50%{opacity:.95;box-shadow:inset 0 0 22px #a9e5ff24,0 0 18px #8bd5ff44}}
+@keyframes leaderboard-silver-sweep{0%,22%{transform:translateX(-125%);opacity:0}38%{opacity:.8}65%,100%{transform:translateX(125%);opacity:0}}
+@keyframes leaderboard-bronze-pulse{0%,100%{box-shadow:inset 0 0 18px #ffac580a,0 0 10px #e9823b15}50%{box-shadow:inset 0 0 26px #ffac581c,0 0 20px #e9823b35}}
+@keyframes leaderboard-bronze-sparks{0%{background-position:0 0,0 0,0 0,0 0;opacity:.28}50%{opacity:.75}100%{background-position:28px -22px,-19px 32px,25px 17px,-16px -24px;opacity:.4}}
+@keyframes leaderboard-bronze-frame{from{opacity:.3}to{opacity:.9;box-shadow:inset 0 0 22px #ff9b4d1c,0 0 17px #d9793a2a}}
+@media(prefers-reduced-motion:reduce){
+ .leaderboard-entry.rank-1,.leaderboard-entry.rank-1::before,.leaderboard-entry.rank-1::after,
+ .leaderboard-entry.rank-2,.leaderboard-entry.rank-2::before,.leaderboard-entry.rank-2::after,
+ .leaderboard-entry.rank-3,.leaderboard-entry.rank-3::before,.leaderboard-entry.rank-3::after{animation:none!important}
+}
+#page-leaderboard.is-movie-ranking #leaderboardGenderControls{display:none!important}

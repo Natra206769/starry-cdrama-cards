@@ -223,3 +223,23 @@
   .leaderboard-entry.rank-2,.leaderboard-entry.rank-2::before,.leaderboard-entry.rank-2::after,
   .leaderboard-entry.rank-3,.leaderboard-entry.rank-3::before,.leaderboard-entry.rank-3::after{animation:none!important}
 }
+
+
+/* V11.4.4 — layered vector flames around the champion's OUTER frame; card rarity colors remain untouched. */
+.leaderboard-entry.rank-1>.leaderboard-fire-overlay{
+  position:absolute;inset:-30px;z-index:0;display:block;width:auto;height:auto;overflow:visible;
+  pointer-events:none;opacity:.97;transform-origin:center;
+  filter:drop-shadow(0 0 5px #ff5a1c) drop-shadow(0 0 12px #ff7a2270);
+  animation:leaderboard-fire-overlay-flicker .36s steps(2,end) infinite alternate;
+}
+.leaderboard-entry.rank-1>.leaderboard-fire-overlay img{
+  position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill;object-position:center;
+  opacity:.98;mix-blend-mode:screen;pointer-events:none;user-select:none;
+}
+@keyframes leaderboard-fire-overlay-flicker{
+  0%{opacity:.79;transform:translateY(2px) scaleX(.99) scaleY(.985)}
+  100%{opacity:1;transform:translateY(-3px) scaleX(1.012) scaleY(1.025)}
+}
+@media(prefers-reduced-motion:reduce){
+  .leaderboard-entry.rank-1>.leaderboard-fire-overlay{animation:none!important}
+}

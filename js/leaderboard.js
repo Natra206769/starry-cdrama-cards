@@ -73,11 +73,6 @@ function makeLeaderboardEntry(item,rank,podium=false){
   element.tabIndex=0;element.setAttribute("role","button");
   element.setAttribute("aria-label","Hạng "+rank+": "+item.name+". Mở hồ sơ diễn viên.");
   element.title="Nhấn để mở hồ sơ diễn viên";
-  if(podium&&rank===1){
-    const fire=document.createElement("span");fire.className="leaderboard-fire-overlay";fire.setAttribute("aria-hidden","true");
-    const fireImage=document.createElement("img");fireImage.src="./assets/champion-fire-overlay.svg";fireImage.alt="";fireImage.loading="eager";fireImage.decoding="async";fireImage.draggable=false;
-    fire.appendChild(fireImage);element.appendChild(fire);
-  }
   const badge=document.createElement("span");badge.className="leaderboard-rank-badge";badge.textContent=rank===1?"♛ "+rank:String(rank).padStart(2,"0");
   const avatar=makeLeaderboardAvatar(item);
   const identity=document.createElement("div");identity.className="leaderboard-identity";

@@ -225,21 +225,49 @@
 }
 
 
-/* V11.4.4 — layered vector flames around the champion's OUTER frame; card rarity colors remain untouched. */
-.leaderboard-entry.rank-1>.leaderboard-fire-overlay{
-  position:absolute;inset:-30px;z-index:0;display:block;width:auto;height:auto;overflow:visible;
-  pointer-events:none;opacity:.97;transform-origin:center;
-  filter:drop-shadow(0 0 5px #ff5a1c) drop-shadow(0 0 12px #ff7a2270);
-  animation:leaderboard-fire-overlay-flicker .36s steps(2,end) infinite alternate;
+/* V11.4.5 — simpler champion treatment: vivid red rim and moving red embers inside. */
+.leaderboard-entry.rank-1{
+  border:3px solid transparent;
+  background:
+    linear-gradient(135deg,#1b1118f7 0%,#151322f7 48%,#21131ff7 100%) padding-box,
+    linear-gradient(135deg,#ff201f 0%,#ff5540 20%,#b90e1f 48%,#ff372d 73%,#ff201f 100%) border-box;
+  box-shadow:0 0 0 1px #ff302c9c,0 0 15px #ff211f7a,0 0 31px #e516242e,inset 0 0 20px #ff292312;
+  animation:leaderboard-red-border-pulse 1.25s ease-in-out infinite alternate;
 }
-.leaderboard-entry.rank-1>.leaderboard-fire-overlay img{
-  position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill;object-position:center;
-  opacity:.98;mix-blend-mode:screen;pointer-events:none;user-select:none;
+.leaderboard-entry.rank-1::before{
+  content:"";position:absolute;inset:5px;z-index:0;border-radius:9px;pointer-events:none;
+  background:
+    radial-gradient(ellipse 19% 45% at 8% 25%,#ff241d78 0%,#fa201c2e 45%,transparent 78%),
+    radial-gradient(ellipse 22% 44% at 84% 20%,#fa1c2a69 0%,#fa201c29 45%,transparent 78%),
+    radial-gradient(ellipse 20% 48% at 35% 88%,#ff2d1f61 0%,#ef171d20 48%,transparent 80%),
+    radial-gradient(ellipse 20% 47% at 95% 78%,#ff372b61 0%,#ef171d22 45%,transparent 80%),
+    linear-gradient(118deg,transparent 12%,#fb261b0c 31%,#ff211c38 46%,#9c102b20 59%,transparent 78%);
+  background-size:150% 150%,160% 155%,155% 150%,160% 150%,200% 200%;
+  background-position:0% 0%,100% 0%,0% 100%,100% 100%,0% 50%;
+  filter:blur(4px);opacity:.72;mix-blend-mode:screen;
+  animation:leaderboard-inner-red-flare 1.35s ease-in-out infinite alternate;
 }
-@keyframes leaderboard-fire-overlay-flicker{
-  0%{opacity:.79;transform:translateY(2px) scaleX(.99) scaleY(.985)}
-  100%{opacity:1;transform:translateY(-3px) scaleX(1.012) scaleY(1.025)}
+.leaderboard-entry.rank-1::after{
+  content:"";position:absolute;inset:3px;z-index:1;border:1px solid #ff524e72;border-radius:10px;pointer-events:none;
+  background:linear-gradient(120deg,#ff34220a,transparent 32%,#ff342215 62%,transparent 86%);
+  box-shadow:inset 0 0 18px #ff25251c,0 0 8px #ff29241c;
+  opacity:.82;animation:leaderboard-red-inner-rim 1.8s ease-in-out infinite alternate;
 }
-@media(prefers-reduced-motion:reduce){
-  .leaderboard-entry.rank-1>.leaderboard-fire-overlay{animation:none!important}
+.leaderboard-entry.rank-1>*{position:relative;z-index:2}
+.leaderboard-entry.rank-1 .leaderboard-rank-badge{
+  color:#ffe3dc;border-color:#ff5b50;background:linear-gradient(145deg,#ff372d38,#9e14251e);
+  box-shadow:0 0 13px #ff2b2545,inset 0 0 10px #ff4b3018;
+}
+@keyframes leaderboard-red-border-pulse{
+  0%{box-shadow:0 0 0 1px #ff302c72,0 0 12px #ff211f52,0 0 24px #e5162424,inset 0 0 18px #ff29230d}
+  100%{box-shadow:0 0 0 2px #ff5546c2,0 0 23px #ff211f99,0 0 37px #e5162452,inset 0 0 25px #ff292322}
+}
+@keyframes leaderboard-inner-red-flare{
+  0%{opacity:.42;background-position:0% 15%,100% 5%,5% 100%,95% 90%,0% 40%;transform:scale(.99)}
+  50%{opacity:.8}
+  100%{opacity:.68;background-position:24% 0%,78% 26%,22% 82%,80% 68%,100% 60%;transform:scale(1.015)}
+}
+@keyframes leaderboard-red-inner-rim{
+  0%{opacity:.45;box-shadow:inset 0 0 12px #ff252512,0 0 5px #ff292410}
+  100%{opacity:.95;box-shadow:inset 0 0 22px #ff25252e,0 0 12px #ff292430}
 }

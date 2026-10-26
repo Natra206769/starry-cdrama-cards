@@ -36,7 +36,7 @@ function buildActorRankingData(){
     actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+rarityPoints(card),0);
     actor.cardCount=actor.systemCards.length;
     // Beauty score (entertainment metric) = P / N + N; P is distinct-card rarity points, N is distinct films.
-    actor.beautyScore=actor.filmCount>0?(actor.catalogCardPoints/actor.filmCount)+actor.filmCount:0;
+    actor.beautyScore=actor.filmCount>1?(actor.catalogCardPoints/actor.filmCount)+actor.filmCount:actor.filmCount===1?actor.catalogCardPoints:0;
     return actor;
   });
 }
@@ -102,7 +102,7 @@ function renderLeaderboard(){
   const sorted=matches.slice(0,MAX_LEADERBOARD_ENTRIES);
   $("leaderboardActorCount").textContent=String(sorted.length);
   $("leaderboardCountLabel").textContent="diễn viên · top 100";
-  $("leaderboardRules").textContent="Điểm Nhan sắc (chỉ số giải trí) = P / N + N. P là tổng điểm độ hiếm của các biến thể thẻ khác nhau trong toàn kho (R 3 · SR 5 · SSR 9 · SSR+ 11 · UR 17 · SP 25); N là số phim khác nhau. Tổng thể gộp diễn viên nam và nữ. Hiển thị tối đa 100 diễn viên.";
+  $("leaderboardRules").textContent="Điểm Nhan sắc (chỉ số giải trí) = P / N + N (chỉ cộng N khi diễn viên có từ 2 phim trở lên; diễn viên chỉ có 1 phim không nhận điểm cộng phim). P là tổng điểm độ hiếm của các biến thể thẻ khác nhau trong toàn kho (R 3 · SR 5 · SSR 9 · SSR+ 11 · UR 17 · SP 25); N là số phim khác nhau. Tổng thể gộp diễn viên nam và nữ. Hiển thị tối đa 100 diễn viên.";
   empty.hidden=sorted.length>0;
   if(!sorted.length){
     $("leaderboardEmptyTitle").textContent=query?"Không tìm thấy kết quả phù hợp":"Chưa có dữ liệu diễn viên để tính điểm";

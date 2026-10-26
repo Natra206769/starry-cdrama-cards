@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.4.5 Actor Ranking</title>
+  <title>Starry C-Drama Cards — V11.4.6 Hourly Draw</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -69,7 +69,7 @@
         <div class="summon-kicker" id="summonKicker" hidden aria-live="polite">
           <span class="summon-kicker-sigil" aria-hidden="true">✧</span>
           <span class="summon-kicker-copy"><small>CELESTIAL SUMMON</small><strong>NGHI THỨC TRIỆU HỒI</strong></span>
-          <span class="summon-kicker-count">×10</span>
+          <span class="summon-kicker-count">×3</span>
         </div>
         <div class="stage-glow"></div>
         <div class="card-wrap" id="cardWrap">
@@ -99,8 +99,9 @@
         <button class="text-btn skip-batch-btn" id="skipBatchBtn" type="button" hidden>» Bỏ qua hoạt ảnh</button>
         <div class="open-actions" aria-label="Chọn số lượng thẻ">
           <button class="primary-btn" id="openBtn" type="button"><span>✦</span> MỞ THẺ <small>×1</small></button>
-          <button class="ten-card-btn" id="openTenBtn" type="button"><span aria-hidden="true">✦</span> MỞ 10 THẺ <small>×10</small></button>
+          <button class="ten-card-btn" id="openTenBtn" type="button"><span aria-hidden="true">✦</span> MỞ 3 THẺ <small>×3</small></button>
         </div>
+        <p class="draw-cooldown-status" id="drawCooldownStatus" role="status" aria-live="polite">Đang kiểm tra lượt mở…</p>
         <button class="text-btn" id="againBtn" hidden>↻ Mở thêm một thẻ</button>
         <p class="small-disclaimer">Ảnh mẫu lấy từ Wikimedia Commons; bạn có thể thêm ảnh riêng ngay trong mục Quản lý thẻ phim.</p>
       </div>
@@ -114,7 +115,7 @@
         <div class="tip">✦ <span>Mẹo nhỏ</span><br>Thẻ mới sẽ được lưu tự động trong bộ sưu tập trên trình duyệt của bạn.</div>
       </aside>
     </section>
-      <section class="batch-reveal" id="batchReveal" hidden aria-live="polite" aria-label="Kết quả nghi thức triệu hồi mười thẻ">
+      <section class="batch-reveal" id="batchReveal" hidden aria-live="polite" aria-label="Kết quả nghi thức triệu hồi ba thẻ">
         <div class="batch-experience-head">
           <div class="batch-experience-title">
             <p class="eyebrow left-eyebrow"><span aria-hidden="true">✦</span> CELESTIAL SUMMON <span aria-hidden="true">✦</span></p>
@@ -141,7 +142,7 @@
             <p class="spotlight-movie"><span>PHIM / BỘ SƯU TẬP</span><strong id="batchSpotlightMovie">Bộ sưu tập chân dung</strong></p>
             <p class="spotlight-quote" id="batchSpotlightQuote">Một ngôi sao, một câu chuyện.</p>
             <p class="spotlight-copy-state" id="batchSpotlightCopy">✦ Một phiên bản mới gia nhập bộ sưu tập!</p>
-            <button class="batch-show-all-btn" id="batchShowAllBtn" type="button">Khám phá đủ 10 thẻ <span aria-hidden="true">↓</span></button>
+            <button class="batch-show-all-btn" id="batchShowAllBtn" type="button">Khám phá đủ 3 thẻ <span aria-hidden="true">↓</span></button>
             <p class="spotlight-footnote">Thẻ được xếp theo độ hiếm từ cao xuống thấp.</p>
           </div>
         </div>
@@ -149,11 +150,11 @@
           <article class="batch-summary-stat"><span class="summary-stat-icon new-icon" aria-hidden="true">✦</span><div><small>THẺ MỚI</small><strong id="batchNewCount">0</strong><span>lần đầu sở hữu</span></div></article>
           <article class="batch-summary-stat"><span class="summary-stat-icon duplicate-icon" aria-hidden="true">↻</span><div><small>THẺ TRÙNG</small><strong id="batchDuplicateCount">0</strong><span>dùng làm phôi nâng cấp</span></div></article>
         </div>
-        <div class="batch-heading batch-results-heading" id="batchResultsHeading" hidden><div><p class="eyebrow left-eyebrow">YOUR NEW COLLECTION</p><h2>10 thẻ <em>vừa mở</em></h2><p class="section-subtitle">Chạm vào thẻ để xem hồ sơ chi tiết.</p></div><span class="batch-result-order">ĐÃ XẾP THEO ĐỘ HIẾM <b>↓</b></span></div>
+        <div class="batch-heading batch-results-heading" id="batchResultsHeading" hidden><div><p class="eyebrow left-eyebrow">YOUR NEW COLLECTION</p><h2>3 thẻ <em>vừa mở</em></h2><p class="section-subtitle">Chạm vào thẻ để xem hồ sơ chi tiết.</p></div><span class="batch-result-order">ĐÃ XẾP THEO ĐỘ HIẾM <b>↓</b></span></div>
         <div class="batch-grid" id="batchGrid" hidden></div>
         <div class="batch-footer-actions" id="batchFooterActions" hidden>
           <button class="batch-secondary-action" id="batchCollectionBtn" type="button">▦ Xem bộ sưu tập</button>
-          <button class="batch-primary-action" id="batchAgainBtn" type="button">✦ Triệu hồi thêm ×10</button>
+          <button class="batch-primary-action" id="batchAgainBtn" type="button">✦ Mở thêm ×3</button>
         </div>
       </section>
     </section>
@@ -484,7 +485,7 @@
         <p class="section-subtitle">Cách hoạt động, lưu trữ và sao lưu bộ sưu tập của bạn.</p>
       </section>
       <div class="info-cards">
-        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Có thể mở 1 thẻ hoặc 10 thẻ cùng lúc. Thẻ đã sở hữu vẫn có thể xuất hiện lại; số lần sở hữu sẽ tăng lên.</p></article>
+        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Bạn có 1 lượt mở mỗi 60 phút: chọn mở 1 thẻ hoặc mở 3 thẻ cùng lúc. Thẻ đã sở hữu vẫn có thể xuất hiện lại; số lần sở hữu sẽ tăng lên.</p></article>
         <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Thẻ đã sở hữu mở hồ sơ đầy đủ; thẻ chưa sở hữu có thể xem trước qua mục liên kết diễn viên.</p></article>
         <article class="info-card"><span>03</span><h3>Dữ liệu trên thiết bị</h3><p>Tiến độ và yêu thích được lưu ở localStorage; hồ sơ thẻ tùy chỉnh và ảnh được lưu trong IndexedDB trên trình duyệt hiện tại.</p></article>
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>

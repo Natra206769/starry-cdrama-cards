@@ -1,8 +1,8 @@
-/* gacha.js — Mở 1 hoặc 3 thẻ với giới hạn một lượt mỗi giờ. */
+/* gacha.js — Vé quay tự cộng mỗi giờ, số dư tối đa 12 vé. */
 
 const TICKET_STATE_KEY = "starry-cdrama-ticket-state-v1";
 const TICKET_INTERVAL_MS = 60 * 60 * 1000;
-const DAILY_TICKET_LIMIT = 12;
+const MAX_TICKETS = 12;
 let drawAnimationInProgress = false;
 let ticketState = null;
 
@@ -20,8 +20,8 @@ function loadTicketState(){
     return;
   }
   ticketState={
-    tickets:Math.max(0,Math.min(DAILY_TICKET_LIMIT,Math.floor(Number(saved.tickets)||0))),
-    earnedToday:Math.max(0,Math.min(DAILY_TICKET_LIMIT,Math.floor(Number(saved.earnedToday)||0))),
+    tickets:Math.max(0,Math.min(MAX_TICKETS,Math.floor(Number(saved.tickets)||0))),
+    earnedToday:Math.max(0,Math.floor(Number(saved.earnedToday)||0)),
     day:typeof saved.day==="string"?saved.day:today,
     lastAccrualAt:Math.min(now,Math.max(0,Number(saved.lastAccrualAt)||now))
   };
@@ -38,11 +38,11 @@ function accrueHourlyTickets(now=Date.now()){
   const elapsed=Math.max(0,now-ticketState.lastAccrualAt);
   const due=Math.floor(elapsed/TICKET_INTERVAL_MS);
   if(due>0){
-    const earned=Math.min(due,DAILY_TICKET_LIMIT-ticketState.earnedToday);
-    ticketState.tickets=Math.min(DAILY_TICKET_LIMIT,ticketState.tickets+earned);
+    const earned=due;
+    ticketState.tickets=Math.min(MAX_TICKETS,ticketState.tickets+earned);
     ticketState.earnedToday+=earned;
     ticketState.lastAccrualAt+=due*TICKET_INTERVAL_MS;
-    if(ticketState.earnedToday>=DAILY_TICKET_LIMIT)ticketState.lastAccrualAt=now;
+
     saveTicketState();
   }
 }
@@ -53,7 +53,7 @@ function formatTicketTime(ms){
   return secs+" giây";
 }
 function nextTicketRemaining(){
-  if(!ticketState||ticketState.earnedToday>=DAILY_TICKET_LIMIT)return 0;
+  if(!ticketState)return 0;
   return Math.max(0,TICKET_INTERVAL_MS-(Date.now()-ticketState.lastAccrualAt));
 }
 function updateDrawControls(){
@@ -63,9 +63,8 @@ function updateDrawControls(){
   ["openBtn","openTenBtn","againBtn","batchAgainBtn"].forEach(id=>{const button=$(id);if(button)button.disabled=locked||tickets< (id==="openTenBtn"||id==="batchAgainBtn"?3:1);});
   const status=$("drawCooldownStatus");
   if(status){
-    let text="Vé: "+tickets+"/12 · Hôm nay đã nhận "+(ticketState?.earnedToday||0)+"/12";
+    let text="Vé: "+tickets+"/12 · Hôm nay đã nhận "+(ticketState?.earnedToday||0)+" vé";
     if(drawAnimationInProgress)text+=" · Đang mở thẻ…";
-    else if(ticketState&&ticketState.earnedToday>=DAILY_TICKET_LIMIT)text+=" · Đã nhận đủ vé hôm nay";
     else text+=" · Vé tiếp theo sau "+formatTicketTime(nextTicketRemaining());
     status.textContent=text;
     status.classList.toggle("is-cooldown",tickets===0);
@@ -76,7 +75,7 @@ function canStartDraw(cost=1){
   accrueHourlyTickets();
   if(drawAnimationInProgress)return false;
   if(ticketState.tickets<cost){
-    showToast(cost===3?"Cần 3 vé để mở 3 thẻ. Bạn nhận 1 vé tự động mỗi giờ, tối đa 12 vé mỗi ngày.":"Bạn đã hết vé. Vé tiếp theo sẽ tự động được cộng sau mỗi giờ, tối đa 12 vé mỗi ngày.");
+    showToast(cost===3?"Cần 3 vé để mở 3 thẻ. Bạn nhận 1 vé tự động mỗi giờ, số dư tối đa 12 vé.":"Bạn đã hết vé. Vé tiếp theo sẽ tự động được cộng sau mỗi giờ, tối đa 12 vé mỗi ngày.");
     updateDrawControls();return false;
   }
   return true;

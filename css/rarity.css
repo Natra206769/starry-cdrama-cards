@@ -230,3 +230,6 @@
 .batch-card.rarity-n::before,.batch-card.rarity-sr::before,.batch-card.rarity-sp::before{border-style:solid!important;outline-style:solid!important}
 .draw-cooldown-status{margin:10px auto 0;min-height:16px;text-align:center;color:#aeb3c8;font-size:10px;line-height:1.6;font-variant-numeric:tabular-nums}
 .draw-cooldown-status.is-cooldown{color:#f0c98c}
+
+/* Keep every visible card frame solid, including the detail-profile frame. */
+.detail-visual::before,.detail-visual.rarity-n::before{border-style:solid!important}

@@ -53,8 +53,15 @@ document.querySelectorAll(".filter").forEach(button=>button.addEventListener("cl
   document.querySelectorAll(".filter").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-pressed",String(active));});activeFilter=button.dataset.filter;renderCollection();
 }));
 const collectionSearchInput=$("collectionSearch"),clearCollectionSearchButton=$("clearCollectionSearch");
-collectionSearchInput.addEventListener("input",()=>{clearCollectionSearchButton.hidden=!collectionSearchInput.value;renderCollection();});
-clearCollectionSearchButton.addEventListener("click",()=>{collectionSearchInput.value="";clearCollectionSearchButton.hidden=true;renderCollection();collectionSearchInput.focus();});
+let collectionSearchRenderTimer=0;
+collectionSearchInput.addEventListener("input",()=>{
+  clearCollectionSearchButton.hidden=!collectionSearchInput.value;
+  window.clearTimeout(collectionSearchRenderTimer);
+  collectionSearchRenderTimer=window.setTimeout(()=>{
+    window.requestAnimationFrame(()=>renderCollection());
+  },100);
+});
+clearCollectionSearchButton.addEventListener("click",()=>{collectionSearchInput.value="";clearCollectionSearchButton.hidden=true;window.clearTimeout(collectionSearchRenderTimer);window.requestAnimationFrame(()=>renderCollection());collectionSearchInput.focus();});
 document.querySelectorAll("[data-collection-mode]").forEach(button=>button.addEventListener("click",()=>{
   collectionMode=button.dataset.collectionMode;
   collectionShelfStatusFilter="all";

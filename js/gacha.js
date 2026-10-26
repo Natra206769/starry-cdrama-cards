@@ -3,9 +3,10 @@
 const DRAW_COOLDOWN_KEY = "starry-cdrama-draw-cooldown-v1";
 const DRAW_COOLDOWN_MS = 60 * 60 * 1000;
 let drawAnimationInProgress = false;
+let fallbackDrawReadyAt = 0;
 function drawReadyAt(){
-  try { return Math.max(0, Number(localStorage.getItem(DRAW_COOLDOWN_KEY)) || 0); }
-  catch(error) { return 0; }
+  try { return Math.max(fallbackDrawReadyAt, Number(localStorage.getItem(DRAW_COOLDOWN_KEY)) || 0); }
+  catch(error) { return fallbackDrawReadyAt; }
 }
 function drawTimeRemaining(){ return Math.max(0, drawReadyAt() - Date.now()); }
 function formatDrawRemaining(ms){
@@ -31,8 +32,9 @@ function canStartDraw(){
   return true;
 }
 function consumeDrawTurn(){
-  try{localStorage.setItem(DRAW_COOLDOWN_KEY,String(Date.now()+DRAW_COOLDOWN_MS));}
-  catch(error){showToast("Không lưu được thời gian hồi lượt trên thiết bị này.");}
+  fallbackDrawReadyAt=Date.now()+DRAW_COOLDOWN_MS;
+  try{localStorage.setItem(DRAW_COOLDOWN_KEY,String(fallbackDrawReadyAt));}
+  catch(error){showToast("Không lưu được thời gian hồi lượt sau khi đóng trang; lượt hiện tại vẫn bị khóa trong phiên này.");}
   updateDrawControls();
 }
 function displayMainCard(card){

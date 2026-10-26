@@ -1,7 +1,40 @@
-/* gacha.js — Mở 1 thẻ, mở 10 thẻ (hiệu ứng triệu hồi, spotlight, tổng kết)
+/* gacha.js — Mở 1 hoặc 3 thẻ với giới hạn một lượt mỗi giờ. */
 
-*/
-
+const DRAW_COOLDOWN_KEY = "starry-cdrama-draw-cooldown-v1";
+const DRAW_COOLDOWN_MS = 60 * 60 * 1000;
+let drawAnimationInProgress = false;
+function drawReadyAt(){
+  try { return Math.max(0, Number(localStorage.getItem(DRAW_COOLDOWN_KEY)) || 0); }
+  catch(error) { return 0; }
+}
+function drawTimeRemaining(){ return Math.max(0, drawReadyAt() - Date.now()); }
+function formatDrawRemaining(ms){
+  const totalSeconds=Math.ceil(ms/1000),minutes=Math.floor(totalSeconds/60),seconds=totalSeconds%60;
+  const hours=Math.floor(minutes/60),remainingMinutes=minutes%60;
+  if(hours>0)return hours+" giờ "+remainingMinutes+" phút";
+  if(minutes>0)return minutes+" phút "+seconds+" giây";
+  return seconds+" giây";
+}
+function updateDrawControls(){
+  const remaining=drawTimeRemaining(),locked=remaining>0||drawAnimationInProgress;
+  ["openBtn","openTenBtn","againBtn","batchAgainBtn"].forEach(id=>{const button=$(id);if(button)button.disabled=locked;});
+  const status=$("drawCooldownStatus");
+  if(status){
+    status.textContent=remaining>0?"Lượt mở tiếp theo sau "+formatDrawRemaining(remaining)+". Mỗi 60 phút hồi 1 lượt.":(drawAnimationInProgress?"Đang mở thẻ…":"Đã sẵn sàng · 1 lượt mở");
+    status.classList.toggle("is-cooldown",remaining>0);
+  }
+}
+function canStartDraw(){
+  const remaining=drawTimeRemaining();
+  if(remaining>0){updateDrawControls();showToast("Bạn đã dùng lượt mở này. Còn "+formatDrawRemaining(remaining)+" để hồi lượt tiếp theo.");return false;}
+  if(drawAnimationInProgress)return false;
+  return true;
+}
+function consumeDrawTurn(){
+  try{localStorage.setItem(DRAW_COOLDOWN_KEY,String(Date.now()+DRAW_COOLDOWN_MS));}
+  catch(error){showToast("Không lưu được thời gian hồi lượt trên thiết bị này.");}
+  updateDrawControls();
+}
 function displayMainCard(card){
   const info=rarityInfo[card.rarity]||rarityInfo.SR;
   lastCharacter=card;
@@ -26,16 +59,18 @@ function resetBatchExperience(){
   $("batchGrid").replaceChildren();$("batchShowAllBtn").hidden=false;
   $("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;
   const stage=document.querySelector(".stage");stage.classList.remove("batch-summoning");
-  $("openBtn").disabled=false;$("openTenBtn").disabled=false;
+  drawAnimationInProgress=false;updateDrawControls();
 }
 function openCard(){
+  if(!canStartDraw())return;
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
   resetBatchExperience();
   const btn=$("openBtn"),tenBtn=$("openTenBtn");btn.disabled=true;if(tenBtn)tenBtn.disabled=true;$("againBtn").hidden=true;
   $("revealHint").textContent="Ánh sao đang hội tụ…";
   $("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   const card=weightedRandom();
-  if(!card){btn.disabled=false;if(tenBtn)tenBtn.disabled=false;return;}
+  if(!card){btn.disabled=false;if(tenBtn)tenBtn.disabled=false;updateDrawControls();return;}
+  drawAnimationInProgress=true;consumeDrawTurn();
   const stage=document.querySelector(".stage");
   stage.style.setProperty("--rarity",rarityInfo[card.rarity].color);
   const openingClasses=Object.keys(rarityInfo).map(rarity=>"opening-rarity-"+rarityCssKey(rarity));
@@ -52,7 +87,7 @@ function openCard(){
     $("revealHint").textContent=isDuplicate?"Bạn đã sở hữu phiên bản này rồi! Bản trùng dùng làm phôi nâng cấp.":"Một thẻ mới gia nhập bộ sưu tập!";
     state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
     saveState();renderCollection();updateStats();
-    $("luckLabel").textContent=card.rarity;$("luckBar").style.width=info.luck+"%";$("againBtn").hidden=false;btn.disabled=false;if(tenBtn)tenBtn.disabled=false;
+    $("luckLabel").textContent=card.rarity;$("luckBar").style.width=info.luck+"%";$("againBtn").hidden=false;drawAnimationInProgress=false;updateDrawControls();
     showToast(info.toastPrefix+card.name+" · "+card.movie+(isDuplicate?" · bản trùng":""));
   },revealDelay);
 }
@@ -69,14 +104,16 @@ function renderBatchSpotlight(card,result){
   $("batchSpotlightCopy").textContent=result.duplicate?"↻ Bản trùng · ×"+result.copyNumber+" · dùng làm phôi nâng cấp":"✦ Lần đầu sở hữu thẻ này";
   setCardImage(art,card,"spotlight-photo","Ảnh nổi bật của "+card.name+" trong "+card.movie);
 }
-function openTenCards(){
+function openThreeCards(){
+  if(!canStartDraw())return;
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
   resetBatchExperience();
   const buttons=[$("openBtn"),$("openTenBtn")];buttons.forEach(button=>{if(button)button.disabled=true;});
   $("againBtn").hidden=true;$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
-  $("revealHint").textContent="Mười lá bài đang được gọi về…";$("summonKicker").hidden=false;$("skipBatchBtn").hidden=false;lastBatchCards=[];
-  const pulled=Array.from({length:10},()=>weightedRandom()).filter(Boolean);
-  if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});$("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;return;}
+  $("revealHint").textContent="Ba lá bài đang được gọi về…";$("summonKicker").hidden=false;$("skipBatchBtn").hidden=false;lastBatchCards=[];
+  const pulled=Array.from({length:3},()=>weightedRandom()).filter(Boolean);
+  if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});$("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;updateDrawControls();return;}
+  drawAnimationInProgress=true;consumeDrawTurn();
   const rarityRank={R:1,SR:2,SSR:3,"SSR+":4,UR:5,SP:6};
   const orderedPulled=pulled.map((card,index)=>({card,index})).sort((a,b)=>rarityRank[b.card.rarity]-rarityRank[a.card.rarity]||a.index-b.index).map(item=>item.card);
   const highlight=orderedPulled[0],seen=new Map();
@@ -114,7 +151,7 @@ function openTenCards(){
     heroCommitted=true;
     $("cardBack").classList.remove("charging");stage.classList.remove(...openingClasses,"batch-summoning");
     const bestInfo=displayMainCard(highlight),firstResult=results[0];
-    $("revealHint").textContent="Thẻ cao nhất trong 10 thẻ: "+highlight.rarity+" · "+highlight.name+(firstResult.duplicate?" (bản trùng).":"!");
+    $("revealHint").textContent="Thẻ cao nhất trong 3 thẻ: "+highlight.rarity+" · "+highlight.name+(firstResult.duplicate?" (bản trùng).":"!");
     // Hold the central card reveal briefly, then transition to the full results scene.
     for(const card of orderedPulled)state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
     saveState();renderCollection();updateStats();
@@ -133,10 +170,10 @@ function openTenCards(){
     allResultsShown=true;clearBatchTimers();
     renderBatchResults(results);$("batchGrid").hidden=false;$("batchSummaryStats").hidden=false;$("batchResultsHeading").hidden=false;$("batchFooterActions").hidden=false;
     $("batchNewCount").textContent=String(newCount);$("batchDuplicateCount").textContent=String(duplicateCount);
-    $("batchSummary").textContent="10 lượt mở · "+newCount+" thẻ mới · "+duplicateCount+" thẻ trùng · độ hiếm cao nhất: "+highlight.rarity+".";
+    $("batchSummary").textContent="3 thẻ đã mở · "+newCount+" thẻ mới · "+duplicateCount+" thẻ trùng · độ hiếm cao nhất: "+highlight.rarity+".";
     $("batchShowAllBtn").hidden=true;$("skipBatchBtn").hidden=true;$("summonKicker").hidden=true;
-    buttons.forEach(button=>{if(button)button.disabled=false;});skipBatchFlow=null;
-    showToast("✦ Mở x10 hoàn tất · "+highlight.rarity+" là cấp cao nhất.");
+    drawAnimationInProgress=false;updateDrawControls();skipBatchFlow=null;
+    showToast("✦ Mở 3 thẻ hoàn tất · "+highlight.rarity+" là cấp cao nhất.");
   }
   skipBatchFlow=()=>{clearBatchTimers();if(!heroCommitted)showHero();if(!spotlightShown)enterSpotlight();showResults();};
   scheduleBatchTimer(showHero,wait);
@@ -167,9 +204,11 @@ function closeBatchExperience(){
   resetBatchExperience();$("page-open").scrollTop=0;showAppPage("open");
   $("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";
 }
-$("openTenBtn").addEventListener("click",openTenCards);
+$("openTenBtn").addEventListener("click",openThreeCards);
 $("skipBatchBtn").addEventListener("click",()=>{if(skipBatchFlow)skipBatchFlow();});
 $("batchShowAllBtn").addEventListener("click",()=>{if(skipBatchFlow)skipBatchFlow();});
 $("batchCloseBtn").addEventListener("click",closeBatchExperience);
 $("batchCollectionBtn").addEventListener("click",()=>{closeBatchExperience();showAppPage("collection");});
 $("batchAgainBtn").addEventListener("click",()=>{closeBatchExperience();openTenCards();});
+
+updateDrawControls();window.setInterval(updateDrawControls,1000);

@@ -1,41 +1,91 @@
 /* gacha.js — Mở 1 hoặc 3 thẻ với giới hạn một lượt mỗi giờ. */
 
-const DRAW_COOLDOWN_KEY = "starry-cdrama-draw-cooldown-v1";
-const DRAW_COOLDOWN_MS = 60 * 60 * 1000;
+const TICKET_STATE_KEY = "starry-cdrama-ticket-state-v1";
+const TICKET_INTERVAL_MS = 60 * 60 * 1000;
+const DAILY_TICKET_LIMIT = 12;
 let drawAnimationInProgress = false;
-let fallbackDrawReadyAt = 0;
-function drawReadyAt(){
-  try { return Math.max(fallbackDrawReadyAt, Number(localStorage.getItem(DRAW_COOLDOWN_KEY)) || 0); }
-  catch(error) { return fallbackDrawReadyAt; }
+let ticketState = null;
+
+function localDayKey(timestamp=Date.now()){
+  const d=new Date(timestamp);
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
-function drawTimeRemaining(){ return Math.max(0, drawReadyAt() - Date.now()); }
-function formatDrawRemaining(ms){
-  const totalSeconds=Math.ceil(ms/1000),minutes=Math.floor(totalSeconds/60),seconds=totalSeconds%60;
-  const hours=Math.floor(minutes/60),remainingMinutes=minutes%60;
-  if(hours>0)return hours+" giờ "+remainingMinutes+" phút";
-  if(minutes>0)return minutes+" phút "+seconds+" giây";
-  return seconds+" giây";
+function loadTicketState(){
+  const now=Date.now(),today=localDayKey(now);
+  let saved=null;
+  try{saved=JSON.parse(localStorage.getItem(TICKET_STATE_KEY)||"null");}catch(error){}
+  if(!saved||!Number.isFinite(Number(saved.lastAccrualAt))){
+    ticketState={tickets:1,earnedToday:1,day:today,lastAccrualAt:now};
+    saveTicketState();
+    return;
+  }
+  ticketState={
+    tickets:Math.max(0,Math.min(DAILY_TICKET_LIMIT,Math.floor(Number(saved.tickets)||0))),
+    earnedToday:Math.max(0,Math.min(DAILY_TICKET_LIMIT,Math.floor(Number(saved.earnedToday)||0))),
+    day:typeof saved.day==="string"?saved.day:today,
+    lastAccrualAt:Math.min(now,Math.max(0,Number(saved.lastAccrualAt)||now))
+  };
+  if(ticketState.day!==today){ticketState.day=today;ticketState.earnedToday=0;}
+  accrueHourlyTickets(now);
 }
-function updateDrawControls(){
-  const remaining=drawTimeRemaining(),locked=remaining>0||drawAnimationInProgress;
-  ["openBtn","openTenBtn","againBtn","batchAgainBtn"].forEach(id=>{const button=$(id);if(button)button.disabled=locked;});
-  const status=$("drawCooldownStatus");
-  if(status){
-    status.textContent=remaining>0?"Lượt mở tiếp theo sau "+formatDrawRemaining(remaining)+". Mỗi 60 phút hồi 1 lượt.":(drawAnimationInProgress?"Đang mở thẻ…":"Đã sẵn sàng · 1 lượt mở");
-    status.classList.toggle("is-cooldown",remaining>0);
+function saveTicketState(){
+  try{localStorage.setItem(TICKET_STATE_KEY,JSON.stringify(ticketState));}catch(error){}
+}
+function accrueHourlyTickets(now=Date.now()){
+  if(!ticketState)return;
+  const today=localDayKey(now);
+  if(ticketState.day!==today){ticketState.day=today;ticketState.earnedToday=0;}
+  const elapsed=Math.max(0,now-ticketState.lastAccrualAt);
+  const due=Math.floor(elapsed/TICKET_INTERVAL_MS);
+  if(due>0){
+    const earned=Math.min(due,DAILY_TICKET_LIMIT-ticketState.earnedToday);
+    ticketState.tickets=Math.min(DAILY_TICKET_LIMIT,ticketState.tickets+earned);
+    ticketState.earnedToday+=earned;
+    ticketState.lastAccrualAt+=due*TICKET_INTERVAL_MS;
+    if(ticketState.earnedToday>=DAILY_TICKET_LIMIT)ticketState.lastAccrualAt=now;
+    saveTicketState();
   }
 }
-function canStartDraw(){
-  const remaining=drawTimeRemaining();
-  if(remaining>0){updateDrawControls();showToast("Bạn đã dùng lượt mở này. Còn "+formatDrawRemaining(remaining)+" để hồi lượt tiếp theo.");return false;}
+function formatTicketTime(ms){
+  const seconds=Math.max(0,Math.ceil(ms/1000)),hours=Math.floor(seconds/3600),minutes=Math.floor((seconds%3600)/60),secs=seconds%60;
+  if(hours>0)return hours+" giờ "+minutes+" phút";
+  if(minutes>0)return minutes+" phút "+secs+" giây";
+  return secs+" giây";
+}
+function nextTicketRemaining(){
+  if(!ticketState||ticketState.earnedToday>=DAILY_TICKET_LIMIT)return 0;
+  return Math.max(0,TICKET_INTERVAL_MS-(Date.now()-ticketState.lastAccrualAt));
+}
+function updateDrawControls(){
+  if(ticketState)accrueHourlyTickets();
+  const tickets=ticketState?ticketState.tickets:0;
+  const locked=drawAnimationInProgress;
+  ["openBtn","openTenBtn","againBtn","batchAgainBtn"].forEach(id=>{const button=$(id);if(button)button.disabled=locked||tickets< (id==="openTenBtn"||id==="batchAgainBtn"?3:1);});
+  const status=$("drawCooldownStatus");
+  if(status){
+    let text="Vé: "+tickets+"/12 · Hôm nay đã nhận "+(ticketState?.earnedToday||0)+"/12";
+    if(drawAnimationInProgress)text+=" · Đang mở thẻ…";
+    else if(ticketState&&ticketState.earnedToday>=DAILY_TICKET_LIMIT)text+=" · Đã nhận đủ vé hôm nay";
+    else text+=" · Vé tiếp theo sau "+formatTicketTime(nextTicketRemaining());
+    status.textContent=text;
+    status.classList.toggle("is-cooldown",tickets===0);
+  }
+}
+function canStartDraw(cost=1){
+  if(!ticketState)loadTicketState();
+  accrueHourlyTickets();
   if(drawAnimationInProgress)return false;
+  if(ticketState.tickets<cost){
+    showToast(cost===3?"Cần 3 vé để mở 3 thẻ. Bạn nhận 1 vé tự động mỗi giờ, tối đa 12 vé mỗi ngày.":"Bạn đã hết vé. Vé tiếp theo sẽ tự động được cộng sau mỗi giờ, tối đa 12 vé mỗi ngày.");
+    updateDrawControls();return false;
+  }
   return true;
 }
-function consumeDrawTurn(){
-  fallbackDrawReadyAt=Date.now()+DRAW_COOLDOWN_MS;
-  try{localStorage.setItem(DRAW_COOLDOWN_KEY,String(fallbackDrawReadyAt));}
-  catch(error){showToast("Không lưu được thời gian hồi lượt sau khi đóng trang; lượt hiện tại vẫn bị khóa trong phiên này.");}
-  updateDrawControls();
+function consumeTickets(count){
+  accrueHourlyTickets();
+  if(!ticketState||ticketState.tickets<count)return false;
+  ticketState.tickets-=count;
+  saveTicketState();updateDrawControls();return true;
 }
 function displayMainCard(card){
   const info=rarityInfo[card.rarity]||rarityInfo.SR;
@@ -64,7 +114,7 @@ function resetBatchExperience(){
   drawAnimationInProgress=false;updateDrawControls();
 }
 function openCard(){
-  if(!canStartDraw())return;
+  if(!canStartDraw(1))return;
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
   resetBatchExperience();
   const btn=$("openBtn"),tenBtn=$("openTenBtn");btn.disabled=true;if(tenBtn)tenBtn.disabled=true;$("againBtn").hidden=true;
@@ -72,7 +122,8 @@ function openCard(){
   $("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   const card=weightedRandom();
   if(!card){btn.disabled=false;if(tenBtn)tenBtn.disabled=false;updateDrawControls();return;}
-  drawAnimationInProgress=true;consumeDrawTurn();
+  if(!consumeTickets(1)){drawAnimationInProgress=false;updateDrawControls();return;}
+  drawAnimationInProgress=true;updateDrawControls();
   const stage=document.querySelector(".stage");
   stage.style.setProperty("--rarity",rarityInfo[card.rarity].color);
   const openingClasses=Object.keys(rarityInfo).map(rarity=>"opening-rarity-"+rarityCssKey(rarity));
@@ -107,7 +158,7 @@ function renderBatchSpotlight(card,result){
   setCardImage(art,card,"spotlight-photo","Ảnh nổi bật của "+card.name+" trong "+card.movie);
 }
 function openThreeCards(){
-  if(!canStartDraw())return;
+  if(!canStartDraw(3))return;
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
   resetBatchExperience();
   const buttons=[$("openBtn"),$("openTenBtn")];buttons.forEach(button=>{if(button)button.disabled=true;});
@@ -115,7 +166,8 @@ function openThreeCards(){
   $("revealHint").textContent="Ba lá bài đang được gọi về…";$("summonKicker").hidden=false;$("skipBatchBtn").hidden=false;lastBatchCards=[];
   const pulled=Array.from({length:3},()=>weightedRandom()).filter(Boolean);
   if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});$("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;updateDrawControls();return;}
-  drawAnimationInProgress=true;consumeDrawTurn();
+  if(!consumeTickets(3)){drawAnimationInProgress=false;updateDrawControls();return;}
+  drawAnimationInProgress=true;updateDrawControls();
   const rarityRank={R:1,SR:2,SSR:3,"SSR+":4,UR:5,SP:6};
   const orderedPulled=pulled.map((card,index)=>({card,index})).sort((a,b)=>rarityRank[b.card.rarity]-rarityRank[a.card.rarity]||a.index-b.index).map(item=>item.card);
   const highlight=orderedPulled[0],seen=new Map();
@@ -213,4 +265,4 @@ $("batchCloseBtn").addEventListener("click",closeBatchExperience);
 $("batchCollectionBtn").addEventListener("click",()=>{closeBatchExperience();showAppPage("collection");});
 $("batchAgainBtn").addEventListener("click",()=>{closeBatchExperience();openTenCards();});
 
-updateDrawControls();window.setInterval(updateDrawControls,1000);
+loadTicketState();updateDrawControls();window.setInterval(updateDrawControls,1000);

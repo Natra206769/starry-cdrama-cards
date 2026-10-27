@@ -66,6 +66,21 @@ function makeLeaderboardAvatar(item){
   }
   return avatar;
 }
+function showLeaderboardCardImage(item,imageSrc){
+  const source=leaderboardAvatarSource(item);
+  const src=imageSrc||source?.src;
+  if(!src){showToast("Thẻ này chưa có ảnh để hiển thị.");return;}
+  let dialog=$("leaderboardImageLightbox");
+  if(!dialog){
+    dialog=document.createElement("dialog");dialog.id="leaderboardImageLightbox";dialog.className="leaderboard-image-lightbox";
+    const image=document.createElement("img");image.id="leaderboardImageLightboxPhoto";image.alt="";image.decoding="async";image.draggable=false;
+    dialog.appendChild(image);
+    dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();});
+    document.body.appendChild(dialog);
+  }
+  const image=$("leaderboardImageLightboxPhoto");image.alt="Ảnh thẻ nhân vật của "+item.name;image.src=src;
+  if(!dialog.open)dialog.showModal();
+}
 function leaderboardOpenEntry(item){openActorProfile(item.name);}
 function makeLeaderboardEntry(item,rank,podium=false){
   const element=document.createElement(podium?"article":"li");
@@ -75,6 +90,9 @@ function makeLeaderboardEntry(item,rank,podium=false){
   element.title="Nhấn để mở hồ sơ diễn viên";
   const badge=document.createElement("span");badge.className="leaderboard-rank-badge";badge.textContent=rank===1?"♛ "+rank:String(rank).padStart(2,"0");
   const avatar=makeLeaderboardAvatar(item);
+  avatar.classList.add("leaderboard-avatar-zoom");avatar.tabIndex=0;avatar.setAttribute("role","button");avatar.setAttribute("aria-label","Mở ảnh thẻ rõ nét của "+item.name);avatar.title="Nhấn để xem ảnh thẻ rõ nét";
+  avatar.addEventListener("click",event=>{event.stopPropagation();showLeaderboardCardImage(item,avatar.querySelector("img")?.currentSrc||avatar.querySelector("img")?.src);});
+  avatar.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();event.stopPropagation();showLeaderboardCardImage(item,avatar.querySelector("img")?.currentSrc||avatar.querySelector("img")?.src);}});
   const identity=document.createElement("div");identity.className="leaderboard-identity";
   const name=document.createElement("strong");name.textContent=item.name;
   const sub=document.createElement("small");sub.textContent="N = "+item.filmCount+" phim · P = "+item.catalogCardPoints+" điểm thẻ";

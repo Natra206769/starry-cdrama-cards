@@ -271,3 +271,13 @@
   0%{opacity:.45;box-shadow:inset 0 0 12px #ff252512,0 0 5px #ff292410}
   100%{opacity:.95;box-shadow:inset 0 0 22px #ff25252e,0 0 12px #ff292430}
 }
+
+
+/* V11.5.0 — tap a ranking portrait to view the card image without card details. */
+.leaderboard-avatar-zoom{cursor:zoom-in;transition:transform .18s ease,filter .18s ease;}
+.leaderboard-avatar-zoom:hover{transform:scale(1.045);filter:brightness(1.08);}
+.leaderboard-avatar-zoom:focus-visible{outline:2px solid #f4d7a0;outline-offset:3px;}
+.leaderboard-image-lightbox{width:fit-content;max-width:96vw;max-height:96vh;margin:auto;padding:0;border:0;border-radius:10px;background:transparent;overflow:visible;box-shadow:0 20px 90px #000b;}
+.leaderboard-image-lightbox::backdrop{background:#050611ed;backdrop-filter:blur(7px);}
+.leaderboard-image-lightbox img{display:block;width:auto;height:auto;max-width:94vw;max-height:92vh;object-fit:contain;object-position:center;border:1px solid #d8bb8680;border-radius:8px;background:#090b14;box-shadow:0 0 0 1px #ffffff12,0 0 42px #0008;}
+@media(prefers-reduced-motion:reduce){.leaderboard-avatar-zoom{transition:none;}}

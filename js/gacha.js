@@ -14,7 +14,7 @@ function loadTicketState(){
   let saved=null;
   try{saved=JSON.parse(localStorage.getItem(TICKET_STATE_KEY)||"null");}catch(error){}
   if(!saved||!Number.isFinite(Number(saved.lastAccrualAt))){
-    ticketState={tickets:1,earnedToday:1,day:today,lastAccrualAt:now};
+    ticketState={tickets:1,earnedToday:1,day:today,lastAccrualAt:now,completedMovies:{}}
     saveTicketState();
     return;
   }
@@ -22,13 +22,37 @@ function loadTicketState(){
     tickets:Math.max(0,Math.floor(Number(saved.tickets)||0)),
     earnedToday:Math.max(0,Math.floor(Number(saved.earnedToday)||0)),
     day:typeof saved.day==="string"?saved.day:today,
-    lastAccrualAt:Math.min(now,Math.max(0,Number(saved.lastAccrualAt)||now))
+    lastAccrualAt:Math.min(now,Math.max(0,Number(saved.lastAccrualAt)||now)),
+    completedMovies:saved.completedMovies&&typeof saved.completedMovies==="object"&&!Array.isArray(saved.completedMovies)?saved.completedMovies:{}
   };
   if(ticketState.day!==today){ticketState.day=today;ticketState.earnedToday=0;}
   accrueHourlyTickets(now);
 }
 function saveTicketState(){
   try{localStorage.setItem(TICKET_STATE_KEY,JSON.stringify(ticketState));}catch(error){}
+}
+
+// Give a one-time 15-ticket reward when a movie collection becomes complete.
+function movieCompletionSnapshot(movieName){
+  const key=normalizedSearchKey(movieName);
+  if(!key||isGenericCollectionTitle(movieName))return {key,complete:false};
+  const movieCards=characters.filter(card=>normalizedSearchKey(card.movie)===key);
+  return {key,complete:movieCards.length>0&&movieCards.every(card=>(Number(state.owned[card.id])||0)>0)};
+}
+function rewardNewMovieCompletions(previousByKey){
+  if(!ticketState||!(previousByKey instanceof Map))return [];
+  if(!ticketState.completedMovies||typeof ticketState.completedMovies!=="object"||Array.isArray(ticketState.completedMovies))ticketState.completedMovies={};
+  const rewarded=[];
+  for(const [key,wasComplete] of previousByKey){
+    if(!key||wasComplete||ticketState.completedMovies[key])continue;
+    const movieName=characters.find(card=>normalizedSearchKey(card.movie)===key)?.movie||key;
+    if(!movieCompletionSnapshot(movieName).complete)continue;
+    ticketState.tickets+=15;
+    ticketState.completedMovies[key]=true;
+    rewarded.push(movieName);
+  }
+  if(rewarded.length){saveTicketState();updateDrawControls();}
+  return rewarded;
 }
 function accrueHourlyTickets(now=Date.now()){
   if(!ticketState)return;
@@ -120,6 +144,7 @@ function openCard(){
   $("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   const card=weightedRandom();
   if(!card){btn.disabled=false;if(tenBtn)tenBtn.disabled=false;updateDrawControls();return;}
+  const completionBefore=movieCompletionSnapshot(card.movie);
   if(!consumeTickets(1)){drawAnimationInProgress=false;updateDrawControls();return;}
   drawAnimationInProgress=true;updateDrawControls();
   const stage=document.querySelector(".stage");
@@ -137,9 +162,10 @@ function openCard(){
     const isDuplicate=(Number(state.owned[card.id])||0)>0;
     $("revealHint").textContent=isDuplicate?"Bạn đã sở hữu phiên bản này rồi! Bản trùng dùng làm phôi nâng cấp.":"Một thẻ mới gia nhập bộ sưu tập!";
     state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
+    const rewardedMovies=rewardNewMovieCompletions(new Map([[completionBefore.key,completionBefore.complete]]));
     saveState();renderCollection();updateStats();
     $("luckLabel").textContent=card.rarity;$("luckBar").style.width=info.luck+"%";$("againBtn").hidden=false;drawAnimationInProgress=false;updateDrawControls();
-    showToast(info.toastPrefix+card.name+" · "+card.movie+(isDuplicate?" · bản trùng":""));
+    showToast(info.toastPrefix+card.name+" · "+card.movie+(isDuplicate?" · bản trùng":"")+(rewardedMovies.length?" · Hoàn thành phim +15 vé: "+rewardedMovies.join(", "):""));
   },revealDelay);
 }
 function renderBatchSpotlight(card,result){
@@ -163,6 +189,8 @@ function openThreeCards(){
   $("againBtn").hidden=true;$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   $("revealHint").textContent="Ba lá bài đang được gọi về…";$("summonKicker").hidden=false;$("skipBatchBtn").hidden=false;lastBatchCards=[];
   const pulled=Array.from({length:3},()=>weightedRandom()).filter(Boolean);
+  const completionBefore=new Map([...new Set(pulled.map(card=>normalizedSearchKey(card.movie)))].map(key=>{const movieName=pulled.find(card=>normalizedSearchKey(card.movie)===key)?.movie||key;const snapshot=movieCompletionSnapshot(movieName);return [snapshot.key,snapshot.complete];}));
+  let rewardedMovies=[];
   if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});$("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;updateDrawControls();return;}
   if(!consumeTickets(3)){drawAnimationInProgress=false;updateDrawControls();return;}
   drawAnimationInProgress=true;updateDrawControls();
@@ -206,6 +234,7 @@ function openThreeCards(){
     $("revealHint").textContent="Thẻ cao nhất trong 3 thẻ: "+highlight.rarity+" · "+highlight.name+(firstResult.duplicate?" (bản trùng).":"!");
     // Hold the central card reveal briefly, then transition to the full results scene.
     for(const card of orderedPulled)state.owned[card.id]=(Number(state.owned[card.id])||0)+1;
+    rewardedMovies=rewardNewMovieCompletions(completionBefore);
     saveState();renderCollection();updateStats();
     $("luckLabel").textContent=highlight.rarity;$("luckBar").style.width=bestInfo.luck+"%";
     if(reducedMotion){enterSpotlight();showResults();}
@@ -225,7 +254,7 @@ function openThreeCards(){
     $("batchSummary").textContent="3 thẻ đã mở · "+newCount+" thẻ mới · "+duplicateCount+" thẻ trùng · độ hiếm cao nhất: "+highlight.rarity+".";
     $("batchShowAllBtn").hidden=true;$("skipBatchBtn").hidden=true;$("summonKicker").hidden=true;
     drawAnimationInProgress=false;updateDrawControls();skipBatchFlow=null;
-    showToast("✦ Mở 3 thẻ hoàn tất · "+highlight.rarity+" là cấp cao nhất.");
+    showToast("✦ Mở 3 thẻ hoàn tất · "+highlight.rarity+" là cấp cao nhất."+(rewardedMovies.length?" · Hoàn thành phim +15 vé: "+rewardedMovies.join(", "):""));
   }
   skipBatchFlow=()=>{clearBatchTimers();if(!heroCommitted)showHero();if(!spotlightShown)enterSpotlight();showResults();};
   scheduleBatchTimer(showHero,wait);

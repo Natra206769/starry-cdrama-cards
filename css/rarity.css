@@ -257,3 +257,27 @@
 @keyframes starry-sp-charge{0%{transform:rotateY(0) scale(.94);filter:brightness(.5) saturate(.6)}43%{transform:rotateY(0) scale(1.07);filter:brightness(2.15) saturate(1.35)}68%{transform:rotateY(0) scale(.975);filter:brightness(1.28) saturate(1.15)}86%{transform:rotateY(0) scale(1.025);filter:brightness(1.55)}100%{transform:rotateY(0) scale(1);filter:brightness(1)}}
 @keyframes starry-sp-seal{from{transform:scale(.9) rotate(-8deg);filter:brightness(1)}to{transform:scale(1.14) rotate(8deg);filter:brightness(2.1)}}
 @media(prefers-reduced-motion:reduce){.stage.opening-rarity-ur::before,.stage.opening-rarity-ur::after,.stage.opening-rarity-ur .card-back,.stage.opening-rarity-ur .back-seal,.stage.opening-rarity-sp::before,.stage.opening-rarity-sp::after,.stage.opening-rarity-sp .card-back,.stage.opening-rarity-sp .back-seal{animation:none!important}}
+
+
+/* V11.7 — tiered cinematic language: SSR jade-gold, SSR+ gilded violet. Keep portrait clear; effects run only on the summon stage. */
+.stage.opening-rarity-ssr::before{opacity:.82!important;border-color:#e8d49b;box-shadow:0 0 16px #e8c87566,inset 0 0 24px #d5b66b22;animation:starry-ssr-seal .95s cubic-bezier(.2,.7,.2,1) both!important}
+.stage.opening-rarity-ssr::after{opacity:.55!important;background-size:39px 43px,61px 67px;animation:starry-ssr-dust 1.8s ease-in-out infinite!important}
+.stage.opening-rarity-ssr .stage-glow{opacity:.42!important;background:radial-gradient(circle,#fff3c8 0%,#d6b86d 32%,#7d9c8b 70%,transparent 100%);transform:scale(1.15);filter:blur(62px)}
+.stage.opening-rarity-ssr .card-back{border-color:#e8d49b!important;box-shadow:0 0 0 1px #fff5,0 0 18px #d6b86d99,0 0 42px #8fb9a644;animation:starry-ssr-charge 1s ease-out both!important}
+.stage.opening-rarity-ssr .back-border{border-color:#f4e7bd;box-shadow:inset 0 0 24px #d6b86d30}
+.stage.opening-rarity-ssr .back-seal{color:#fff2c5;text-shadow:0 0 10px #fff2c5,0 0 25px #d6b86d;animation:starry-ssr-sigil .8s ease-in-out infinite alternate}
+.stage.opening-rarity-ssr-plus::before{opacity:.92!important;border-color:#e9d3ff;box-shadow:0 0 24px #c18aff99,inset 0 0 32px #c18aff3b,0 0 54px #f3d28a30;animation:starry-ssrplus-portal 1.35s cubic-bezier(.16,.72,.24,1) both!important}
+.stage.opening-rarity-ssr-plus::after{opacity:.76!important;background-size:31px 35px,47px 53px;animation:starry-ssrplus-particles .85s ease-in-out infinite!important}
+.stage.opening-rarity-ssr-plus .stage-glow{opacity:.58!important;background:radial-gradient(circle,#fff 0%,#d9b7ff 24%,#9d75d8 55%,#d6b86d 78%,transparent 100%);transform:scale(1.32);filter:blur(60px)}
+.stage.opening-rarity-ssr-plus .card-back{border-color:#e9d3ff!important;box-shadow:0 0 0 1px #fff7,0 0 24px #c18affcc,0 0 58px #c18aff77,0 0 72px #e8c87522;animation:starry-ssrplus-charge 1.35s cubic-bezier(.16,.72,.24,1) both!important}
+.stage.opening-rarity-ssr-plus .back-border{border-color:#f3e4ff;box-shadow:inset 0 0 30px #c18aff44,0 0 12px #e8c87530}
+.stage.opening-rarity-ssr-plus .back-seal{color:#fff5ff;text-shadow:0 0 13px #fff,0 0 30px #c18aff;animation:starry-ssrplus-sigil .48s ease-in-out infinite alternate}
+@keyframes starry-ssr-seal{0%{opacity:.2;transform:rotate(-12deg) scale(.72)}65%{opacity:1;transform:rotate(7deg) scale(1.08)}100%{opacity:.85;transform:rotate(0) scale(1)}}
+@keyframes starry-ssr-dust{0%,100%{filter:brightness(.9);background-position:0 0,0 0}50%{filter:brightness(1.5);background-position:8px -10px,-12px 14px}}
+@keyframes starry-ssr-charge{0%{transform:scale(.97);filter:brightness(.85)}52%{transform:scale(1.035);filter:brightness(1.55)}100%{transform:scale(1);filter:brightness(1)}}
+@keyframes starry-ssr-sigil{from{transform:rotate(-4deg) scale(.94)}to{transform:rotate(4deg) scale(1.08)}}
+@keyframes starry-ssrplus-portal{0%{opacity:0;transform:rotate(-18deg) scale(.55)}45%{opacity:1;transform:rotate(120deg) scale(1.12)}78%{opacity:.95;transform:rotate(250deg) scale(1.02)}100%{opacity:.88;transform:rotate(330deg) scale(1)}}
+@keyframes starry-ssrplus-particles{0%,100%{filter:brightness(.9);background-position:0 0,0 0}50%{filter:brightness(1.8);background-position:12px -16px,-15px 18px}}
+@keyframes starry-ssrplus-charge{0%{transform:scale(.94);filter:brightness(.75)}48%{transform:scale(1.055);filter:brightness(1.85)}72%{transform:scale(.99);filter:brightness(1.2)}100%{transform:scale(1);filter:brightness(1)}}
+@keyframes starry-ssrplus-sigil{from{transform:rotate(-7deg) scale(.9);filter:brightness(1)}to{transform:rotate(7deg) scale(1.12);filter:brightness(1.8)}}
+@media(prefers-reduced-motion:reduce){.stage.opening-rarity-ssr::before,.stage.opening-rarity-ssr::after,.stage.opening-rarity-ssr .card-back,.stage.opening-rarity-ssr .back-seal,.stage.opening-rarity-ssr-plus::before,.stage.opening-rarity-ssr-plus::after,.stage.opening-rarity-ssr-plus .card-back,.stage.opening-rarity-ssr-plus .back-seal{animation:none!important}}

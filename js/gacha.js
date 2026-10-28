@@ -83,7 +83,7 @@ function updateDrawControls(){
   if(ticketState)accrueHourlyTickets();
   const tickets=ticketState?ticketState.tickets:0;
   const locked=drawAnimationInProgress;
-  ["openBtn","openTenBtn","againBtn","batchAgainBtn"].forEach(id=>{const button=$(id);if(button)button.disabled=locked||tickets< (id==="openTenBtn"||id==="batchAgainBtn"?3:1);});
+  ["openBtn","openThreeBtn","againBtn","batchAgainBtn"].forEach(id=>{const button=$(id);if(button)button.disabled=locked||tickets< (id==="openThreeBtn"||id==="batchAgainBtn"?3:1);});
   const status=$("drawCooldownStatus");
   if(status){
     let text="Vé hiện có: "+tickets+" · Hôm nay đã nhận "+(ticketState?.earnedToday||0)+" vé";
@@ -139,11 +139,11 @@ function openCard(){
   if(!canStartDraw(1))return;
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
   resetBatchExperience();
-  const btn=$("openBtn"),tenBtn=$("openTenBtn");btn.disabled=true;if(tenBtn)tenBtn.disabled=true;$("againBtn").hidden=true;
+  const btn=$("openBtn"),threeBtn=$("openThreeBtn");btn.disabled=true;if(threeBtn)threeBtn.disabled=true;$("againBtn").hidden=true;
   $("revealHint").textContent="Ánh sao đang hội tụ…";
   $("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   const card=weightedRandom();
-  if(!card){btn.disabled=false;if(tenBtn)tenBtn.disabled=false;updateDrawControls();return;}
+  if(!card){btn.disabled=false;if(threeBtn)threeBtn.disabled=false;updateDrawControls();return;}
   const completionBefore=movieCompletionSnapshot(card.movie);
   if(!consumeTickets(1)){drawAnimationInProgress=false;updateDrawControls();return;}
   drawAnimationInProgress=true;updateDrawControls();
@@ -185,7 +185,7 @@ function openThreeCards(){
   if(!canStartDraw(3))return;
   if(!characters.length){showToast("Kho thẻ đang trống. Hãy thêm thẻ hoặc khôi phục thẻ mẫu.");return;}
   resetBatchExperience();
-  const buttons=[$("openBtn"),$("openTenBtn")];buttons.forEach(button=>{if(button)button.disabled=true;});
+  const buttons=[$("openBtn"),$("openThreeBtn")];buttons.forEach(button=>{if(button)button.disabled=true;});
   $("againBtn").hidden=true;$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   $("revealHint").textContent="Ba lá bài đang được gọi về…";$("summonKicker").hidden=false;$("skipBatchBtn").hidden=false;lastBatchCards=[];
   const pulled=Array.from({length:3},()=>weightedRandom()).filter(Boolean);
@@ -286,7 +286,7 @@ function closeBatchExperience(){
   resetBatchExperience();$("page-open").scrollTop=0;showAppPage("open");
   $("revealHint").textContent="Tập trung năng lượng… ngôi sao đang chờ bạn.";
 }
-$("openTenBtn").addEventListener("click",openThreeCards);
+$("openThreeBtn").addEventListener("click",openThreeCards);
 $("skipBatchBtn").addEventListener("click",()=>{if(skipBatchFlow)skipBatchFlow();});
 $("batchShowAllBtn").addEventListener("click",()=>{if(skipBatchFlow)skipBatchFlow();});
 $("batchCloseBtn").addEventListener("click",closeBatchExperience);

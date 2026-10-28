@@ -71,13 +71,13 @@
 /* V7.4 — ten-card pull, portrait-first layout and unmistakably different rarity treatments. */
 .open-actions{display:grid;gap:10px;width:min(100%,292px);position:relative;z-index:2}
 .open-actions .primary-btn{width:100%;min-width:0;min-height:48px;padding:12px 14px}
-.ten-card-btn{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px;padding:11px 14px;border:1px solid #c5a0ff88;border-radius:28px;background:linear-gradient(110deg,#2a2344,#171a2f 58%,#3a2146);color:#f8eaff;font:700 11px var(--sans);letter-spacing:1.1px;cursor:pointer;box-shadow:inset 0 0 18px #b78aff12,0 7px 25px #a56bff20;transition:transform .2s,border-color .2s,box-shadow .2s}
-.ten-card-btn::before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(110deg,transparent 18%,#fff2 48%,transparent 70%);transform:translateX(-120%);transition:transform .65s ease}
-.ten-card-btn:hover{transform:translateY(-2px);border-color:#eccbff;box-shadow:0 9px 28px #a56bff40,0 0 20px #cf9bff18}
-.ten-card-btn:hover::before{transform:translateX(120%)}
-.ten-card-btn:disabled{opacity:.55;cursor:wait;transform:none}
-.ten-card-btn span{color:#ffd9ff;font-size:15px}
-.ten-card-btn small{font-size:9px;opacity:.7}
+.three-card-btn{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px;padding:11px 14px;border:1px solid #c5a0ff88;border-radius:28px;background:linear-gradient(110deg,#2a2344,#171a2f 58%,#3a2146);color:#f8eaff;font:700 11px var(--sans);letter-spacing:1.1px;cursor:pointer;box-shadow:inset 0 0 18px #b78aff12,0 7px 25px #a56bff20;transition:transform .2s,border-color .2s,box-shadow .2s}
+.three-card-btn::before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(110deg,transparent 18%,#fff2 48%,transparent 70%);transform:translateX(-120%);transition:transform .65s ease}
+.three-card-btn:hover{transform:translateY(-2px);border-color:#eccbff;box-shadow:0 9px 28px #a56bff40,0 0 20px #cf9bff18}
+.three-card-btn:hover::before{transform:translateX(120%)}
+.three-card-btn:disabled{opacity:.55;cursor:wait;transform:none}
+.three-card-btn span{color:#ffd9ff;font-size:15px}
+.three-card-btn small{font-size:9px;opacity:.7}
 .batch-reveal{padding:16px 0 42px;scroll-margin-top:88px}
 .batch-reveal[hidden]{display:none}
 .batch-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 20px}
@@ -146,7 +146,7 @@
 @media(max-width:760px){.batch-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.batch-info{padding:10px 9px 11px;min-height:125px}.batch-art{min-height:125px}.batch-heading{align-items:flex-start}}
 @media(max-width:520px){.batch-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.batch-art{min-height:150px}.batch-info{min-height:120px}.batch-heading{gap:8px}.batch-heading .outline-btn{flex:0 0 auto;min-height:36px;padding:7px 9px;font-size:9px}.batch-heading h2{font-size:22px}.batch-reveal{padding-top:5px}}
 @media(max-width:360px){.batch-grid{gap:7px}.batch-art{min-height:135px}.batch-info{padding:9px 8px;min-height:125px}.batch-copy{font-size:7px}}
-@media(prefers-reduced-motion:reduce){.ten-card-btn,.batch-card,.batch-card:hover,.batch-card::before,.batch-card::after,.batch-card .batch-starfield,.character-card.rarity-n .rarity-overlay::before,.character-card.rarity-sp .rarity-overlay::before,.character-card.rarity-sp .rarity-overlay::after{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.three-card-btn,.batch-card,.batch-card:hover,.batch-card::before,.batch-card::after,.batch-card .batch-starfield,.character-card.rarity-n .rarity-overlay::before,.character-card.rarity-sp .rarity-overlay::before,.character-card.rarity-sp .rarity-overlay::after{animation:none!important;transition:none!important}}
 
 /* Keep the detail sheet portrait-led: the artwork remains the visual anchor. */
 .detail-content{padding:16px 24px 14px}

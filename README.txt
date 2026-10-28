@@ -2,7 +2,7 @@ STARRY C-DRAMA CARDS — V11.6.0
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
-- Mở 1 hoặc 10 thẻ theo độ hiếm R / SR / SSR / SSR+ / UR / SP (N cũ tự chuyển thành R).
+- Mở 1 hoặc 3 thẻ theo độ hiếm R / SR / SSR / SSR+ / UR / SP (N cũ tự chuyển thành R).
 - Thư viện cá nhân và danh mục khám phá toàn bộ thẻ; tìm kiếm, lọc, sắp xếp và xem dạng lưới/danh sách.
 - Kệ phim trực quan bằng poster; lọc theo năm/thể loại/trạng thái, sắp xếp theo tên, năm, tiến độ hoặc số phiên bản.
 - Lối tắt “Tiếp tục sưu tầm” cho phim đang dang dở và nhãn trạng thái chưa bắt đầu/đang sưu tầm/hoàn thành.
@@ -74,7 +74,7 @@ V11.4.0 — Hệ độ hiếm và bảng xếp hạng
 
 V11.6.0 — Hiệu ứng điện ảnh và phòng thử nghiệm
 - Tăng cao trào triệu hồi UR/SP, giữ thời gian lộ thẻ theo độ hiếm và hỗ trợ giảm chuyển động.
-- Sửa độ trễ xuất hiện từng thẻ; đồng bộ thao tác mở 10 thẻ với giao diện/tài liệu.
+- Sửa độ trễ xuất hiện từng thẻ; giữ đúng thao tác mở 3 thẻ như thiết kế giao diện.
 - Làm nổi bật hiệu ứng nâng sao thành công, đặc biệt cấp 5★.
 - Thêm phòng thử hiệu ứng không tiêu hao vật phẩm; tăng cache service worker lên v46.
 - Không thay đổi STORAGE_KEY, DB_NAME, DB_VERSION hoặc dữ liệu sở hữu.

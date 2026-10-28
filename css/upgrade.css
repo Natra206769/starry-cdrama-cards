@@ -333,3 +333,14 @@
 @keyframes starry-star-crest-4{0%{opacity:0;transform:scale(.84) rotate(-5deg)}48%{opacity:1;transform:scale(1.035) rotate(2deg)}100%{opacity:.9;transform:scale(1) rotate(0)}}
 @keyframes starry-star-crest-5{0%{opacity:0;transform:scale(.72) rotate(-10deg)}38%{opacity:1;transform:scale(1.04) rotate(3deg)}68%{opacity:1;transform:scale(.99) rotate(-1deg)}100%{opacity:.95;transform:scale(1) rotate(0)}}
 @media(prefers-reduced-motion:reduce){.upgrade-animation-stage.is-success.tier-2::before,.upgrade-animation-stage.is-success.tier-3::before,.upgrade-animation-stage.is-success.tier-4::before,.upgrade-animation-stage.is-success.tier-5::before{animation:none!important;transform:none!important}}
+
+/* V11.7 — respect reduced-motion preferences for every persistent collection star rim. */
+@media (prefers-reduced-motion: reduce) {
+  .mini-card .mini-star-frame,
+  .mini-card .mini-star-frame::before,
+  .mini-card .mini-star-frame::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .mini-card .mini-star-frame::after { opacity: 0 !important; }
+}

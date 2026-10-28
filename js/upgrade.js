@@ -237,3 +237,74 @@ function renderUpgradeFootnote(){
   note.textContent=`Nâng sao: ${stars}. Nâng level: ${exp} EXP mỗi phôi.`;
 }
 renderUpgradeFootnote();
+
+
+// V11.6 — isolated preview lab. It never consumes cards/tickets and never saves state.
+(function initEffectPreviewLab(){
+ const stage=document.getElementById("effectLabStage");if(!stage)return;
+ const raritySelect=document.getElementById("effectLabRarity"),starsSelect=document.getElementById("effectLabStars");
+ const summonButton=document.getElementById("effectLabSummonBtn"),upgradeButton=document.getElementById("effectLabUpgradeBtn");
+ const status=document.getElementById("effectLabStatus"),hint=document.getElementById("effectLabHint");
+ const back=document.getElementById("effectLabCardBack"),card=document.getElementById("effectLabCharacterCard");
+ const art=document.getElementById("effectLabCardArt"),badge=document.getElementById("effectLabStarBadge");
+ const tierLabel=document.getElementById("effectLabTierLabel"),cardName=document.getElementById("effectLabCardName"),quote=document.getElementById("effectLabQuote");
+ if(!raritySelect||!starsSelect||!summonButton||!upgradeButton||!status||!back||!card||!art)return;
+ const effectFor=tier=>(rarityInfo[tier]||rarityInfo.UR).effect;
+ const stageClassFor=tier=>"opening-rarity-"+(tier==="SSR+"?"ssr":tier.toLowerCase());
+ const stageClasses=[...new Set(Object.keys(rarityInfo).map(stageClassFor))];
+ const cardClasses=[...new Set(Object.values(rarityInfo).map(info=>"rarity-"+info.effect))];
+ let timer=null,runId=0;
+ const reducedMotion=()=>Boolean(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+ function resetTimer(){if(timer!==null){window.clearTimeout(timer);timer=null;}return ++runId;}
+ function selectedTier(){return rarityInfo[raritySelect.value]?raritySelect.value:"UR";}
+ function applyTier(tier){
+  const info=rarityInfo[tier]||rarityInfo.UR;
+  stage.classList.remove(...stageClasses,"is-lab-charging","is-lab-upgrade");
+  card.classList.remove(...cardClasses,"lab-reveal","lab-upgrade-pop");card.classList.add("rarity-"+effectFor(tier));
+  stage.style.setProperty("--rarity",info.color);back.style.setProperty("--rarity",info.color);
+  card.style.setProperty("--rarity",info.color);card.style.setProperty("--art1",info.art[0]);card.style.setProperty("--art2",info.art[1]);card.style.setProperty("--accent",info.art[2]);
+  art.style.setProperty("--art1",info.art[0]);art.style.setProperty("--art2",info.art[1]);art.style.setProperty("--accent",info.art[2]);
+  if(tierLabel)tierLabel.textContent=tier+" · "+info.shortLabel.toLocaleUpperCase("vi-VN");
+  if(cardName)cardName.textContent=tier==="SP"?"Ngôi Sao Đặc Biệt":tier==="UR"?"Thẻ Huyền Thoại":"Thẻ "+tier+" xem thử";
+  if(quote)quote.textContent=tier==="SP"?"Một khoảnh khắc đặc biệt giữa ngân hà.":tier==="UR"?"Ánh vàng hội tụ trước khi huyền thoại xuất hiện.":"Một ngôi sao, một câu chuyện.";
+  if(badge)badge.textContent="★ 1/5";stage.dataset.labRarity=tier;stage.dataset.labPhase="idle";stage.dataset.labStars="1";
+ }
+ function showCardImmediately(tier){
+  applyTier(tier);back.classList.remove("charging");back.classList.add("hidden");
+  card.classList.remove("hidden");card.classList.add("lab-reveal");stage.dataset.labPhase="revealed";
+ }
+ summonButton.addEventListener("click",()=>{
+  const id=resetTimer(),tier=selectedTier(),info=rarityInfo[tier]||rarityInfo.UR;applyTier(tier);
+  card.classList.add("hidden");card.classList.remove("lab-reveal","lab-upgrade-pop");
+  back.classList.remove("hidden");back.classList.add("charging");back.style.opacity="1";back.style.transform="rotateY(0)";
+  stage.classList.add(stageClassFor(tier),"is-lab-charging");stage.dataset.labPhase="charging";
+  status.textContent="Đang mô phỏng triệu hồi "+tier+"… không tiêu hao vé hay thẻ.";
+  if(hint)hint.textContent="Ánh sao đang hội tụ…";
+  timer=window.setTimeout(()=>{
+   if(id!==runId)return;
+   back.classList.remove("charging");back.classList.add("hidden");stage.classList.remove(...stageClasses,"is-lab-charging");
+   card.classList.remove("hidden");card.classList.add("lab-reveal");stage.dataset.labPhase="revealed";
+   status.textContent="Đã xem thử hiệu ứng "+tier+". Bộ sưu tập và số vé không thay đổi.";
+   if(hint)hint.textContent=tier+" · xem thử hoàn tất";timer=null;
+  },reducedMotion()?80:(Number(info.revealDelay)||900));
+ });
+ upgradeButton.addEventListener("click",()=>{
+  const id=resetTimer(),tier=selectedTier(),stars=Math.max(2,Math.min(5,Number(starsSelect.value)||5));
+  showCardImmediately(tier);stage.classList.add("is-lab-upgrade");stage.dataset.labPhase="upgrade";stage.dataset.labStars=String(stars);
+  card.classList.remove("lab-reveal","lab-upgrade-pop");void card.offsetWidth;card.classList.add("lab-upgrade-pop");
+  if(badge)badge.textContent="★ "+stars+"/5";
+  status.textContent="Đang mô phỏng nâng sao thành công lên "+stars+"★… không tiêu hao nguyên liệu.";
+  if(hint)hint.textContent="Tinh quang đang bùng nở…";
+  timer=window.setTimeout(()=>{
+   if(id!==runId)return;stage.classList.remove("is-lab-upgrade");stage.dataset.labPhase="upgrade-complete";
+   status.textContent="Mô phỏng nâng sao "+stars+"★ hoàn tất. Không có dữ liệu nào được lưu hoặc tiêu hao.";
+   if(hint)hint.textContent="★ "+stars+"/5 · mô phỏng hoàn tất";timer=null;
+  },reducedMotion()?80:1250);
+ });
+ raritySelect.addEventListener("change",()=>{
+  resetTimer();const tier=selectedTier();applyTier(tier);back.classList.remove("hidden","charging");card.classList.add("hidden");
+  status.textContent="Đã chọn "+tier+". Nhấn thử triệu hồi hoặc thử nâng sao.";
+  if(hint)hint.textContent="Hiệu ứng sẽ xuất hiện tại đây.";
+ });
+ applyTier(selectedTier());
+})();

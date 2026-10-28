@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.5.0 Movie Completion Rewards & Card Image Viewer</title>
+  <title>Starry C-Drama Cards — V11.6.0 Cinematic Effects Workshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -99,7 +99,7 @@
         <button class="text-btn skip-batch-btn" id="skipBatchBtn" type="button" hidden>» Bỏ qua hoạt ảnh</button>
         <div class="open-actions" aria-label="Chọn số lượng thẻ">
           <button class="primary-btn" id="openBtn" type="button"><span>✦</span> MỞ THẺ <small>×1</small></button>
-          <button class="ten-card-btn" id="openTenBtn" type="button"><span aria-hidden="true">✦</span> MỞ 3 THẺ <small>×3</small></button>
+          <button class="three-card-btn" id="openThreeBtn" type="button"><span aria-hidden="true">✦</span> MỞ 3 THẺ <small>×3</small></button>
         </div>
         <p class="draw-cooldown-status" id="drawCooldownStatus" role="status" aria-live="polite">Đang kiểm tra lượt mở…</p>
         <button class="text-btn" id="againBtn" hidden>↻ Mở thêm một thẻ</button>
@@ -449,6 +449,44 @@
         </section>
 
         </div>
+
+        <section class="effect-lab" id="effectLab" aria-labelledby="effectLabTitle">
+          <div class="effect-lab-heading"><div>
+            <p class="eyebrow left-eyebrow">CINEMATIC WORKSHOP · PREVIEW ONLY</p>
+            <h3 id="effectLabTitle">Phòng thử <em>hiệu ứng</em></h3>
+            <p class="section-subtitle">Thử hiệu ứng triệu hồi và nâng sao mà không tiêu hao vé, thẻ hoặc thay đổi dữ liệu đã lưu.</p>
+          </div><span class="effect-lab-stamp" aria-hidden="true">✦ LAB</span></div>
+          <div class="effect-lab-controls">
+            <label for="effectLabRarity">Độ hiếm triệu hồi
+              <select id="effectLabRarity">
+                <option value="R">R · Hiếm</option><option value="SR">SR · Siêu hiếm</option>
+                <option value="SSR">SSR · Siêu hiếm</option><option value="SSR+">SSR+ · Siêu hiếm+</option>
+                <option value="UR" selected>UR · Cực hiếm</option><option value="SP">SP · Đặc biệt</option>
+              </select>
+            </label>
+            <label for="effectLabStars">Cấp sao muốn xem
+              <select id="effectLabStars"><option value="2">2★</option><option value="3">3★</option><option value="4">4★</option><option value="5" selected>5★ · Tối đa</option></select>
+            </label>
+            <div class="effect-lab-actions">
+              <button class="effect-lab-button primary" id="effectLabSummonBtn" type="button">✦ Thử triệu hồi</button>
+              <button class="effect-lab-button secondary" id="effectLabUpgradeBtn" type="button">★ Thử nâng sao</button>
+            </div>
+          </div>
+          <p class="effect-lab-status" id="effectLabStatus" role="status" aria-live="polite">Chọn độ hiếm rồi chạy thử. Đây chỉ là mô phỏng, không thay đổi bộ sưu tập.</p>
+          <div class="stage effect-lab-stage" id="effectLabStage" data-lab-phase="idle" data-lab-stars="1" aria-label="Khu vực xem trước hoạt ảnh">
+            <div class="stage-glow"></div><div class="card-wrap effect-lab-card-wrap">
+              <div class="card card-back effect-lab-card-back" id="effectLabCardBack" aria-label="Mặt sau thẻ xem trước">
+                <div class="back-border"><div class="back-seal">✦<small>星光</small>✦</div><div class="back-corner tl"></div><div class="back-corner tr"></div><div class="back-corner bl"></div><div class="back-corner br"></div></div>
+              </div>
+              <article class="card character-card effect-lab-character-card hidden" id="effectLabCharacterCard" aria-label="Thẻ xem trước hiệu ứng">
+                <div class="rarity-overlay" aria-hidden="true"></div>
+                <div class="card-art effect-lab-card-art" id="effectLabCardArt"><div class="art-orbit"></div><div class="art-symbol">✧</div><div class="art-caption">STARRY PREVIEW</div><div class="portrait-initials">星光</div><div class="art-subtitle">星光 · STARRY</div></div>
+                <div class="card-info"><div class="card-rarity" id="effectLabTierLabel">UR · ULTRA RARE</div><h2 id="effectLabCardName">Thẻ xem thử</h2><p class="chinese-name">星光</p><p class="card-movie">Cinematic effect preview</p><div class="card-meta"><span>Mô phỏng</span><span>Không tiêu hao</span></div><p class="card-quote" id="effectLabQuote">Một ngôi sao, một câu chuyện.</p></div>
+                <div class="card-edge"></div><span class="effect-lab-star-badge" id="effectLabStarBadge">★ 1/5</span>
+              </article>
+            </div><p class="reveal-hint effect-lab-hint" id="effectLabHint">Hiệu ứng sẽ xuất hiện tại đây.</p>
+          </div>
+        </section>
       </section>
     </section>
 

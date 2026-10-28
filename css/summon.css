@@ -161,3 +161,18 @@
 @media(prefers-reduced-motion:reduce) {
   .summon-kicker,.summon-kicker-sigil,.stage.batch-summoning::before,.stage.batch-summoning::after,.stage.batch-summoning .back-seal,.batch-spotlight,.spotlight-portal i,.spotlight-portal span,.spotlight-art,.spotlight-art-foil,.batch-summary-grid,.batch-card { animation:none !important; transition:none !important; }
 }
+
+
+/* V11.6 — stagger multi-draw results and give UR/SP dedicated card finishes. */
+.batch-card{animation-delay:calc(var(--batch-index,0) * 58ms)}
+.batch-card.rarity-ur{box-shadow:inset 0 0 28px #ffca7528,0 0 17px #ffca7550,0 10px 30px #0007}
+.batch-card.rarity-ur::before{inset:4px;border:2px solid #ffe0a0;opacity:.96;box-shadow:inset 0 0 24px #ffca7538,0 0 18px #ffca7570;animation:result-ur-frame 2.4s ease-in-out infinite}
+.batch-card.rarity-ur::after{opacity:.8;animation:rare-shimmer 2.6s ease-out .2s 1}
+.batch-card.rarity-ur .batch-starfield{opacity:.8;background-size:31px 37px,57px 63px;animation:star-drift 2.8s ease-in-out infinite}
+.batch-card.rarity-sp{box-shadow:inset 0 0 30px #ff85d42e,0 0 20px #ff85d477,0 0 38px #a66bff35,0 10px 32px #0008}
+.batch-card.rarity-sp::before{inset:3px;border:2px double #ffd8f3;opacity:1;box-shadow:inset 0 0 26px #ff85d455,0 0 20px #ff85d4aa;animation:result-sp-frame 1.7s ease-in-out infinite}
+.batch-card.rarity-sp::after{opacity:.9;background:linear-gradient(115deg,transparent 24%,#fff0 38%,#ffffff88 49%,#ff85d477 53%,transparent 67%);animation:rare-shimmer 2.1s ease-out .1s 1}
+.batch-card.rarity-sp .batch-starfield{opacity:1;background-size:23px 29px,41px 47px,63px 71px;animation:star-drift 1.45s ease-in-out infinite}
+@keyframes result-ur-frame{0%,100%{filter:brightness(.9);box-shadow:inset 0 0 18px #ffca7528,0 0 10px #ffca7550}50%{filter:brightness(1.25);box-shadow:inset 0 0 28px #ffca7544,0 0 22px #ffca75bb}}
+@keyframes result-sp-frame{0%,100%{filter:brightness(.88);box-shadow:inset 0 0 18px #ff85d433,0 0 12px #ff85d477}50%{filter:brightness(1.35);box-shadow:inset 0 0 32px #ff85d466,0 0 26px #ff85d4cc,0 0 38px #a66bff55}}
+@media(prefers-reduced-motion:reduce){.batch-card.rarity-ur,.batch-card.rarity-ur::before,.batch-card.rarity-ur::after,.batch-card.rarity-ur .batch-starfield,.batch-card.rarity-sp,.batch-card.rarity-sp::before,.batch-card.rarity-sp::after,.batch-card.rarity-sp .batch-starfield{animation:none!important}}

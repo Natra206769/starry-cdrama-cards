@@ -1,8 +1,8 @@
-STARRY C-DRAMA CARDS — V11.4.0
+STARRY C-DRAMA CARDS — V11.6.0
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
-- Mở 1 hoặc 10 thẻ theo độ hiếm R / SR / SSR / SSR+ / UR / SP (N cũ tự chuyển thành R).
+- Mở 1 hoặc 3 thẻ theo độ hiếm R / SR / SSR / SSR+ / UR / SP (N cũ tự chuyển thành R).
 - Thư viện cá nhân và danh mục khám phá toàn bộ thẻ; tìm kiếm, lọc, sắp xếp và xem dạng lưới/danh sách.
 - Kệ phim trực quan bằng poster; lọc theo năm/thể loại/trạng thái, sắp xếp theo tên, năm, tiến độ hoặc số phiên bản.
 - Lối tắt “Tiếp tục sưu tầm” cho phim đang dang dở và nhãn trạng thái chưa bắt đầu/đang sưu tầm/hoàn thành.
@@ -12,6 +12,8 @@ TÍNH NĂNG
 - Trang phim và hồ sơ diễn viên liên kết với từng phiên bản thẻ.
 - Quản lý metadata dùng chung theo phim: poster, tên gốc, năm phát hành, thể loại, mô tả.
 - Yêu thích, tiến độ sưu tầm, nâng sao 1★–5★, level, hiệu ứng holographic và xếp hạng toàn kho.
+- Nghi thức triệu hồi riêng cho UR/SP, kết quả nhiều thẻ xuất hiện lần lượt và hiệu ứng nâng sao theo cấp đạt được.
+- Phòng thử hiệu ứng miễn phí: xem trước độ hiếm và nâng thành công 2★–5★ mà không tiêu hao vé/thẻ hoặc sửa dữ liệu.
 - Quản lý thẻ mẫu/thẻ tự thêm; nhập hàng loạt CSV/TSV hoặc dán bảng với xem trước, kiểm tra dữ liệu và bỏ qua thẻ trùng mặc định.
 - Danh mục phim độc lập với danh mục thẻ; nhập metadata phim hàng loạt, gộp metadata an toàn và giữ phim chưa có thẻ trong danh mục/kệ/hồ sơ.
 - Tra cứu phim bộ/điện ảnh qua TMDB, xem trước kết quả và poster rồi xác nhận lưu; token API chỉ tồn tại trong phiên tab và không được ghi vào bộ nhớ ứng dụng.
@@ -69,3 +71,10 @@ V11.4.0 — Hệ độ hiếm và bảng xếp hạng
 - Bảng diễn viên bỏ xếp hạng độ hot; thêm chế độ Tổng thể gộp nam và nữ, cùng bộ lọc riêng nam/nữ.
 - Hiệu ứng rực cháy dành cho hạng 1; mọi bảng xếp hạng giới hạn tối đa 100 mục.
 - Giữ nguyên STORAGE_KEY / DB_NAME / DB_VERSION; tăng CACHE_NAME của service worker để phát hành cập nhật.
+
+V11.6.0 — Hiệu ứng điện ảnh và phòng thử nghiệm
+- Tăng cao trào triệu hồi UR/SP, giữ thời gian lộ thẻ theo độ hiếm và hỗ trợ giảm chuyển động.
+- Sửa độ trễ xuất hiện từng thẻ; giữ đúng thao tác mở 3 thẻ như thiết kế giao diện.
+- Làm nổi bật hiệu ứng nâng sao thành công, đặc biệt cấp 5★.
+- Thêm phòng thử hiệu ứng không tiêu hao vật phẩm; tăng cache service worker lên v46.
+- Không thay đổi STORAGE_KEY, DB_NAME, DB_VERSION hoặc dữ liệu sở hữu.

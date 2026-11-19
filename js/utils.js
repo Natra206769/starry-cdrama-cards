@@ -47,7 +47,7 @@ function normalizeCard(card,fallback={}){
   result.movie=titleCaseName(String(result.movie||"").trim()||"Bộ sưu tập chân dung");
   result.role=titleCaseName(String(result.role||"").trim());
   delete result.costume; // Ignore legacy outfit metadata; cards are no longer split by costume.
-  result.quote=String(result.quote||"").trim()||"Một ngôi sao, một câu chuyện.";
+  delete result.quote; // Remove legacy character-description fields from normalized cards.
   result.symbol=result.symbol||result.icon||"✦";
   result.initials=result.initials||makeInitials(result.chinese,result.name);
   result.gender=result.gender||"other";

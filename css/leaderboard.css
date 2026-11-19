@@ -281,3 +281,10 @@
 .leaderboard-image-lightbox::backdrop{background:#050611ed;backdrop-filter:blur(7px);}
 .leaderboard-image-lightbox img{display:block;width:auto;height:auto;max-width:94vw;max-height:92vh;object-fit:contain;object-position:center;border:1px solid #d8bb8680;border-radius:8px;background:#090b14;box-shadow:0 0 0 1px #ffffff12,0 0 42px #0008;}
 @media(prefers-reduced-motion:reduce){.leaderboard-avatar-zoom{transition:none;}}
+
+
+/* V11.7 — visually separate Top 3 from the rest of the Top 10. */
+.leaderboard-band-label{margin:8px 0 10px;padding:9px 12px;border-left:3px solid #c18aff;border-radius:0 8px 8px 0;background:linear-gradient(90deg,#c18aff16,transparent);color:#d9c5f3;font-size:10px;font-weight:800;letter-spacing:1.3px;}
+.leaderboard-band-label[hidden]{display:none!important;}
+.leaderboard-entry.is-top-ten{border-color:#a78bfa55;background:linear-gradient(110deg,#a78bfa0d,#ffffff03);box-shadow:inset 3px 0 0 #a78bfa35;}
+.leaderboard-entry.is-top-ten .leaderboard-rank-badge{border-color:#b69aea70;background:#a78bfa12;color:#ddc9ff;}

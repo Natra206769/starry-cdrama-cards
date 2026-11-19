@@ -7,7 +7,7 @@ function showCharacterDetails(id,allowUnowned=false){
   currentDetailId=id;const dialog=$("characterDetailDialog"),visual=$("detailVisual"),photo=$("detailPhoto"),initials=$("detailInitials");const info=rarityInfo[card.rarity]||rarityInfo.R;visual.classList.remove(...Object.values(rarityInfo).map(item=>"rarity-"+item.effect));visual.classList.add("rarity-"+info.effect);visual.style.setProperty("--rarity",info.color);
   $("detailName").textContent=card.name||"Chưa đặt tên";$("detailChinese").textContent=card.chinese||"Chưa có tên tiếng Trung";
   $("detailGender").textContent=genderLabel(card.gender);$("detailStyle").textContent=displayStyleLabel(card.style);$("detailRarity").textContent=info.label;$("detailRarity").style.color=info.color;
-  $("detailCount").textContent="×"+(state.owned[id]||0);$("detailQuote").textContent=card.quote||"Một ngôi sao, một câu chuyện.";
+  $("detailCount").textContent="×"+(state.owned[id]||0);
   $("detailMovie").textContent=card.movie||"Bộ sưu tập chân dung";$("detailRole").textContent=card.role||"Chưa nhập";
   $("detailOpenMovieBtn").textContent=isGenericCollectionTitle(card.movie)?"Xem nhóm thẻ ↗":"▣ Xem trang phim";
   visual.style.setProperty("--art1",card.art1||"#292f46");visual.style.setProperty("--art2",card.art2||"#111522");visual.style.setProperty("--accent",card.accent||"#a1a8c9");

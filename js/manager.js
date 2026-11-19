@@ -27,7 +27,7 @@ function editCharacter(id){
     const legacyOption=document.createElement("option");legacyOption.value="__legacy__:"+savedStyle;legacyOption.textContent=savedStyle+" (dữ liệu cũ · cần phân loại)";legacyOption.dataset.legacyStyle="true";styleSelect.appendChild(legacyOption);
   }
   styleSelect.value=Array.from(styleSelect.options).some(option=>option.value===savedStyle)?savedStyle:(savedStyle?"__legacy__:"+savedStyle:"");
-  $("fieldRarity").value=card.rarity||"SR";$("fieldQuote").value=card.quote||"";$("fieldPhoto").value="";
+  $("fieldRarity").value=card.rarity||"SR";$("fieldPhoto").value="";
   $("formTitle").textContent="Sửa thẻ: "+card.name;$("saveCharacterBtn").textContent="Lưu thay đổi";$("imageRequiredLabel").textContent="(để trống nếu giữ ảnh hiện tại)";$("photoStatus").textContent=card.photo?"Đang dùng ảnh của thẻ này. Chọn ảnh mới nếu muốn thay.":"Chưa có ảnh; bạn có thể thêm ở đây.";
   buildPreview(card.photo,card.name);$("characterForm").hidden=false;$("managerToggle").textContent="✎ Đang sửa thẻ";$("characterForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -177,7 +177,7 @@ $("characterForm").addEventListener("submit",async event=>{
   }
   const wasEditing=Boolean(editingId),rarity=$("fieldRarity").value,current=editingId?getAnyCharacter(editingId):null,art=makeArt(rarity);
   const changedPhoto=Boolean(pendingPhotoData);
-  const fields={name,chinese:$("fieldChinese").value.trim(),movie,role,gender:$("fieldGender").value,style,rarity,quote:$("fieldQuote").value.trim()||"Một ngôi sao, một câu chuyện.",initials:makeInitials($("fieldChinese").value,name),photo:pendingPhotoData||current?.photo||"",photoFallback:changedPhoto?null:(current?.photoFallback||null),...art};
+  const fields={name,chinese:$("fieldChinese").value.trim(),movie,role,gender:$("fieldGender").value,style,rarity,initials:makeInitials($("fieldChinese").value,name),photo:pendingPhotoData||current?.photo||"",photoFallback:changedPhoto?null:(current?.photoFallback||null),...art};
   const previous=JSON.parse(JSON.stringify(managerData));
   if(editingId){
     if(managerData.custom.some(card=>card.id===editingId))managerData.custom=managerData.custom.map(card=>{

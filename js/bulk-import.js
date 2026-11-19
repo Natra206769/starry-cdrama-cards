@@ -1,7 +1,7 @@
 /* V11.1 — Bulk card import; append-only for custom cards and never rewrites player state. */
 (function initBulkImport(){
  const $b=id=>document.getElementById(id),styles=["Cổ trang","Thanh xuân vườn trường","Công sở","Tiên hiệp","Dân quốc","Khác"];
- const aliases={name:["ten dien vien","dien vien","actor","actor name","name","ten","ten nhan vat"],movie:["ten phim","phim","movie","drama","title","movie title","bo suu tap"],role:["vai dien","vai","role","character role"],chinese:["ten tieng trung","tieng trung","chinese","chinese name","han tu"],gender:["gioi tinh","gender","sex"],style:["phong cach","style","card style"],rarity:["do hiem","rarity","tier","cap hiem"],quote:["mo ta","trich dan","cau trich dan","quote","description"],photo:["anh url","url anh","anh dai dien","photo url","image url","photo","image","anh"]};
+ const aliases={name:["ten dien vien","dien vien","actor","actor name","name","ten","ten nhan vat"],movie:["ten phim","phim","movie","drama","title","movie title","bo suu tap"],role:["vai dien","vai","role","character role"],chinese:["ten tieng trung","tieng trung","chinese","chinese name","han tu"],gender:["gioi tinh","gender","sex"],style:["phong cach","style","card style"],rarity:["do hiem","rarity","tier","cap hiem"],photo:["anh url","url anh","anh dai dien","photo url","image url","photo","image","anh"]};
  let rows=[],sourceCount=0;
  function status(message,kind=""){const el=$b("bulkImportStatus");el.textContent=message;el.classList.toggle("is-error",kind==="error");el.classList.toggle("is-ready",kind==="ready");}
  function headerKey(s){return normalizedSearchKey(s).replace(/[_-]+/g," ").replace(/[()[\]]/g,"").trim();}
@@ -34,11 +34,11 @@
   const src=matrix.slice(1).filter(r=>r.some(Boolean));if(src.length>500)throw Error("Mỗi lần chỉ nhập tối đa 500 dòng. Hãy chia tệp nhỏ hơn.");
   const existing=new Set((characters||[]).map(signature)),seen=new Set();
   return src.map((cells,i)=>{
-   const get=f=>map[f]===undefined?"":String(cells[map[f]]||"").trim(),name=titleCaseName(get("name")),movie=titleCaseName(get("movie")),role=titleCaseName(get("role")),chinese=get("chinese"),gender=genderOf(get("gender")),style=styleOf(get("style")),rarity=rarityOf(get("rarity")||"SSR"),quote=get("quote"),photo=photoOf(get("photo")),errors=[],warnings=[];
+   const get=f=>map[f]===undefined?"":String(cells[map[f]]||"").trim(),name=titleCaseName(get("name")),movie=titleCaseName(get("movie")),role=titleCaseName(get("role")),chinese=get("chinese"),gender=genderOf(get("gender")),style=styleOf(get("style")),rarity=rarityOf(get("rarity")||"SSR"),photo=photoOf(get("photo")),errors=[],warnings=[];
    if(!name)errors.push("Thiếu tên diễn viên.");if(!movie)errors.push("Thiếu tên phim.");
-   if(name.length>60)errors.push("Tên diễn viên quá 60 ký tự.");if(movie.length>100)errors.push("Tên phim quá 100 ký tự.");if(role.length>80)errors.push("Vai diễn quá 80 ký tự.");if(chinese.length>30)errors.push("Tên tiếng Trung quá 30 ký tự.");if(quote.length>180)errors.push("Mô tả quá 180 ký tự.");
+   if(name.length>60)errors.push("Tên diễn viên quá 60 ký tự.");if(movie.length>100)errors.push("Tên phim quá 100 ký tự.");if(role.length>80)errors.push("Vai diễn quá 80 ký tự.");if(chinese.length>30)errors.push("Tên tiếng Trung quá 30 ký tự.");
    if(!gender)errors.push("Giới tính không hợp lệ.");if(!rarity)errors.push("Độ hiếm phải là R/SR/SSR/SSR+/UR/SP.");if(photo.error)errors.push(photo.error);if(style.warning)warnings.push(style.warning);
-   const card={name,movie,role,chinese,gender:gender||"other",style:style.value,rarity:rarity||"SSR",quote:quote||"Một ngôi sao, một câu chuyện.",photo:photo.value},sig=signature(card);
+   const card={name,movie,role,chinese,gender:gender||"other",style:style.value,rarity:rarity||"SSR",photo:photo.value},sig=signature(card);
    const duplicateExisting=Boolean(name&&movie&&existing.has(sig)),duplicateBatch=Boolean(name&&movie&&seen.has(sig));if(name&&movie)seen.add(sig);
    return {line:i+2,card,errors,warnings,duplicateExisting,duplicateBatch};
   });
@@ -66,7 +66,7 @@
   catch(e){rows=[];sourceCount=0;render();status(e.message||"Không thể đọc bảng dữ liệu.","error");}
  }
  function downloadTemplate(){
-  const headers=["Tên diễn viên","Tên phim","Vai diễn","Tên tiếng Trung","Giới tính","Phong cách","Độ hiếm","Mô tả","Ảnh URL"];
+  const headers=["Tên diễn viên","Tên phim","Vai diễn","Tên tiếng Trung","Giới tính","Phong cách","Độ hiếm","Ảnh URL"];
   const csv="\uFEFF"+headers.map(v=>'"'+v.replace(/"/g,'""')+'"').join(",")+"\r\n",blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=url;a.download="starry-cdrama-import-template.csv";a.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("Đã tải mẫu CSV nhập hàng loạt.");
  }

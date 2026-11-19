@@ -14,7 +14,7 @@ function loadTicketState(){
   let saved=null;
   try{saved=JSON.parse(localStorage.getItem(TICKET_STATE_KEY)||"null");}catch(error){}
   if(!saved||!Number.isFinite(Number(saved.lastAccrualAt))){
-    ticketState={tickets:1,earnedToday:1,day:today,lastAccrualAt:now,completedMovies:{}}
+    ticketState={tickets:1,earnedToday:1,day:today,lastAccrualAt:now,missedRareDraws:0,completedMovies:{}}
     saveTicketState();
     return;
   }
@@ -23,6 +23,7 @@ function loadTicketState(){
     earnedToday:Math.max(0,Math.floor(Number(saved.earnedToday)||0)),
     day:typeof saved.day==="string"?saved.day:today,
     lastAccrualAt:Math.min(now,Math.max(0,Number(saved.lastAccrualAt)||now)),
+    missedRareDraws:Math.max(0,Math.min(PITY_GUARANTEE_AFTER_MISSES-1,Math.floor(Number(saved.missedRareDraws)||0))),
     completedMovies:saved.completedMovies&&typeof saved.completedMovies==="object"&&!Array.isArray(saved.completedMovies)?saved.completedMovies:{}
   };
   if(ticketState.day!==today){ticketState.day=today;ticketState.earnedToday=0;}
@@ -30,6 +31,14 @@ function loadTicketState(){
 }
 function saveTicketState(){
   try{localStorage.setItem(TICKET_STATE_KEY,JSON.stringify(ticketState));}catch(error){}
+}
+function getConsecutiveRareMisses(){return ticketState?Math.max(0,Math.floor(Number(ticketState.missedRareDraws)||0)):0;}
+function recordPityResult(rarity){
+  if(!ticketState)return;
+  const hasRareCards=Array.isArray(characters)&&characters.some(card=>isPityRarity(card.rarity));
+  if(!hasRareCards||isPityRarity(rarity))ticketState.missedRareDraws=0;
+  else ticketState.missedRareDraws=Math.min(PITY_GUARANTEE_AFTER_MISSES-1,getConsecutiveRareMisses()+1);
+  saveTicketState();if(typeof renderRarityOdds==="function")renderRarityOdds();
 }
 
 // Give a one-time 15-ticket reward when a movie collection becomes complete.
@@ -116,7 +125,7 @@ function displayMainCard(card){
   $("cardName").textContent=card.name;$("cardChinese").textContent=card.chinese||"";
   $("cardGender").textContent=genderLabel(card.gender);$("cardStyle").textContent=displayStyleLabel(card.style);
   $("cardMovie").textContent=card.movie+(card.role?" · "+card.role:"");
-  $("cardQuote").textContent="“"+card.quote+"”";$("artSymbol").textContent=card.symbol||"✦";
+  $("artSymbol").textContent=card.symbol||"✦";
   $("artCaption").textContent=card.movie.toUpperCase();$("portraitInitials").textContent=card.initials||makeInitials(card.chinese,card.name);
   const art=$("cardArt");art.style.setProperty("--art1",card.art1);art.style.setProperty("--art2",card.art2);art.style.setProperty("--accent",card.accent);
   art.classList.remove("has-photo");art.querySelectorAll(".actor-photo").forEach(img=>img.remove());setCardImage(art,card,"actor-photo","Ảnh "+card.name+" trong "+card.movie);
@@ -146,6 +155,7 @@ function openCard(){
   if(!card){btn.disabled=false;if(threeBtn)threeBtn.disabled=false;updateDrawControls();return;}
   const completionBefore=movieCompletionSnapshot(card.movie);
   if(!consumeTickets(1)){drawAnimationInProgress=false;updateDrawControls();return;}
+  recordPityResult(card.rarity);
   drawAnimationInProgress=true;updateDrawControls();
   const stage=document.querySelector(".stage");
   stage.style.setProperty("--rarity",rarityInfo[card.rarity].color);
@@ -177,7 +187,7 @@ function renderBatchSpotlight(card,result){
   $("batchSpotlightInitials").textContent=card.initials||makeInitials(card.chinese,card.name);
   $("batchSpotlightTier").textContent=card.rarity;$("batchSpotlightRarity").textContent=info.label;$("batchSpotlightRarity").style.color=info.color;
   $("batchSpotlightName").textContent=card.name;$("batchSpotlightMovie").textContent=card.movie+(card.role?" · "+card.role:"");
-  $("batchSpotlightQuote").textContent="“"+(card.quote||"Một ngôi sao, một câu chuyện.")+"”";
+  
   $("batchSpotlightCopy").textContent=result.duplicate?"↻ Bản trùng · ×"+result.copyNumber+" · dùng làm phôi nâng cấp":"✦ Lần đầu sở hữu thẻ này";
   setCardImage(art,card,"spotlight-photo","Ảnh nổi bật của "+card.name+" trong "+card.movie);
 }
@@ -188,7 +198,11 @@ function openThreeCards(){
   const buttons=[$("openBtn"),$("openThreeBtn")];buttons.forEach(button=>{if(button)button.disabled=true;});
   $("againBtn").hidden=true;$("characterCard").classList.add("hidden");$("cardBack").classList.remove("hidden");$("cardBack").style.opacity="1";$("cardBack").style.transform="rotateY(0)";
   $("revealHint").textContent="Ba lá bài đang được gọi về…";$("summonKicker").hidden=false;$("skipBatchBtn").hidden=false;lastBatchCards=[];
-  const pulled=Array.from({length:3},()=>weightedRandom()).filter(Boolean);
+  const pulled=[];
+  for(let drawIndex=0;drawIndex<3;drawIndex++){
+    const card=weightedRandom();if(!card)continue;
+    pulled.push(card);recordPityResult(card.rarity);
+  }
   const completionBefore=new Map([...new Set(pulled.map(card=>normalizedSearchKey(card.movie)))].map(key=>{const movieName=pulled.find(card=>normalizedSearchKey(card.movie)===key)?.movie||key;const snapshot=movieCompletionSnapshot(movieName);return [snapshot.key,snapshot.complete];}));
   let rewardedMovies=[];
   if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});$("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;updateDrawControls();return;}

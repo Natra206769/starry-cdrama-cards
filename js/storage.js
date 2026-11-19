@@ -17,7 +17,7 @@ async function dbGet(key){const database=await openDatabase();return new Promise
 async function dbPut(key,value){const database=await openDatabase();return new Promise((resolve,reject)=>{const tx=database.transaction(DB_STORE,"readwrite");tx.objectStore(DB_STORE).put(value,key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error("Không thể lưu dữ liệu"));tx.onabort=()=>reject(tx.error||new Error("Đã hủy lưu dữ liệu"));});}
 function normalizeManagerData(saved){
   const raw=saved&&typeof saved==="object"?saved:{};
-  const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>{const clean=normalizeStoredRarity(normalizeSavedNameFields({...card}));delete clean.costume;return [id,clean];})):{};
+  const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>{const clean=normalizeStoredRarity(normalizeSavedNameFields({...card}));delete clean.costume;delete clean.quote;return [id,clean];})):{};
   const movieMetadata=raw.movieMetadata&&typeof raw.movieMetadata==="object"&&!Array.isArray(raw.movieMetadata)?raw.movieMetadata:{};
   const rawPreferences=raw.moviePreferences&&typeof raw.moviePreferences==="object"&&!Array.isArray(raw.moviePreferences)?raw.moviePreferences:{};
   const moviePreferences=Object.fromEntries(Object.entries(rawPreferences).map(([key,value])=>[String(key),{
@@ -35,8 +35,8 @@ async function readManagerData(){
     // Migrate only the three requested display-name fields. All other user data, including photos,
     // IDs, ownership, favorites, hidden/deleted flags and custom metadata, stays intact.
     const migrated=JSON.parse(JSON.stringify(saved));
-    if(Array.isArray(migrated.custom))migrated.custom.forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);});
-    if(migrated.overrides&&typeof migrated.overrides==="object")Object.values(migrated.overrides).forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);});
+    if(Array.isArray(migrated.custom))migrated.custom.forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);delete card.quote;});
+    if(migrated.overrides&&typeof migrated.overrides==="object")Object.values(migrated.overrides).forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);delete card.quote;});
     const changed=JSON.stringify(migrated)!==JSON.stringify(saved);
     if(changed){
       try{await dbPut("managerData",migrated);}
@@ -57,7 +57,6 @@ function rebuildCharacters(){
   const favoriteCount=state.favorites.length;state.favorites=state.favorites.filter(id=>activeIds.has(id));if(state.favorites.length!==favoriteCount)changed=true;
   if(changed)saveState();
   renderCollection();updateStats();renderManagerList();renderRarityOdds();
-  if(typeof renderMovieMetadataManager==="function")renderMovieMetadataManager();
   for(const fieldId of Object.keys(AUTOCOMPLETE_CONFIG||{})){if($(fieldId)&&$(fieldId).value.trim())renderAutocomplete(fieldId);}
 }
 function getAnyCharacter(id){

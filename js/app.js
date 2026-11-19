@@ -49,44 +49,15 @@ document.querySelector(".brand")?.addEventListener("click",event=>{event.prevent
 
 $("openBtn").addEventListener("click",openCard);$("againBtn").addEventListener("click",openCard);
 $("emptyOpenBtn").addEventListener("click",()=>{showAppPage("open");openCard();});
-document.querySelectorAll(".filter").forEach(button=>button.addEventListener("click",()=>{
-  document.querySelectorAll(".filter").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-pressed",String(active));});activeFilter=button.dataset.filter;renderCollection();
-}));
-const collectionSearchInput=$("collectionSearch"),clearCollectionSearchButton=$("clearCollectionSearch");
+const collectionSearchInput=$("collectionSearch");
 let collectionSearchRenderTimer=0;
 collectionSearchInput.addEventListener("input",()=>{
-  clearCollectionSearchButton.hidden=!collectionSearchInput.value;
-  window.clearTimeout(collectionSearchRenderTimer);
-  collectionSearchRenderTimer=window.setTimeout(()=>{
-    window.requestAnimationFrame(()=>renderCollection());
-  },100);
+ window.clearTimeout(collectionSearchRenderTimer);
+ collectionSearchRenderTimer=window.setTimeout(()=>window.requestAnimationFrame(()=>renderCollection()),100);
 });
-clearCollectionSearchButton.addEventListener("click",()=>{collectionSearchInput.value="";clearCollectionSearchButton.hidden=true;window.clearTimeout(collectionSearchRenderTimer);window.requestAnimationFrame(()=>renderCollection());collectionSearchInput.focus();});
 document.querySelectorAll("[data-collection-mode]").forEach(button=>button.addEventListener("click",()=>{
-  collectionMode=button.dataset.collectionMode;
-  collectionShelfStatusFilter="all";
-  activeFilter="all";
-  renderCollection();
+ collectionMode=button.dataset.collectionMode;renderCollection();
 }));
-document.querySelectorAll("[data-collection-view]").forEach(button=>button.addEventListener("click",()=>{
-  collectionViewMode=button.dataset.collectionView;
-  renderCollection();
-}));
-$("collectionSortSelect").addEventListener("change",event=>{collectionSortMode=event.target.value;renderCollection();});
-$("collectionRarityFilter").addEventListener("change",event=>{collectionRarityFilter=event.target.value;renderCollection();});
-$("collectionStyleFilter").addEventListener("change",event=>{collectionStyleFilter=event.target.value;renderCollection();});
-document.querySelectorAll("[data-collection-display]").forEach(button=>button.addEventListener("click",()=>{
-  collectionDisplayMode=button.dataset.collectionDisplay;
-  renderCollection();
-}));
-$("collectionMovieGenreFilter").addEventListener("change",event=>{collectionShelfGenreFilter=event.target.value;renderCollection();});
-$("collectionMovieYearFilter").addEventListener("change",event=>{collectionShelfYearFilter=event.target.value;renderCollection();});
-$("collectionMovieSortSelect").addEventListener("change",event=>{collectionShelfSortMode=event.target.value;renderCollection();});
-$("collectionMovieStatusFilter").addEventListener("change",event=>{collectionShelfStatusFilter=event.target.value;renderCollection();});
-$("collectionMovieFocusFilter").addEventListener("change",event=>{collectionShelfFocusFilter=event.target.value;renderCollection();});
-$("collectionPresetSelect").addEventListener("change",event=>{collectionSelectedPresetId=event.target.value;if(collectionSelectedPresetId)applyCollectionPreset(collectionSelectedPresetId);else renderCollectionPresetOptions();});
-$("saveCollectionPresetBtn").addEventListener("click",saveCollectionPreset);
-$("deleteCollectionPresetBtn").addEventListener("click",deleteCollectionPreset);
 $("saveUiPrefsBtn").addEventListener("click",saveUiPreferencesFromControls);
 $("resetUiPrefsBtn").addEventListener("click",()=>{
   uiPreferences={theme:"classic",density:"comfortable"};

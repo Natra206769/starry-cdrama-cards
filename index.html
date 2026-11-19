@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.6.0 Cinematic Effects Workshop</title>
+  <title>Starry C-Drama Cards — V11.7.0 Lucky Star Update</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -89,9 +89,7 @@
               <h2 id="cardName">Tiêu Chiến</h2>
               <p class="chinese-name" id="cardChinese">肖战</p>
               <p class="card-movie" id="cardMovie">Bộ sưu tập chân dung</p>
-              <div class="card-meta"><span id="cardGender">Nam</span><span id="cardStyle">Cổ trang</span></div>
-              <p class="card-quote" id="cardQuote">Một ánh nhìn, vạn câu chuyện.</p>
-            </div>
+              <div class="card-meta"><span id="cardGender">Nam</span><span id="cardStyle">Cổ trang</span></div></div>
             <div class="card-edge"></div>
           </article>
         </div>
@@ -109,7 +107,7 @@
       <aside class="side-note right-note">
         <div class="note-icon">✧</div>
         <h3>May mắn hôm nay</h3>
-        <p>Mỗi lượt mở sẽ chọn ngẫu nhiên một nhân vật. Độ hiếm ảnh hưởng xác suất xuất hiện.</p>
+        <p>Mỗi lượt mở chọn ngẫu nhiên một nhân vật. Nếu liên tiếp chưa nhận được thẻ SSR trở lên, hệ thống sẽ tăng dần tỉ lệ để cân bằng may mắn.</p>
         <div class="luck-meter"><div><span>Vận may</span><b id="luckLabel">Đang chờ</b></div><div class="meter-track"><span id="luckBar"></span></div></div>
         <p class="rarity-odds" id="rarityOdds" aria-live="polite"></p>
         <div class="tip">✦ <span>Mẹo nhỏ</span><br>Thẻ mới sẽ được lưu tự động trong bộ sưu tập trên trình duyệt của bạn.</div>
@@ -139,9 +137,7 @@
             <p class="spotlight-caption"><span aria-hidden="true">✧</span> THẺ CAO NHẤT LƯỢT NÀY</p>
             <p class="spotlight-rarity" id="batchSpotlightRarity">SP · SPECIAL</p>
             <h3 id="batchSpotlightName">Ngôi Sao Bí Ẩn</h3>
-            <p class="spotlight-movie"><span>PHIM / BỘ SƯU TẬP</span><strong id="batchSpotlightMovie">Bộ sưu tập chân dung</strong></p>
-            <p class="spotlight-quote" id="batchSpotlightQuote">Một ngôi sao, một câu chuyện.</p>
-            <p class="spotlight-copy-state" id="batchSpotlightCopy">✦ Một phiên bản mới gia nhập bộ sưu tập!</p>
+            <p class="spotlight-movie"><span>PHIM / BỘ SƯU TẬP</span><strong id="batchSpotlightMovie">Bộ sưu tập chân dung</strong></p><p class="spotlight-copy-state" id="batchSpotlightCopy">✦ Một phiên bản mới gia nhập bộ sưu tập!</p>
             <button class="batch-show-all-btn" id="batchShowAllBtn" type="button">Khám phá đủ 3 thẻ <span aria-hidden="true">↓</span></button>
             <p class="spotlight-footnote">Thẻ được xếp theo độ hiếm từ cao xuống thấp.</p>
           </div>
@@ -176,9 +172,7 @@
             <div class="form-field autocomplete-field"><label for="fieldRole">Vai diễn trong phim</label><div class="autocomplete-control"><input id="fieldRole" maxlength="80" placeholder="Ví dụ: Tạ Chinh" aria-autocomplete="list" aria-controls="fieldRoleSuggestions" aria-expanded="false" /><div class="field-suggestions" id="fieldRoleSuggestions" role="listbox" aria-label="Vai diễn đã có" hidden></div></div><small class="field-suggestion-note" id="fieldRoleSuggestionNote" aria-live="polite"></small></div>
             <label>Giới tính<select id="fieldGender"><option value="female">Nữ</option><option value="male">Nam</option><option value="other">Khác / nhóm</option></select></label>
             <label>Phong cách *<select id="fieldStyle" required><option value="">Chọn phong cách…</option><option>Cổ trang</option><option>Thanh xuân vườn trường</option><option>Công sở</option><option>Tiên hiệp</option><option>Dân quốc</option><option>Khác</option></select></label>
-            <label>Độ hiếm<select id="fieldRarity" aria-label="Độ hiếm"></select></label>
-            <label class="wide-field">Câu trích dẫn / mô tả<input id="fieldQuote" maxlength="180" placeholder="Một câu ngắn về nhân vật…" /></label>
-            <label class="wide-field">Ảnh đại diện của thẻ <span class="optional-label" id="imageRequiredLabel">(bắt buộc khi thêm)</span><input id="fieldPhoto" type="file" accept="image/*" /><small>Chọn ảnh đại diện phù hợp với diễn viên trong phim. Ảnh sẽ được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
+            <label>Độ hiếm<select id="fieldRarity" aria-label="Độ hiếm"></select></label><label class="wide-field">Ảnh đại diện của thẻ <span class="optional-label" id="imageRequiredLabel">(bắt buộc khi thêm)</span><input id="fieldPhoto" type="file" accept="image/*" /><small>Chọn ảnh đại diện phù hợp với diễn viên trong phim. Ảnh sẽ được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
           </div>
           <div class="photo-preview-wrap"><div class="photo-preview" id="photoPreview"><span>Ảnh xem trước</span></div><p id="photoStatus">Ảnh đại diện thuộc về thẻ này, không ảnh hưởng thẻ khác của cùng diễn viên.</p></div>
           <div class="form-actions"><button class="primary-btn" type="submit" id="saveCharacterBtn">Lưu nhân vật</button><button class="secondary-btn" type="button" id="clearFormBtn">Xóa nội dung form</button></div>
@@ -197,7 +191,7 @@
                 <button class="outline-btn" id="downloadBulkTemplateBtn" type="button">↓ Tải mẫu CSV</button>
               </div>
               <label class="bulk-import-text-label" for="bulkImportText">Hoặc dán bảng từ Excel / Google Sheets
-                <textarea id="bulkImportText" rows="7" spellcheck="false" placeholder="Tên diễn viên,Tên phim,Vai diễn,Tên tiếng Trung,Giới tính,Phong cách,Độ hiếm,Mô tả,Ảnh URL&#10;Điền Hi Vi,Trục Ngọc,Tạ Chinh,田曦薇,Nữ,Cổ trang,SSR,Một câu mô tả,https://…"></textarea>
+                <textarea id="bulkImportText" rows="7" spellcheck="false" placeholder="Tên diễn viên,Tên phim,Vai diễn,Tên tiếng Trung,Giới tính,Phong cách,Độ hiếm,Ảnh URL&#10;Điền Hi Vi,Trục Ngọc,Tạ Chinh,田曦薇,Nữ,Cổ trang,SSR,https://…"></textarea>
                 <small>Dòng đầu là tiêu đề cột. Hỗ trợ CSV phân tách bằng dấu phẩy/chấm phẩy và bảng dán dùng tab. Bắt buộc: Tên diễn viên, Tên phim. Ảnh URL tùy chọn.</small>
               </label>
               <div class="bulk-import-controls">
@@ -217,116 +211,7 @@
         </div>
       </div>
     </section>
-    <section class="manage-section movie-metadata-section" id="movieLibraryManager">
-      <div class="section-heading manage-heading">
-        <div><p class="eyebrow left-eyebrow">YOUR DRAMA DATABASE</p><h2>Quản lý <em>dữ liệu phim</em></h2><p class="section-subtitle">Bổ sung thông tin một lần cho mỗi phim. Tất cả thẻ cùng phim sẽ dùng chung hồ sơ này.</p></div>
-        <span class="movie-metadata-header-count" id="movieMetadataCount">0 phim</span>
-      </div>
 
-      <details class="movie-bulk-import-panel" id="movieBulkImportPanel">
-        <summary><span aria-hidden="true">▤</span> Nhập danh mục phim hàng loạt <small>CSV / TSV · Tối đa 500 phim mỗi lần</small></summary>
-        <div class="movie-bulk-import-body">
-          <p class="movie-bulk-import-note">Mỗi dòng là một phim. Phim vẫn được lưu trong danh mục dù chưa có thẻ; tên phim được dùng để liên kết với các thẻ cùng tên. Metadata cũ được giữ theo mặc định.</p>
-          <div class="bulk-import-actions">
-            <label class="outline-btn bulk-file-label" for="movieBulkImportFile">↑ Chọn CSV / TSV</label>
-            <input id="movieBulkImportFile" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" hidden />
-            <button class="outline-btn" id="downloadMovieTemplateBtn" type="button">↓ Tải mẫu CSV phim</button>
-          </div>
-          <label class="movie-bulk-text-label" for="movieBulkImportText">Hoặc dán bảng từ Excel / Google Sheets
-            <textarea id="movieBulkImportText" rows="6" spellcheck="false" placeholder="Tên phim,Tên gốc,Năm phát hành,Thể loại,Mô tả,Poster URL&#10;Trục Ngọc,逐玉,2026,Cổ trang; Tình cảm,Mô tả ngắn,https://…"></textarea>
-            <small>Cột bắt buộc: Tên phim. Các cột còn lại tùy chọn. Dùng dấu chấm phẩy để tách thể loại trong CSV.</small>
-          </label>
-          <div class="movie-bulk-options">
-            <label><input id="movieBulkPreserveExisting" type="checkbox" checked /> Giữ thông tin cũ, chỉ bổ sung trường còn trống</label>
-            <button class="primary-btn" id="analyzeMovieBulkBtn" type="button">Kiểm tra dữ liệu phim</button>
-            <button class="outline-btn" id="clearMovieBulkBtn" type="button">Xóa nội dung</button>
-          </div>
-          <p class="bulk-import-status" id="movieBulkImportStatus" role="status" aria-live="polite">Chọn tệp hoặc dán bảng rồi kiểm tra trước khi lưu.</p>
-          <div class="bulk-import-preview movie-bulk-preview" id="movieBulkImportPreview" hidden>
-            <div class="bulk-preview-heading"><strong id="movieBulkPreviewSummary">Bản xem trước</strong><small>Dòng trùng trong cùng tệp sẽ được bỏ qua để tránh ghi đè lẫn nhau.</small></div>
-            <div class="bulk-preview-table-wrap"><table class="bulk-preview-table"><thead><tr><th>Dòng</th><th>Phim / metadata</th><th>Kiểm tra</th></tr></thead><tbody id="movieBulkPreviewRows"></tbody></table></div>
-            <div class="bulk-import-commit-row"><button class="primary-btn" id="commitMovieBulkBtn" type="button" disabled>Lưu danh mục phim</button><span id="movieBulkCommitHint">Chưa có dữ liệu sẵn sàng.</span></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="tmdb-lookup-panel" id="tmdbLookupPanel">
-        <summary><span aria-hidden="true">✦</span> Tìm thông tin phim tự động <small>TMDB · tên gốc · năm · thể loại · poster</small></summary>
-        <div class="tmdb-lookup-body">
-          <div class="tmdb-lookup-intro">
-            <p>Nhập tên phim để tìm phim bộ hoặc điện ảnh. Chọn đúng kết quả, xem trước thông tin rồi mới lưu vào danh mục Starry.</p>
-            <p class="tmdb-token-help">Tính năng này cần <strong>TMDB API Read Access Token</strong>. <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer">Mở trang API của TMDB ↗</a>. Token chỉ nằm trong ô nhập của phiên hiện tại; ứng dụng không ghi token vào localStorage, IndexedDB hoặc bản sao lưu.</p>
-          </div>
-          <label class="tmdb-token-label" for="tmdbReadAccessToken">TMDB Read Access Token
-            <div class="tmdb-token-input-row"><input id="tmdbReadAccessToken" type="password" autocomplete="off" spellcheck="false" placeholder="Dán token đọc API tại đây" /><button class="outline-btn" id="toggleTmdbTokenVisibility" type="button" aria-pressed="false">Hiện</button></div>
-          </label>
-          <div class="tmdb-search-grid">
-            <label for="tmdbSearchQuery">Tên cần tìm<input id="tmdbSearchQuery" maxlength="120" placeholder="Ví dụ: Trục Ngọc / 逐玉 / Chasing Jade" /></label>
-            <label for="tmdbSearchType">Loại nội dung<select id="tmdbSearchType"><option value="tv">Phim bộ / TV series</option><option value="movie">Phim điện ảnh</option><option value="both">Cả hai loại</option></select></label>
-          </div>
-          <label class="tmdb-target-label" for="tmdbTargetTitle">Tên phim sẽ lưu trong Starry
-            <input id="tmdbTargetTitle" maxlength="100" placeholder="Tên phim dùng để liên kết với các thẻ hiện có" />
-            <small>Giữ đúng tên phim đang dùng trên các thẻ để liên kết metadata chính xác. Có thể sửa tên này trước khi lưu.</small>
-          </label>
-          <div class="tmdb-search-actions"><button class="primary-btn" id="tmdbSearchBtn" type="button">⌕ Tìm trên TMDB</button><button class="outline-btn" id="clearTmdbSearchBtn" type="button">Xóa tìm kiếm</button></div>
-          <p class="bulk-import-status tmdb-search-status" id="tmdbSearchStatus" role="status" aria-live="polite">Chưa thực hiện tìm kiếm. Cần token đọc API để bắt đầu.</p>
-          <div class="tmdb-results" id="tmdbSearchResults" aria-live="polite" hidden></div>
-          <section class="tmdb-selected-result" id="tmdbSelectedResult" hidden aria-label="Xem trước phim được chọn">
-            <div class="tmdb-selected-heading"><strong>Kết quả đã chọn</strong><small id="tmdbSelectedSource">Dữ liệu từ TMDB</small></div>
-            <div class="tmdb-selected-card">
-              <div class="tmdb-selected-poster" id="tmdbSelectedPoster"><span>✦</span></div>
-              <div class="tmdb-selected-copy">
-                <h3 id="tmdbSelectedTitle"></h3>
-                <p id="tmdbSelectedOriginal"></p>
-                <p id="tmdbSelectedFacts"></p>
-                <p id="tmdbSelectedOverview"></p>
-                <a id="tmdbSelectedLink" href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">Mở hồ sơ nguồn ↗</a>
-              </div>
-            </div>
-            <label class="tmdb-preserve-label"><input id="tmdbPreserveExisting" type="checkbox" checked /> Giữ metadata đang có; chỉ bổ sung trường còn trống</label>
-            <button class="primary-btn tmdb-save-btn" id="saveTmdbResultBtn" type="button">Lưu thông tin vào danh mục phim</button>
-          </section>
-          <div class="tmdb-attribution">
-            <a class="tmdb-brand" href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer"><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg" alt="TMDB" loading="lazy" /><span>Thông tin và hình ảnh: TMDB</span></a>
-            <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
-            <small>Phù hợp cho dự án phi thương mại theo điều khoản của TMDB. Các trường do TMDB cung cấp sẽ tự hết hạn sau 180 ngày nếu chưa được chỉnh sửa thủ công; bạn có thể tra cứu lại để làm mới.</small>
-          </div>
-        </div>
-      </details>
-      <div class="movie-metadata-layout">
-        <form class="movie-metadata-form manager-content" id="movieMetadataForm">
-          <div class="form-title-row"><h3 id="movieMetadataFormTitle">Chọn phim để chỉnh sửa</h3><span class="movie-metadata-save-state" id="movieMetadataSaveState">Chọn phim trước khi lưu</span></div>
-          <label class="movie-metadata-field">Phim trong kho thẻ *
-            <select id="movieMetadataSelect" required><option value="">Chọn một phim…</option></select>
-            <small>Danh sách lấy từ tên phim đang dùng trong các thẻ; nhóm chân dung chung không nằm trong danh sách này.</small>
-          </label>
-          <div class="movie-metadata-fields-grid">
-            <label class="movie-metadata-field">Tên gốc / tên tiếng Trung<input id="movieMetadataOriginalTitle" maxlength="120" placeholder="Ví dụ: 逐玉" /></label>
-            <label class="movie-metadata-field">Năm phát hành<input id="movieMetadataYear" type="number" min="1900" max="2100" step="1" placeholder="Ví dụ: 2026" /></label>
-            <label class="movie-metadata-field movie-metadata-wide">Thể loại<input id="movieMetadataGenres" maxlength="180" placeholder="Cổ trang, Tình cảm, Hài…" /><small>Phân cách nhiều thể loại bằng dấu phẩy.</small></label>
-            <label class="movie-metadata-field movie-metadata-wide">Mô tả<textarea id="movieMetadataDescription" rows="4" maxlength="1200" placeholder="Tóm tắt ngắn nội dung phim, bối cảnh hoặc điểm nổi bật…"></textarea></label>
-            <label class="movie-metadata-field movie-metadata-wide">Poster bằng đường dẫn ảnh<input id="movieMetadataPosterUrl" type="url" inputmode="url" placeholder="https://…/poster.jpg" /><small>Có thể dùng ảnh trực tuyến hoặc tải ảnh lên bên dưới.</small></label>
-            <label class="movie-metadata-field movie-metadata-wide">Hoặc tải poster từ thiết bị<input id="movieMetadataPosterFile" type="file" accept="image/*" /><small>Ảnh được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
-          </div>
-          <div class="movie-poster-preview-wrap">
-            <div class="movie-poster-preview" id="movieMetadataPosterPreview"><span>✦</span></div>
-            <div class="movie-poster-preview-copy"><strong id="movieMetadataPosterLabel">Chưa có poster</strong><small>Poster được dùng chung trên trang phim, không thay đổi ảnh riêng của từng thẻ.</small></div>
-          </div>
-          <div class="movie-metadata-form-actions">
-            <button class="primary-btn" type="submit" id="saveMovieMetadataBtn" disabled>Lưu dữ liệu phim</button>
-            <button class="outline-btn" type="button" id="clearMovieMetadataPosterBtn">Bỏ poster</button>
-          </div>
-          <p class="form-footnote">Thông tin phim được lưu riêng theo tên phim và đưa vào bản sao lưu JSON. Không chỉnh sửa số thẻ, quyền sở hữu hoặc tiến trình nâng cấp.</p>
-        </form>
-        <div class="manager-content movie-metadata-catalog">
-          <div class="manager-toolbar">
-            <div><strong id="movieMetadataManagedCount">Danh mục phim</strong><small>Chọn một phim bên dưới để thêm hoặc sửa dữ liệu.</small></div>
-            <div class="manager-tools"><input id="movieMetadataSearch" class="manager-search" type="search" placeholder="Tìm tên phim…" aria-label="Tìm phim cần quản lý" /></div>
-          </div>
-          <div class="movie-metadata-list" id="movieMetadataList" aria-live="polite"></div>
-        </div>
-      </div>
-    </section>
     </section>
 
     <section class="app-page" id="page-collection" data-app-page="collection" hidden>
@@ -343,60 +228,12 @@
         <button class="collection-mode-tab" type="button" role="tab" data-collection-mode="discover" aria-selected="false"><span aria-hidden="true">✧</span> Khám phá kho thẻ</button>
       </div>
 
-      <div class="collection-display-tabs" role="group" aria-label="Kiểu danh mục">
-        <button type="button" class="collection-display-tab active" data-collection-display="cards" aria-pressed="true"><span aria-hidden="true">▦</span> Xem thẻ</button>
-        <button type="button" class="collection-display-tab" data-collection-display="movies" aria-pressed="false"><span aria-hidden="true">▣</span> Kệ phim</button>
-      </div>
-
-      <div class="collection-tools collection-tools-v10">
-        <label class="collection-search-wrap" for="collectionSearch"><span aria-hidden="true">⌕</span><input id="collectionSearch" type="search" placeholder="Tìm phim, diễn viên, vai diễn…" autocomplete="off" aria-label="Tìm trong thư viện" /><button type="button" id="clearCollectionSearch" class="search-clear" aria-label="Xóa từ khóa tìm kiếm" hidden>×</button></label>
-        <div class="collection-toolbar-actions">
-          <label class="collection-select-wrap"><span>Sắp xếp</span><select id="collectionSortSelect" aria-label="Sắp xếp thẻ"><option value="rarity">Độ hiếm</option><option value="name">Tên A–Z</option><option value="stars">Số sao</option><option value="level">Level</option><option value="copies">Số bản sao</option></select></label>
-          <div class="collection-view-switch" role="group" aria-label="Kiểu hiển thị">
-            <button type="button" class="collection-view-btn active" data-collection-view="grid" aria-pressed="true" aria-label="Xem dạng lưới" title="Dạng lưới">▦</button>
-            <button type="button" class="collection-view-btn" data-collection-view="list" aria-pressed="false" aria-label="Xem dạng danh sách" title="Dạng danh sách">☰</button>
-          </div>
-        </div>
+      <div class="collection-tools collection-tools-v10 collection-search-only">
+        <label class="collection-search-wrap" for="collectionSearch"><span aria-hidden="true">⌕</span><input id="collectionSearch" type="search" placeholder="Tìm phim, diễn viên, vai diễn…" autocomplete="off" aria-label="Tìm trong thư viện" /></label>
         <span class="collection-result-count" id="collectionResultCount" aria-live="polite">0 phim · 0 thẻ phù hợp</span>
       </div>
-      <details class="collection-presets-panel">
-        <summary>Bộ lọc đã lưu</summary>
-        <div class="collection-presets" aria-label="Bộ lọc đã lưu">
-          <label for="collectionPresetSelect">Bộ lọc</label>
-          <select id="collectionPresetSelect" aria-label="Chọn bộ lọc đã lưu…"><option value="">Chọn bộ lọc đã lưu…</option></select>
-          <button type="button" class="outline-btn" id="saveCollectionPresetBtn">☆ Lưu bộ lọc hiện tại</button>
-          <button type="button" class="outline-btn" id="deleteCollectionPresetBtn" disabled>Xóa</button>
-        </div>
-      </details>
 
-      <div class="collection-filter-panel">
-        <div class="filters collection-filter-chips" role="group" aria-label="Lọc thư viện">
-          <button class="filter active" data-filter="all" aria-pressed="true"><span id="countAllLabel">Thẻ của tôi</span> <span id="countAll">0</span></button>
-          <button class="filter" data-filter="missing" aria-pressed="false">Chưa sưu tầm</button>
-          <button class="filter" data-filter="male" aria-pressed="false">Nam</button>
-          <button class="filter" data-filter="female" aria-pressed="false">Nữ</button>
-          <button class="filter" data-filter="favorites" aria-pressed="false">Yêu thích ♡</button>
-        </div>
-        <div class="collection-extra-filters">
-          <label class="collection-select-wrap"><span>Độ hiếm</span><select id="collectionRarityFilter" aria-label="Lọc theo độ hiếm"><option value="all">Tất cả</option><option value="R">R</option><option value="SR">SR</option><option value="SSR">SSR</option><option value="SSR+">SSR+</option><option value="UR">UR</option><option value="SP">SP</option></select></label>
-          <label class="collection-select-wrap"><span>Phong cách</span><select id="collectionStyleFilter" aria-label="Lọc theo phong cách"><option value="all">Tất cả</option></select></label>
-        </div>
-      </div>
-
-      <div class="collection-shelf-filters" id="collectionShelfFilters" hidden>
-        <label class="collection-select-wrap"><span>Thể loại</span><select id="collectionMovieGenreFilter" aria-label="Lọc phim theo thể loại"><option value="all">Tất cả thể loại</option></select></label>
-        <label class="collection-select-wrap"><span>Năm</span><select id="collectionMovieYearFilter" aria-label="Lọc phim theo năm"><option value="all">Tất cả năm</option></select></label>
-        <label class="collection-select-wrap"><span>Sắp xếp phim</span><select id="collectionMovieSortSelect" aria-label="Sắp xếp kệ phim"><option value="title">Tên A–Z</option><option value="year">Năm mới nhất</option><option value="progress">Tiến độ sưu tầm</option><option value="cards">Số phiên bản thẻ</option></select></label>
-        <label class="collection-select-wrap"><span>Trạng thái</span><select id="collectionMovieStatusFilter" aria-label="Lọc phim theo trạng thái sưu tầm"><option value="all">Tất cả trạng thái</option><option value="in-progress">Đang sưu tầm</option><option value="complete">Hoàn thành</option><option value="not-started">Chưa bắt đầu</option></select></label>
-        <label class="collection-select-wrap"><span>Danh sách phim</span><select id="collectionMovieFocusFilter" aria-label="Lọc phim yêu thích, muốn sưu tầm hoặc đã ghim"><option value="all">Tất cả phim</option><option value="favorites">Phim yêu thích</option><option value="watchlist">Muốn sưu tầm</option><option value="pinned">Phim đã ghim</option></select></label>
-      </div>
-      <details class="collection-rarity-panel" id="collectionRarityPanel">
-        <summary>Tiến độ theo độ hiếm</summary>
-        <div class="collection-rarity-summary" id="collectionRaritySummary" aria-label="Tiến độ sưu tầm theo cấp độ hiếm"></div>
-      </details>
-      <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Các thẻ bạn sở hữu sẽ xuất hiện tại đây. Hãy mở thẻ hoặc chuyển sang Khám phá kho thẻ để xem toàn bộ danh mục.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div>
-      <div class="collection-movie-shelf" id="collectionMovieShelf" hidden aria-label="Kệ phim"></div>
-      <div class="collection-sets" id="collectionSets"></div>
+      <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Các thẻ bạn sở hữu sẽ xuất hiện tại đây. Hãy mở thẻ hoặc chuyển sang Khám phá kho thẻ để xem toàn bộ danh mục.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div><div class="collection-sets" id="collectionSets"></div>
     </section>
     </section>
 
@@ -506,6 +343,7 @@
         </div>
         <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Điểm Nhan sắc = P / N + N, tính từ toàn bộ danh mục hệ thống.</div>
         <div class="leaderboard-podium" id="leaderboardPodium" aria-label="Ba vị trí dẫn đầu"></div>
+        <p class="leaderboard-band-label leaderboard-top-ten-label" id="leaderboardTopTenLabel" hidden>TOP 10 · NHÓM HẠNG 4–10</p>
         <ol class="leaderboard-list" id="leaderboardList" aria-label="Bảng xếp hạng"></ol>
         <div class="leaderboard-empty" id="leaderboardEmpty" hidden>
           <span class="leaderboard-empty-star" aria-hidden="true">✧</span>
@@ -523,7 +361,7 @@
         <p class="section-subtitle">Cách hoạt động, lưu trữ và sao lưu bộ sưu tập của bạn.</p>
       </section>
       <div class="info-cards">
-        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Bạn có 1 lượt mở mỗi 60 phút: chọn mở 1 thẻ hoặc mở 3 thẻ cùng lúc. Thẻ đã sở hữu vẫn có thể xuất hiện lại; số lần sở hữu sẽ tăng lên.</p></article>
+        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Bạn nhận 1 lượt mở mỗi 60 phút và có thể mở 1 hoặc 3 thẻ. SSR trở lên được tính là thẻ hiếm: sau 10 lượt liên tiếp chưa ra thẻ hiếm, tỉ lệ tăng dần; lượt thứ 20 được bảo đảm có thẻ hiếm nếu kho có thẻ thuộc nhóm này.</p></article>
         <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Thẻ đã sở hữu mở hồ sơ đầy đủ; thẻ chưa sở hữu có thể xem trước qua mục liên kết diễn viên.</p></article>
         <article class="info-card"><span>03</span><h3>Dữ liệu trên thiết bị</h3><p>Tiến độ và yêu thích được lưu ở localStorage; hồ sơ thẻ tùy chỉnh và ảnh được lưu trong IndexedDB trên trình duyệt hiện tại.</p></article>
         <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
@@ -585,9 +423,7 @@
           <button type="button" class="outline-btn" id="detailOpenMovieBtn">▣ Xem trang phim</button>
           <button type="button" class="outline-btn" id="detailOpenActorBtn">✦ Hồ sơ diễn viên</button>
         </div>
-        <div class="detail-film-info"><p><span>Phim / bộ sưu tập</span><strong id="detailMovie"></strong></p><p><span>Vai diễn</span><strong id="detailRole"></strong></p></div>
-        <p class="detail-quote" id="detailQuote"></p>
-        <section class="detail-relations" id="detailRelations" aria-labelledby="detailRelationsTitle">
+        <div class="detail-film-info"><p><span>Phim / bộ sưu tập</span><strong id="detailMovie"></strong></p><p><span>Vai diễn</span><strong id="detailRole"></strong></p></div><section class="detail-relations" id="detailRelations" aria-labelledby="detailRelationsTitle">
           <div class="detail-relations-intro"><p class="detail-relations-eyebrow">STARRY CONNECTIONS</p><h3 id="detailRelationsTitle">Mối liên kết</h3><p id="detailRelationSummary">Các mối liên kết được tổng hợp từ diễn viên và tên phim trong kho thẻ.</p></div>
           <div class="detail-relation-groups" id="detailRelationGroups"></div>
         </section>
@@ -627,9 +463,6 @@
   <script src="js/storage.js"></script>
   <script src="js/manager.js"></script>
   <script src="js/bulk-import.js"></script>
-  <script src="js/movie-manager.js"></script>
-  <script src="js/bulk-movie-import.js"></script>
-  <script src="js/tmdb-lookup.js"></script>
   <script src="js/main.js"></script>
   <script src="js/pwa.js"></script>
 </body>

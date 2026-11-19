@@ -86,7 +86,7 @@ function showLeaderboardCardImage(item,imageSrc){
 function leaderboardOpenEntry(item){openActorProfile(item.name);}
 function makeLeaderboardEntry(item,rank,podium=false){
   const element=document.createElement(podium?"article":"li");
-  element.className="leaderboard-entry rank-"+rank+(podium?" is-podium":"");
+  element.className="leaderboard-entry rank-"+rank+(podium?" is-podium":"")+(rank>=4&&rank<=10?" is-top-ten":"");
   element.tabIndex=0;element.setAttribute("role","button");
   element.setAttribute("aria-label","Hạng "+rank+": "+item.name+". Mở hồ sơ diễn viên.");
   element.title="Nhấn để mở hồ sơ diễn viên";
@@ -97,7 +97,7 @@ function makeLeaderboardEntry(item,rank,podium=false){
   avatar.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();event.stopPropagation();showLeaderboardCardImage(item,avatar.querySelector("img")?.currentSrc||avatar.querySelector("img")?.src);}});
   const identity=document.createElement("div");identity.className="leaderboard-identity";
   const name=document.createElement("strong");name.textContent=item.name;
-  const sub=document.createElement("small");sub.textContent="N = "+item.filmCount+" phim · P = "+item.catalogCardPoints+" điểm thẻ";
+  const sub=document.createElement("small");sub.textContent=(rank<=3?"TOP 3 · ":rank<=10?"TOP 10 · ":"")+"N = "+item.filmCount+" phim · P = "+item.catalogCardPoints+" điểm thẻ";
   identity.append(name,sub);
   const metric=document.createElement("div");metric.className="leaderboard-metric";
   const score=document.createElement("strong"),label=document.createElement("span");
@@ -111,8 +111,8 @@ function makeLeaderboardEntry(item,rank,podium=false){
 
 function renderLeaderboard(){
   const page=$("page-leaderboard");if(!page)return;
-  const podium=$("leaderboardPodium"),list=$("leaderboardList"),empty=$("leaderboardEmpty");
-  podium.replaceChildren();list.replaceChildren();podium.hidden=true;list.hidden=true;
+  const podium=$("leaderboardPodium"),list=$("leaderboardList"),empty=$("leaderboardEmpty"),topTenLabel=$("leaderboardTopTenLabel");
+  podium.replaceChildren();list.replaceChildren();podium.hidden=true;list.hidden=true;if(topTenLabel)topTenLabel.hidden=true;
   document.querySelectorAll("[data-rank-gender]").forEach(button=>{
     const active=button.dataset.rankGender===leaderboardGender;button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));
   });
@@ -130,7 +130,7 @@ function renderLeaderboard(){
     return;
   }
   if(sorted.length>=3){
-    podium.hidden=false;list.hidden=sorted.length<=3;
+    podium.hidden=false;list.hidden=sorted.length<=3;if(topTenLabel)topTenLabel.hidden=sorted.length<=3;
     const top=sorted.slice(0,3),displayOrder=[top[1],top[0],top[2]];
     displayOrder.forEach(item=>podium.appendChild(makeLeaderboardEntry(item,sorted.indexOf(item)+1,true)));
     sorted.slice(3).forEach((item,index)=>list.appendChild(makeLeaderboardEntry(item,index+4,false)));

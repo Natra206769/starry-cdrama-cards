@@ -26,6 +26,10 @@ const rarityInfo = {
 // Tổng trọng số danh nghĩa. SP được giữ đúng rarityInfo.SP.weight / TOTAL_RARITY_WEIGHT khi kho có SP.
 const TOTAL_RARITY_WEIGHT = 1000;
 
+// Pity: raise SSR+ odds after 10 misses; the 20th consecutive pull is guaranteed rare.
+const PITY_START_AFTER_MISSES = 10;
+const PITY_GUARANTEE_AFTER_MISSES = 20;
+
 // ---- Nâng sao: tỉ lệ thành công (%), số bản sao cùng thẻ bị tiêu hao, sao đạt được ----
 // Khóa là số sao hiện tại. Ví dụ 1:{rate:80,cost:2,next:2} = 1★→2★ thành công 80%, tốn 2 bản sao.
 const starUpgradeRules = {

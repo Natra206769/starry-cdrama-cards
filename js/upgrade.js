@@ -121,7 +121,7 @@ function renderUpgradeFodderList(mainCard){
   const fodderCards=characters.filter(card=>card.id!==mainCard.id&&(Number(state.owned[card.id])||0)>1)
     .sort((a,b)=>compareVietnamese(a.name,b.name)||compareVietnamese(a.movie,b.movie));
   if(!fodderCards.length){
-    const empty=document.createElement("p");empty.className="upgrade-fodder-empty";empty.textContent="Chưa có thẻ nào đủ điều kiện làm phôi. Bạn cần sở hữu ít nhất 2 bản của một thẻ khác để dùng phôi và vẫn giữ lại 1 bản.";list.appendChild(empty);
+    const empty=document.createElement("p");empty.className="upgrade-fodder-empty";empty.textContent="Cần ít nhất 2 bản của một thẻ khác để dùng làm phôi.";list.appendChild(empty);
   }else{
     for(const card of fodderCards){
       const owned=Number(state.owned[card.id])||0,available=owned-1,exp=levelExpByRarity[card.rarity]||10;
@@ -170,7 +170,7 @@ function setUpgradeAnimation(phase,stars,title,message){
 function clearUpgradeAnimationLater(delay=2700){
   if(upgradeAnimationTimer)clearTimeout(upgradeAnimationTimer);
   upgradeAnimationTimer=window.setTimeout(()=>{
-    if(!upgradeAttemptInProgress){setUpgradeAnimation("idle",currentUpgradeId?getCardProgress(currentUpgradeId).stars:1,"Tinh quang đang chờ","Chọn thao tác nâng sao để bắt đầu nghi thức.");}
+    if(!upgradeAttemptInProgress){setUpgradeAnimation("idle",currentUpgradeId?getCardProgress(currentUpgradeId).stars:1,"Sẵn sàng","");}
     upgradeAnimationTimer=null;
   },delay);
 }
@@ -230,13 +230,6 @@ $("upgradeLevelBtn")?.addEventListener("click",()=>{
 });
 
 // Giữ chữ hướng dẫn trên giao diện luôn khớp với config.js.
-function renderUpgradeFootnote(){
-  const note=$("upgradeFootnote");if(!note)return;
-  const stars=Object.entries(starUpgradeRules).map(([from,rule])=>`${from}★→${rule.next}★ ${rule.rate}% (${rule.cost} phôi)`).join(", ");
-  const exp=Object.entries(levelExpByRarity).map(([rarity,value])=>`${rarity} ${value}`).join(" · ");
-  note.textContent=`Nâng sao: ${stars}. Nâng level: ${exp} EXP mỗi phôi.`;
-}
-renderUpgradeFootnote();
 
 
 // V11.6 — isolated preview lab. It never consumes cards/tickets and never saves state.
@@ -247,7 +240,7 @@ renderUpgradeFootnote();
  const status=document.getElementById("effectLabStatus"),hint=document.getElementById("effectLabHint");
  const back=document.getElementById("effectLabCardBack"),card=document.getElementById("effectLabCharacterCard");
  const art=document.getElementById("effectLabCardArt"),badge=document.getElementById("effectLabStarBadge");
- const tierLabel=document.getElementById("effectLabTierLabel"),cardName=document.getElementById("effectLabCardName"),quote=document.getElementById("effectLabQuote");
+ const tierLabel=document.getElementById("effectLabTierLabel"),cardName=document.getElementById("effectLabCardName");
  if(!raritySelect||!starsSelect||!summonButton||!upgradeButton||!status||!back||!card||!art)return;
  const effectFor=tier=>(rarityInfo[tier]||rarityInfo.UR).effect;
  const stageClassFor=tier=>"opening-rarity-"+(tier==="SSR+"?"ssr":tier.toLowerCase());
@@ -266,7 +259,6 @@ renderUpgradeFootnote();
   art.style.setProperty("--art1",info.art[0]);art.style.setProperty("--art2",info.art[1]);art.style.setProperty("--accent",info.art[2]);
   if(tierLabel)tierLabel.textContent=tier+" · "+info.shortLabel.toLocaleUpperCase("vi-VN");
   if(cardName)cardName.textContent=tier==="SP"?"Ngôi Sao Đặc Biệt":tier==="UR"?"Thẻ Huyền Thoại":"Thẻ "+tier+" xem thử";
-  if(quote)quote.textContent=tier==="SP"?"Một khoảnh khắc đặc biệt giữa ngân hà.":tier==="UR"?"Ánh vàng hội tụ trước khi huyền thoại xuất hiện.":"Một ngôi sao, một câu chuyện.";
   if(badge)badge.textContent="★ 1/5";stage.dataset.labRarity=tier;stage.dataset.labPhase="idle";stage.dataset.labStars="1";
  }
  function showCardImmediately(tier){

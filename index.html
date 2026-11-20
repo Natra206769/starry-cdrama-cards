@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0d16" />
   <meta name="color-scheme" content="dark" />
-  <title>Starry C-Drama Cards — V11.7.0 Lucky Star Update</title>
+  <title>Starry C-Drama Cards — V11.8.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -47,14 +47,14 @@
       <button class="nav-tab" type="button" data-page="upgrade"><span>✧</span> Nâng cấp</button>
       <button class="nav-tab" type="button" data-page="leaderboard"><span>♛</span> Xếp hạng</button>
       <button class="nav-tab" type="button" data-page="manager"><span>✎</span> Quản lý thẻ</button>
-      <button class="nav-tab" type="button" data-page="info"><span>☷</span> Hướng dẫn & dữ liệu</button>
+      <button class="nav-tab" type="button" data-page="info"><span>☷</span> Cài đặt</button>
     </nav>
 
     <section class="app-page active" id="page-open" data-app-page="open">
     <section class="hero">
       <p class="eyebrow"><span></span> YOUR LITTLE C-DRAMA UNIVERSE <span></span></p>
       <h1>Mỗi lá bài, <em>một câu chuyện.</em></h1>
-      <p class="intro">Sưu tầm diễn viên qua từng bộ phim, vai diễn và phong cách riêng.</p>
+      
     </section>
 
     <section class="gacha-layout">
@@ -101,16 +101,16 @@
         </div>
         <p class="draw-cooldown-status" id="drawCooldownStatus" role="status" aria-live="polite">Đang kiểm tra lượt mở…</p>
         <button class="text-btn" id="againBtn" hidden>↻ Mở thêm một thẻ</button>
-        <p class="small-disclaimer">Ảnh mẫu lấy từ Wikimedia Commons; bạn có thể thêm ảnh riêng ngay trong mục Quản lý thẻ phim.</p>
+        <p class="small-disclaimer">Ảnh mẫu: Wikimedia Commons · Ảnh riêng: Quản lý thẻ.</p>
       </div>
 
       <aside class="side-note right-note">
         <div class="note-icon">✧</div>
         <h3>May mắn hôm nay</h3>
-        <p>Mỗi lượt mở chọn ngẫu nhiên một nhân vật. Nếu liên tiếp chưa nhận được thẻ SSR trở lên, hệ thống sẽ tăng dần tỉ lệ để cân bằng may mắn.</p>
+        
         <div class="luck-meter"><div><span>Vận may</span><b id="luckLabel">Đang chờ</b></div><div class="meter-track"><span id="luckBar"></span></div></div>
         <p class="rarity-odds" id="rarityOdds" aria-live="polite"></p>
-        <div class="tip">✦ <span>Mẹo nhỏ</span><br>Thẻ mới sẽ được lưu tự động trong bộ sưu tập trên trình duyệt của bạn.</div>
+        
       </aside>
     </section>
       <section class="batch-reveal" id="batchReveal" hidden aria-live="polite" aria-label="Kết quả nghi thức triệu hồi ba thẻ">
@@ -139,14 +139,14 @@
             <h3 id="batchSpotlightName">Ngôi Sao Bí Ẩn</h3>
             <p class="spotlight-movie"><span>PHIM / BỘ SƯU TẬP</span><strong id="batchSpotlightMovie">Bộ sưu tập chân dung</strong></p><p class="spotlight-copy-state" id="batchSpotlightCopy">✦ Một phiên bản mới gia nhập bộ sưu tập!</p>
             <button class="batch-show-all-btn" id="batchShowAllBtn" type="button">Khám phá đủ 3 thẻ <span aria-hidden="true">↓</span></button>
-            <p class="spotlight-footnote">Thẻ được xếp theo độ hiếm từ cao xuống thấp.</p>
+            
           </div>
         </div>
         <div class="batch-summary-grid" id="batchSummaryStats" hidden>
-          <article class="batch-summary-stat"><span class="summary-stat-icon new-icon" aria-hidden="true">✦</span><div><small>THẺ MỚI</small><strong id="batchNewCount">0</strong><span>lần đầu sở hữu</span></div></article>
-          <article class="batch-summary-stat"><span class="summary-stat-icon duplicate-icon" aria-hidden="true">↻</span><div><small>THẺ TRÙNG</small><strong id="batchDuplicateCount">0</strong><span>dùng làm phôi nâng cấp</span></div></article>
+          <article class="batch-summary-stat"><span class="summary-stat-icon new-icon" aria-hidden="true">✦</span><div><small>THẺ MỚI</small><strong id="batchNewCount">0</strong></div></article>
+          <article class="batch-summary-stat"><span class="summary-stat-icon duplicate-icon" aria-hidden="true">↻</span><div><small>THẺ TRÙNG</small><strong id="batchDuplicateCount">0</strong></div></article>
         </div>
-        <div class="batch-heading batch-results-heading" id="batchResultsHeading" hidden><div><p class="eyebrow left-eyebrow">YOUR NEW COLLECTION</p><h2>3 thẻ <em>vừa mở</em></h2><p class="section-subtitle">Chạm vào thẻ để xem hồ sơ chi tiết.</p></div><span class="batch-result-order">ĐÃ XẾP THEO ĐỘ HIẾM <b>↓</b></span></div>
+        <div class="batch-heading batch-results-heading" id="batchResultsHeading" hidden><div><p class="eyebrow left-eyebrow">YOUR NEW COLLECTION</p><h2>3 thẻ <em>vừa mở</em></h2></div><span class="batch-result-order">ĐÃ XẾP THEO ĐỘ HIẾM <b>↓</b></span></div>
         <div class="batch-grid" id="batchGrid" hidden></div>
         <div class="batch-footer-actions" id="batchFooterActions" hidden>
           <button class="batch-secondary-action" id="batchCollectionBtn" type="button">▦ Xem bộ sưu tập</button>
@@ -158,7 +158,7 @@
     <section class="app-page" id="page-manager" data-app-page="manager" hidden>
     <section class="manage-section" id="manager">
       <div class="section-heading manage-heading">
-        <div><p class="eyebrow left-eyebrow">YOUR PERSONAL CAST</p><h2>Quản lý <em>thẻ phim</em></h2><p class="section-subtitle">Mỗi thẻ ghi nhận diễn viên trong một phim, kèm vai diễn, phong cách và độ hiếm.</p></div>
+        <div><p class="eyebrow left-eyebrow">YOUR PERSONAL CAST</p><h2>Quản lý <em>thẻ phim</em></h2></div>
         <button class="primary-btn manager-toggle" id="managerToggle" type="button">＋ Thêm thẻ</button>
       </div>
       <div class="manager-layout">
@@ -172,19 +172,19 @@
             <div class="form-field autocomplete-field"><label for="fieldRole">Vai diễn trong phim</label><div class="autocomplete-control"><input id="fieldRole" maxlength="80" placeholder="Ví dụ: Tạ Chinh" aria-autocomplete="list" aria-controls="fieldRoleSuggestions" aria-expanded="false" /><div class="field-suggestions" id="fieldRoleSuggestions" role="listbox" aria-label="Vai diễn đã có" hidden></div></div><small class="field-suggestion-note" id="fieldRoleSuggestionNote" aria-live="polite"></small></div>
             <label>Giới tính<select id="fieldGender"><option value="female">Nữ</option><option value="male">Nam</option><option value="other">Khác / nhóm</option></select></label>
             <label>Phong cách *<select id="fieldStyle" required><option value="">Chọn phong cách…</option><option>Cổ trang</option><option>Thanh xuân vườn trường</option><option>Công sở</option><option>Tiên hiệp</option><option>Dân quốc</option><option>Khác</option></select></label>
-            <label>Độ hiếm<select id="fieldRarity" aria-label="Độ hiếm"></select></label><label class="wide-field">Ảnh đại diện của thẻ <span class="optional-label" id="imageRequiredLabel">(bắt buộc khi thêm)</span><input id="fieldPhoto" type="file" accept="image/*" /><small>Chọn ảnh đại diện phù hợp với diễn viên trong phim. Ảnh sẽ được nén và lưu trong trình duyệt này, không tải lên máy chủ.</small></label>
+            <label>Độ hiếm<select id="fieldRarity" aria-label="Độ hiếm"></select></label><label class="wide-field">Ảnh đại diện của thẻ <span class="optional-label" id="imageRequiredLabel">(bắt buộc khi thêm)</span><input id="fieldPhoto" type="file" accept="image/*" /><small>Ảnh chỉ lưu trên thiết bị này.</small></label>
           </div>
-          <div class="photo-preview-wrap"><div class="photo-preview" id="photoPreview"><span>Ảnh xem trước</span></div><p id="photoStatus">Ảnh đại diện thuộc về thẻ này, không ảnh hưởng thẻ khác của cùng diễn viên.</p></div>
+          <div class="photo-preview-wrap"><div class="photo-preview" id="photoPreview"><span>Ảnh xem trước</span></div><p id="photoStatus">Chưa chọn ảnh.</p></div>
           <div class="form-actions"><button class="primary-btn" type="submit" id="saveCharacterBtn">Lưu nhân vật</button><button class="secondary-btn" type="button" id="clearFormBtn">Xóa nội dung form</button></div>
-          <p class="form-footnote">Nhiều thẻ có thể dùng cùng tên diễn viên. Khác phim, vai diễn hoặc cấp độ hiếm thì hãy tạo thẻ mới, không sửa đè thẻ cũ. Thẻ cùng tên phim tự động nằm trong một bộ sưu tập.</p>
+          
         </form>
         <div class="manager-content">
-          <div class="manager-toolbar"><div><strong id="managerCount">12 thẻ</strong><small>Sửa để cập nhật thông tin thẻ; dùng “Xóa hẳn” để loại thẻ khỏi trò chơi.</small></div><div class="manager-tools"><input id="managerSearch" class="manager-search" type="search" placeholder="Tìm diễn viên / phim…" aria-label="Tìm thẻ trong danh sách" /><button class="outline-btn" id="exportBtn" type="button">↓ Sao lưu</button><button class="outline-btn" id="importBtn" type="button">↑ Khôi phục</button><input id="importFile" type="file" accept="application/json,.json" hidden /><button class="outline-btn" id="restoreDefaultsBtn" type="button">Khôi phục thẻ mẫu</button></div></div>
+          <div class="manager-toolbar"><div><strong id="managerCount">12 thẻ</strong></div><div class="manager-tools"><input id="managerSearch" class="manager-search" type="search" placeholder="Tìm diễn viên / phim…" aria-label="Tìm thẻ trong danh sách" /><button class="outline-btn" id="exportBtn" type="button">↓ Sao lưu</button><button class="outline-btn" id="importBtn" type="button">↑ Khôi phục</button><input id="importFile" type="file" accept="application/json,.json" hidden /><button class="outline-btn" id="restoreDefaultsBtn" type="button">Khôi phục thẻ mẫu</button></div></div>
 
           <details class="bulk-import-panel" id="bulkImportPanel">
             <summary><span aria-hidden="true">⚡</span> Nhập hàng loạt từ CSV hoặc dán bảng <small>Tối đa 500 thẻ mỗi lần</small></summary>
             <div class="bulk-import-body">
-              <p class="bulk-import-intro">Xem trước và kiểm tra dữ liệu trước khi lưu. Thẻ trùng sẽ được bỏ qua mặc định. Không thay thế thẻ mẫu hoặc tiến độ sưu tầm hiện có.</p>
+              <p class="bulk-import-intro">Tối đa 500 thẻ/lần · Thẻ trùng được bỏ qua mặc định.</p>
               <div class="bulk-import-actions">
                 <label class="outline-btn bulk-file-label" for="bulkImportFile">↑ Chọn tệp CSV / TSV</label>
                 <input id="bulkImportFile" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" hidden />
@@ -192,16 +192,16 @@
               </div>
               <label class="bulk-import-text-label" for="bulkImportText">Hoặc dán bảng từ Excel / Google Sheets
                 <textarea id="bulkImportText" rows="7" spellcheck="false" placeholder="Tên diễn viên,Tên phim,Vai diễn,Tên tiếng Trung,Giới tính,Phong cách,Độ hiếm,Ảnh URL&#10;Điền Hi Vi,Trục Ngọc,Tạ Chinh,田曦薇,Nữ,Cổ trang,SSR,https://…"></textarea>
-                <small>Dòng đầu là tiêu đề cột. Hỗ trợ CSV phân tách bằng dấu phẩy/chấm phẩy và bảng dán dùng tab. Bắt buộc: Tên diễn viên, Tên phim. Ảnh URL tùy chọn.</small>
+                <small>Bắt buộc: Tên diễn viên, Tên phim · Hỗ trợ CSV/TSV · Ảnh URL tùy chọn.</small>
               </label>
               <div class="bulk-import-controls">
                 <button class="primary-btn" id="analyzeBulkImportBtn" type="button">Kiểm tra dữ liệu</button>
                 <label class="bulk-skip-duplicates"><input id="bulkSkipDuplicates" type="checkbox" checked /> Bỏ qua thẻ trùng thông tin</label>
                 <button class="outline-btn" id="clearBulkImportBtn" type="button">Xóa nội dung</button>
               </div>
-              <p class="bulk-import-status" id="bulkImportStatus" role="status" aria-live="polite">Chọn tệp hoặc dán bảng, sau đó chọn “Kiểm tra dữ liệu”.</p>
+              <p class="bulk-import-status" id="bulkImportStatus" role="status" aria-live="polite">Chọn tệp hoặc dán bảng rồi kiểm tra.</p>
               <div class="bulk-import-preview" id="bulkImportPreview" hidden>
-                <div class="bulk-preview-heading"><strong id="bulkPreviewSummary">Bản xem trước</strong><small>Dòng lỗi sẽ không được nhập; sửa bảng và kiểm tra lại để nhập đủ.</small></div>
+                <div class="bulk-preview-heading"><strong id="bulkPreviewSummary">Bản xem trước</strong><small>Dòng lỗi sẽ bị bỏ qua.</small></div>
                 <div class="bulk-preview-table-wrap"><table class="bulk-preview-table"><thead><tr><th>Dòng</th><th>Diễn viên / phim</th><th>Kiểm tra</th></tr></thead><tbody id="bulkPreviewRows"></tbody></table></div>
                 <div class="bulk-import-commit-row"><button class="primary-btn" id="commitBulkImportBtn" type="button" disabled>Nhập các thẻ hợp lệ</button><span id="bulkCommitHint">Chưa có dữ liệu sẵn sàng.</span></div>
               </div>
@@ -217,7 +217,7 @@
     <section class="app-page" id="page-collection" data-app-page="collection" hidden>
     <section class="collection-section" id="collection">
       <div class="section-heading">
-        <div><p class="eyebrow left-eyebrow" id="collectionEyebrow">YOUR PERSONAL DRAMA LIBRARY</p><h2><span id="collectionTitlePrefix">Thư viện</span> <em id="collectionTitleEm">của tôi</em></h2><p class="section-subtitle" id="collectionSubtitle">Những thẻ bạn đã sở hữu, các phiên bản đã nâng cấp và phim đang sưu tầm.</p></div>
+        <div><p class="eyebrow left-eyebrow" id="collectionEyebrow">YOUR PERSONAL DRAMA LIBRARY</p><h2><span id="collectionTitlePrefix">Thư viện</span> <em id="collectionTitleEm">của tôi</em></h2></div>
         <button class="reset-btn" id="resetBtn" title="Xóa tiến độ sưu tầm">↻ <span>Đặt lại</span></button>
       </div>
 
@@ -233,7 +233,7 @@
         <span class="collection-result-count" id="collectionResultCount" aria-live="polite">0 phim · 0 thẻ phù hợp</span>
       </div>
 
-      <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Các thẻ bạn sở hữu sẽ xuất hiện tại đây. Hãy mở thẻ hoặc chuyển sang Khám phá kho thẻ để xem toàn bộ danh mục.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div><div class="collection-sets" id="collectionSets"></div>
+      <div class="empty-state" id="emptyState"><div>✧</div><h3>Thư viện còn trống</h3><p>Mở thẻ để bắt đầu.</p><button class="secondary-btn" id="emptyOpenBtn">Mở thẻ đầu tiên</button></div><div class="collection-sets" id="collectionSets"></div>
     </section>
     </section>
 
@@ -241,14 +241,14 @@
     <section class="app-page" id="page-upgrade" data-app-page="upgrade" hidden>
       <section class="upgrade-page-section">
         <div class="section-heading upgrade-page-heading">
-          <div><p class="eyebrow left-eyebrow">STARRY FORGE · CARD ENHANCEMENT</p><h2>Nâng cấp <em>thẻ</em></h2><p class="section-subtitle">Chọn một thẻ bạn đang sở hữu để nâng sao hoặc tăng level. Thẻ chính luôn được giữ lại.</p></div>
+          <div><p class="eyebrow left-eyebrow">STARRY FORGE · CARD ENHANCEMENT</p><h2>Nâng cấp <em>thẻ</em></h2></div>
         </div>
         <div class="upgrade-page-toolbar">
           <label class="upgrade-card-search-wrap" for="upgradeCardSearch"><span aria-hidden="true">⌕</span><input id="upgradeCardSearch" type="search" placeholder="Tìm thẻ theo tên, phim, độ hiếm…" autocomplete="off" aria-label="Tìm thẻ để nâng cấp" /></label>
           <span class="upgrade-card-count" id="upgradeCardCount">0 thẻ có thể nâng cấp</span>
         </div>
         <div class="upgrade-card-selector" id="upgradeCardSelector" aria-label="Chọn thẻ chính để nâng cấp"></div>
-        <div class="upgrade-no-cards" id="upgradeNoCards" hidden><span>✧</span><h3>Chưa có thẻ nào trong bộ sưu tập</h3><p>Hãy mở thẻ trước, sau đó quay lại đây để nâng sao hoặc tăng level.</p><button class="secondary-btn" id="upgradeOpenCardsBtn" type="button">Mở thẻ</button></div>
+        <div class="upgrade-no-cards" id="upgradeNoCards" hidden><span>✧</span><h3>Chưa có thẻ nào trong bộ sưu tập</h3><p>Mở thẻ để bắt đầu.</p><button class="secondary-btn" id="upgradeOpenCardsBtn" type="button">Mở thẻ</button></div>
         <div class="upgrade-workbench" id="upgradeWorkbench" hidden>
           <div class="upgrade-workbench-heading"><div><p class="upgrade-eyebrow">CURRENTLY SELECTED</p><h3 id="upgradeSelectedCardTitle">Chọn một thẻ</h3><p id="upgradeSelectedCardMeta">Phim · độ hiếm · số lượng</p></div><span class="upgrade-workbench-mark" aria-hidden="true">✦</span></div>
           <div class="upgrade-animation-stage" id="upgradeAnimationStage" data-phase="idle" data-stars="1" aria-live="polite">
@@ -265,7 +265,7 @@
             <span class="upgrade-animation-sparks" aria-hidden="true">✦ · ✧ · ✦</span>
           </div>
                   <section class="card-upgrade-panel" id="cardUpgradePanel" hidden aria-labelledby="cardUpgradeTitle">
-          <div class="upgrade-panel-heading"><p class="upgrade-eyebrow">STARRY FORGE</p><h3 id="cardUpgradeTitle">Cường hóa thẻ</h3><p>Tiến độ được lưu tự động trên thiết bị này.</p></div>
+          <div class="upgrade-panel-heading"><p class="upgrade-eyebrow">STARRY FORGE</p><h3 id="cardUpgradeTitle">Cường hóa thẻ</h3></div>
           <div class="upgrade-current-stats">
             <div class="upgrade-current-stat"><span>⭐ SAO</span><strong id="upgradeStarsDisplay">1★</strong></div>
             <div class="upgrade-current-stat"><span>✦ LEVEL</span><strong id="upgradeLevelDisplay">Lv.1</strong><small id="upgradeLevelExp">0 / 30 EXP</small><span class="upgrade-exp-track"><i id="upgradeExpFill"></i></span></div>
@@ -277,12 +277,12 @@
           </section>
           <section class="upgrade-subsection" aria-labelledby="upgradeLevelTitle">
             <div class="upgrade-subsection-heading"><h4 id="upgradeLevelTitle">⬆ Nâng level</h4><span class="upgrade-pill safe">Không trượt</span></div>
-            <p class="upgrade-description">Chọn bất kỳ thẻ khác làm phôi, không phân biệt phim hoặc độ hiếm. Mỗi thẻ được chọn phải còn ít nhất 1 bản sau khi tiêu hao.</p>
+            
             <label class="upgrade-search-wrap" for="upgradeFodderSearch"><span aria-hidden="true">⌕</span><input id="upgradeFodderSearch" type="search" placeholder="Tìm thẻ làm phôi…" autocomplete="off" /></label>
             <div class="upgrade-fodder-list" id="upgradeFodderList" aria-label="Chọn thẻ làm phôi"></div>
             <div class="upgrade-level-footer"><div><small>EXP phôi đã chọn</small><strong id="upgradeSelectedExp">0 EXP</strong><span id="upgradeLevelSummary">Chọn thẻ làm phôi để tiếp tục.</span></div><button class="primary-btn upgrade-action-btn" id="upgradeLevelBtn" type="button" disabled>Nâng level</button></div>
           </section>
-          <p class="upgrade-footnote" id="upgradeFootnote">Nâng sao: 1★→2★ 80% (2 phôi), 2★→3★ 60% (3), 3★→4★ 40% (4), 4★→5★ 25% (6). Nâng level: R 20 · SR 40 · SSR 80 · SSR+ 100 · UR 150 · SP 250 EXP mỗi phôi.</p>
+          
         </section>
 
         </div>
@@ -291,7 +291,7 @@
           <div class="effect-lab-heading"><div>
             <p class="eyebrow left-eyebrow">CINEMATIC WORKSHOP · PREVIEW ONLY</p>
             <h3 id="effectLabTitle">Phòng thử <em>hiệu ứng</em></h3>
-            <p class="section-subtitle">Thử hiệu ứng triệu hồi và nâng sao mà không tiêu hao vé, thẻ hoặc thay đổi dữ liệu đã lưu.</p>
+            
           </div><span class="effect-lab-stamp" aria-hidden="true">✦ LAB</span></div>
           <div class="effect-lab-controls">
             <label for="effectLabRarity">Độ hiếm triệu hồi
@@ -309,7 +309,7 @@
               <button class="effect-lab-button secondary" id="effectLabUpgradeBtn" type="button">★ Thử nâng sao</button>
             </div>
           </div>
-          <p class="effect-lab-status" id="effectLabStatus" role="status" aria-live="polite">Chọn độ hiếm rồi chạy thử. Đây chỉ là mô phỏng, không thay đổi bộ sưu tập.</p>
+          <p class="effect-lab-status" id="effectLabStatus" role="status" aria-live="polite">Mô phỏng · Không tiêu hao vé hoặc thẻ.</p>
           <div class="stage effect-lab-stage" id="effectLabStage" data-lab-phase="idle" data-lab-stars="1" aria-label="Khu vực xem trước hoạt ảnh">
             <div class="stage-glow"></div><div class="card-wrap effect-lab-card-wrap">
               <div class="card card-back effect-lab-card-back" id="effectLabCardBack" aria-label="Mặt sau thẻ xem trước">
@@ -318,7 +318,7 @@
               <article class="card character-card effect-lab-character-card hidden" id="effectLabCharacterCard" aria-label="Thẻ xem trước hiệu ứng">
                 <div class="rarity-overlay" aria-hidden="true"></div>
                 <div class="card-art effect-lab-card-art" id="effectLabCardArt"><div class="art-orbit"></div><div class="art-symbol">✧</div><div class="art-caption">STARRY PREVIEW</div><div class="portrait-initials">星光</div><div class="art-subtitle">星光 · STARRY</div></div>
-                <div class="card-info"><div class="card-rarity" id="effectLabTierLabel">UR · ULTRA RARE</div><h2 id="effectLabCardName">Thẻ xem thử</h2><p class="chinese-name">星光</p><p class="card-movie">Cinematic effect preview</p><div class="card-meta"><span>Mô phỏng</span><span>Không tiêu hao</span></div><p class="card-quote" id="effectLabQuote">Một ngôi sao, một câu chuyện.</p></div>
+                <div class="card-info"><div class="card-rarity" id="effectLabTierLabel">UR · ULTRA RARE</div><h2 id="effectLabCardName">Thẻ xem thử</h2><p class="chinese-name">星光</p><p class="card-movie">Cinematic effect preview</p><div class="card-meta"><span>Mô phỏng</span><span>Không tiêu hao</span></div></div>
                 <div class="card-edge"></div><span class="effect-lab-star-badge" id="effectLabStarBadge">★ 1/5</span>
               </article>
             </div><p class="reveal-hint effect-lab-hint" id="effectLabHint">Hiệu ứng sẽ xuất hiện tại đây.</p>
@@ -330,7 +330,7 @@
     <section class="app-page" id="page-leaderboard" data-app-page="leaderboard" hidden>
       <section class="leaderboard-section" id="leaderboard">
         <div class="section-heading leaderboard-page-heading">
-          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2><p class="section-subtitle">Tính trên toàn bộ danh mục; hiển thị tối đa 100 diễn viên.</p></div>
+          <div><p class="eyebrow left-eyebrow">STARRY STAR RANKING</p><h2>Bảng xếp hạng <em>ngôi sao</em></h2></div>
           <div class="leaderboard-total"><span>✦</span><strong id="leaderboardActorCount">0</strong><small id="leaderboardCountLabel">diễn viên</small></div>
         </div>
         <label class="leaderboard-search-wrap" for="leaderboardSearch"><span aria-hidden="true">⌕</span><input id="leaderboardSearch" type="search" placeholder="Tìm diễn viên…" autocomplete="off" aria-label="Tìm diễn viên trong bảng xếp hạng" /></label>
@@ -341,14 +341,14 @@
             <button class="leaderboard-chip" type="button" data-rank-gender="male" aria-pressed="false">✧ Diễn viên nam</button>
           </div>
         </div>
-        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Điểm Nhan sắc = P / N + N, tính từ toàn bộ danh mục hệ thống.</div>
+        <div class="leaderboard-rules" id="leaderboardRules" aria-live="polite">Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×hệ số. Điểm thẻ: R 3 · SR 5 · SSR 8 · SSR+ 11 · UR 15 · SP 20.</div>
         <div class="leaderboard-podium" id="leaderboardPodium" aria-label="Ba vị trí dẫn đầu"></div>
-        <p class="leaderboard-band-label leaderboard-top-ten-label" id="leaderboardTopTenLabel" hidden>TOP 10 · NHÓM HẠNG 4–10</p>
+        <p class="leaderboard-band-label leaderboard-top-ten-label" id="leaderboardTopTenLabel" hidden>TOP 10 · HẠNG 4–10</p>
         <ol class="leaderboard-list" id="leaderboardList" aria-label="Bảng xếp hạng"></ol>
         <div class="leaderboard-empty" id="leaderboardEmpty" hidden>
           <span class="leaderboard-empty-star" aria-hidden="true">✧</span>
           <h3 id="leaderboardEmptyTitle">Chưa có đủ dữ liệu xếp hạng</h3>
-          <p id="leaderboardEmptyText">Thêm tên diễn viên cùng tên phim cụ thể vào kho để bắt đầu bảng xếp hạng.</p>
+          <p id="leaderboardEmptyText">Chưa có dữ liệu xếp hạng.</p>
           <button class="secondary-btn" id="leaderboardAddCardsBtn" type="button">＋ Thêm / cập nhật thẻ</button>
         </div>
       </section>
@@ -357,33 +357,24 @@
     <section class="app-page" id="page-info" data-app-page="info" hidden>
       <section class="info-page-heading">
         <p class="eyebrow left-eyebrow">STARRY ARCHIVE</p>
-        <h2>Hướng dẫn <em>& dữ liệu</em></h2>
-        <p class="section-subtitle">Cách hoạt động, lưu trữ và sao lưu bộ sưu tập của bạn.</p>
+        <h2>Cài đặt</h2>
+        
       </section>
-      <div class="info-cards">
-        <article class="info-card"><span>01</span><h3>Mở thẻ</h3><p>Bạn nhận 1 lượt mở mỗi 60 phút và có thể mở 1 hoặc 3 thẻ. SSR trở lên được tính là thẻ hiếm: sau 10 lượt liên tiếp chưa ra thẻ hiếm, tỉ lệ tăng dần; lượt thứ 20 được bảo đảm có thẻ hiếm nếu kho có thẻ thuộc nhóm này.</p></article>
-        <article class="info-card"><span>02</span><h3>Bộ sưu tập</h3><p>Thẻ được gom theo tên phim. Thẻ đã sở hữu mở hồ sơ đầy đủ; thẻ chưa sở hữu có thể xem trước qua mục liên kết diễn viên.</p></article>
-        <article class="info-card"><span>03</span><h3>Dữ liệu trên thiết bị</h3><p>Tiến độ và yêu thích được lưu ở localStorage; hồ sơ thẻ tùy chỉnh và ảnh được lưu trong IndexedDB trên trình duyệt hiện tại.</p></article>
-        <article class="info-card"><span>04</span><h3>Sao lưu an toàn</h3><p>Vào mục Quản lý thẻ và chọn “Sao lưu” để xuất JSON. Giữ tệp sao lưu ở nơi an toàn để có thể khôi phục khi đổi máy hoặc trình duyệt.</p></article>
-        <article class="info-card"><span>05</span><h3>Mối liên kết</h3><p>Hồ sơ tự nối các thẻ của cùng diễn viên và các diễn viên có cùng tên phim. Hãy nhập tên phim nhất quán để tạo mạng lưới bạn diễn chính xác.</p></article>
-        <article class="info-card"><span>06</span><h3>Gợi ý tên có sẵn</h3><p>Khi nhập tên diễn viên, phim hoặc vai diễn, chọn gợi ý để điền nhanh. Nếu trùng diễn viên, phim, vai diễn và độ hiếm, ứng dụng sẽ hỏi lại trước khi thêm thẻ có thông tin trùng.</p></article>
-        <article class="info-card"><span>07</span><h3>Bảng xếp hạng</h3><p>Điểm phim là tổng điểm các biến thể thẻ khác nhau cộng điểm cặp bạn diễn tái hợp. Điểm Nhan sắc = P / N + N, với P là tổng điểm thẻ khác nhau và N là số phim khác nhau. Có bảng Tổng thể gộp diễn viên nam và nữ; mỗi bảng chỉ hiển thị tối đa 100 mục. Điểm dùng toàn bộ kho hệ thống, không phụ thuộc thẻ bạn sở hữu.</p></article>
-      </div>
       <section class="info-card ui-preferences-card" aria-labelledby="uiPreferencesTitle">
         <span>08</span><h3 id="uiPreferencesTitle">Tùy chỉnh giao diện</h3>
-        <p>Chọn màu nhấn và mật độ hiển thị. Tùy chọn lưu riêng trên trình duyệt và có thể đi kèm bản sao lưu V11.0.</p>
+        
         <div class="ui-preferences-controls">
           <label for="uiThemeSelect">Bảng màu</label>
           <select id="uiThemeSelect"><option value="classic">Tinh quang vàng</option><option value="rose">Hoa hồng</option><option value="ocean">Đại dương</option><option value="jade">Ngọc bích</option><option value="violet">Tím thiên hà</option></select>
           <label for="uiDensitySelect">Mật độ thẻ</label>
           <select id="uiDensitySelect"><option value="comfortable">Thoáng</option><option value="compact">Gọn</option></select>
           <div class="ui-preferences-actions"><button type="button" class="primary-btn" id="saveUiPrefsBtn">Lưu giao diện</button><button type="button" class="outline-btn" id="resetUiPrefsBtn">Đặt mặc định</button></div>
-          <p class="ui-preferences-note" id="uiPreferencesNote" aria-live="polite">Tùy chỉnh được lưu riêng, không thay đổi dữ liệu sưu tầm.</p>
+          <p class="ui-preferences-note" id="uiPreferencesNote" aria-live="polite"></p>
         </div>
       </section>
       <details class="credits-section">
     <summary>✦ Nguồn ảnh mẫu & giấy phép sử dụng</summary>
-    <p>Các ảnh được tải trực tiếp từ Wikimedia Commons. Giao diện có cắt khung ảnh bằng CSS; vui lòng mở trang nguồn để xem thông tin đầy đủ và điều kiện giấy phép.</p>
+    
     <ul>
       <li><a href="https://commons.wikimedia.org/wiki/File:Xiao_Zhan_at_the_Weibo_Night_Ceremony_January_11_2020.jpg" target="_blank" rel="noopener">Tiêu Chiến — Xiao Zhan at the Weibo Night Ceremony</a> · Pobediti丨肖战 · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</li>
       <li><a href="https://commons.wikimedia.org/wiki/File:王一博.jpg" target="_blank" rel="noopener">Vương Nhất Bác — ảnh gặp gỡ người hâm mộ</a> · Aco · <a href="https://creativecommons.org/licenses/by/2.5/" target="_blank" rel="noopener">CC BY 2.5</a>.</li>
@@ -398,7 +389,7 @@
       <li><a href="https://commons.wikimedia.org/wiki/File:Yang_Zi_at_Ryo_band_promotion,_Wuhan_of_China,_12_April_2019.jpg" target="_blank" rel="noopener">Dương Tử — sự kiện Ryo tại Vũ Hán</a> · Nascent·恆星 · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</li>
       <li><a href="https://commons.wikimedia.org/wiki/File:Bai_Lu.jpg" target="_blank" rel="noopener">Bạch Lộc — phim Love is Sweet</a> · iQIYI Indonesia · <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>.</li>
     </ul>
-    <p class="credits-note">Ghi công tác giả theo trang Commons. Mỗi ảnh vẫn tuân theo giấy phép riêng; giấy phép áp dụng cho ảnh không đồng nghĩa diễn viên hay tác giả bảo chứng cho trò chơi này. Cần kết nối Internet để tải ảnh. Nếu máy chủ ảnh không phản hồi, thẻ sẽ tự chuyển về minh họa chữ.</p>
+    <p class="credits-note">Ảnh thuộc giấy phép riêng. Xem trang nguồn để biết điều kiện sử dụng.</p>
       </details>
     </section>
   </main>
@@ -424,7 +415,7 @@
           <button type="button" class="outline-btn" id="detailOpenActorBtn">✦ Hồ sơ diễn viên</button>
         </div>
         <div class="detail-film-info"><p><span>Phim / bộ sưu tập</span><strong id="detailMovie"></strong></p><p><span>Vai diễn</span><strong id="detailRole"></strong></p></div><section class="detail-relations" id="detailRelations" aria-labelledby="detailRelationsTitle">
-          <div class="detail-relations-intro"><p class="detail-relations-eyebrow">STARRY CONNECTIONS</p><h3 id="detailRelationsTitle">Mối liên kết</h3><p id="detailRelationSummary">Các mối liên kết được tổng hợp từ diễn viên và tên phim trong kho thẻ.</p></div>
+          <div class="detail-relations-intro"><p class="detail-relations-eyebrow">STARRY CONNECTIONS</p><h3 id="detailRelationsTitle">Mối liên kết</h3></div>
           <div class="detail-relation-groups" id="detailRelationGroups"></div>
         </section>
         <div class="detail-owned"><span>Đã sở hữu</span><strong id="detailCount">×1</strong></div>

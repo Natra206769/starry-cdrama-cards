@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — V11.7.0
+STARRY C-DRAMA CARDS — V11.8.0
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
@@ -8,7 +8,8 @@ TÍNH NĂNG
 - Bộ sưu tập có hai chế độ: Thư viện của tôi và Khám phá kho thẻ; công cụ tìm kiếm là thanh tìm kiếm duy nhất.
 - Hồ sơ phim và diễn viên được tổng hợp trực tiếp từ các thẻ trong kho; xem các phiên bản thẻ còn thiếu và mối liên kết bạn diễn.
 - Yêu thích thẻ, nâng sao 1★–5★, level, hiệu ứng holographic và xếp hạng diễn viên toàn kho.
-- Top 3 có hiệu ứng khung riêng; các vị trí 4–10 được nhấn mạnh riêng; mỗi bảng tối đa 100 diễn viên.
+- Top 3 có hiệu ứng riêng; nhóm 4–10 được nhấn mạnh; tối đa 100 diễn viên.
+- Điểm thẻ: R 3 · SR 5 · SSR 8 · SSR+ 11 · UR 15 · SP 20.
 - Quản lý thẻ mẫu/thẻ tự thêm; nhập hàng loạt CSV/TSV hoặc dán bảng với xem trước, xác thực và bỏ qua thẻ trùng mặc định.
 - Sao lưu/khôi phục JSON V5; tùy chỉnh bảng màu, mật độ hiển thị; hỗ trợ bàn phím và giảm chuyển động.
 - Không còn giao diện Kệ phim, Quản lý dữ liệu phim hoặc trường mô tả riêng cho từng nhân vật.
@@ -42,3 +43,9 @@ V11.7.0 — Bảo hiểm may mắn và giao diện tinh gọn
 - Gỡ giao diện quản lý metadata phim/TMDB và mô tả riêng của từng nhân vật; hồ sơ phim vẫn được tổng hợp từ thẻ.
 - Tách biệt Top 3 khỏi nhóm Top 10; giữ hiệu ứng riêng cho hạng 1, 2 và 3.
 - Giữ nguyên các khóa dữ liệu người chơi; cache service worker tăng lên v50.
+
+V11.8.0 — Cập nhật điểm thẻ và tinh gọn giao diện
+- Điểm xếp hạng mới: R 3, SR 5, SSR 8, SSR+ 11, UR 15, SP 20.
+- Rút gọn mô tả lặp lại ở các mục; giữ lại xác nhận tiêu hao, cảnh báo và thông tin thao tác cần thiết.
+- Loại bỏ nội dung hướng dẫn dài; giữ trang Cài đặt và ghi công ảnh mẫu.
+- Cache service worker tăng lên v51.

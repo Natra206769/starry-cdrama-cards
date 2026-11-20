@@ -43,7 +43,7 @@ const levelExpRequirements = [30,50,75,100,140,180,230,290,360];
 const MAX_CARD_LEVEL = 10;
 
 // ---- Điểm Nhan sắc theo độ hiếm của mỗi biến thể thẻ trong bảng xếp hạng ----
-const leaderboardRarityPoints = {R:3,SR:5,SSR:9,"SSR+":11,UR:17,SP:25};
+const leaderboardRarityPoints = {R:3,SR:5,SSR:8,"SSR+":11,UR:15,SP:20};
 
 // ---- Thời gian (ms) giữ màn hình khi mở x10: thẻ chính sau khi lật, và màn spotlight ----
 const BATCH_REVEAL_HOLD_MS = {R:800,SR:1000,SSR:1320,"SSR+":1450,UR:1750,SP:2050};

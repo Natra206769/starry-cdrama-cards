@@ -97,8 +97,7 @@ function makeLeaderboardEntry(item,rank,podium=false){
   avatar.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();event.stopPropagation();showLeaderboardCardImage(item,avatar.querySelector("img")?.currentSrc||avatar.querySelector("img")?.src);}});
   const identity=document.createElement("div");identity.className="leaderboard-identity";
   const name=document.createElement("strong");name.textContent=item.name;
-  const sub=document.createElement("small");sub.textContent=(rank<=3?"TOP 3 · ":rank<=10?"TOP 10 · ":"")+"N = "+item.filmCount+" phim · P = "+item.catalogCardPoints+" điểm thẻ";
-  identity.append(name,sub);
+  identity.append(name);
   const metric=document.createElement("div");metric.className="leaderboard-metric";
   const score=document.createElement("strong"),label=document.createElement("span");
   score.textContent=item.beautyScore.toLocaleString("vi-VN",{maximumFractionDigits:2});
@@ -122,7 +121,7 @@ function renderLeaderboard(){
   const sorted=matches.slice(0,MAX_LEADERBOARD_ENTRIES);
   $("leaderboardActorCount").textContent=String(sorted.length);
   $("leaderboardCountLabel").textContent="diễn viên · top 100";
-  $("leaderboardRules").textContent="Điểm Nhan sắc (chỉ số giải trí) = P / N + N × hệ số phim. Hệ số: 1–4 phim = 1; 5–9 phim = 1,2; từ 10 phim = 1,25. Diễn viên chỉ đóng 1 phim không nhận điểm cộng phim. P là tổng điểm độ hiếm của các biến thể thẻ khác nhau trong toàn kho (R 3 · SR 5 · SSR 9 · SSR+ 11 · UR 17 · SP 25); N là số phim khác nhau. Tổng thể gộp diễn viên nam và nữ. Hiển thị tối đa 100 diễn viên.";
+  $("leaderboardRules").textContent="Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×hệ số (1–4 phim: 1; 5–9: 1,2; từ 10: 1,25). P = tổng điểm thẻ, N = số phim. Điểm thẻ: R 3 · SR 5 · SSR 8 · SSR+ 11 · UR 15 · SP 20.";
   empty.hidden=sorted.length>0;
   if(!sorted.length){
     $("leaderboardEmptyTitle").textContent=query?"Không tìm thấy kết quả phù hợp":"Chưa có dữ liệu diễn viên để tính điểm";

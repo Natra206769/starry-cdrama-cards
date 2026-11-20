@@ -31,11 +31,11 @@ function renderRarityOdds(){
  if(!total){target.textContent="Kho thẻ đang trống.";return;}
  const odds=available.map(({rarity,weight})=>rarity+" "+(weight/total*100).toLocaleString("vi-VN",{maximumFractionDigits:2})+"%");
  let hint="";
- if(!characters.some(card=>isPityRarity(card.rarity)))hint="Bảo hiểm SSR trở lên chưa hoạt động vì kho chưa có thẻ hiếm.";
+ if(!characters.some(card=>isPityRarity(card.rarity)))hint="Kho chưa có thẻ hiếm.";
  else{const misses=typeof getConsecutiveRareMisses==="function"?getConsecutiveRareMisses():0,rarePct=available.filter(item=>isPityRarity(item.rarity)).reduce((sum,item)=>sum+item.weight,0)/total*100;
-  hint=misses>=PITY_GUARANTEE_AFTER_MISSES-1?"Bảo hiểm SSR trở lên: lượt kế tiếp chắc chắn có thẻ hiếm.":misses>=PITY_START_AFTER_MISSES?"Bảo hiểm SSR trở lên: "+rarePct.toLocaleString("vi-VN",{maximumFractionDigits:2})+"% hiện tại · "+misses+" lượt hụt liên tiếp.":"Bảo hiểm SSR trở lên: "+misses+"/"+PITY_START_AFTER_MISSES+" lượt hụt trước khi tăng tỉ lệ.";
+  hint=misses>=PITY_GUARANTEE_AFTER_MISSES-1?"Thẻ hiếm: 100% lượt kế tiếp.":misses>=PITY_START_AFTER_MISSES?"Thẻ hiếm: "+rarePct.toLocaleString("vi-VN",{maximumFractionDigits:2})+"% · hụt "+misses+".":"Bảo hiểm: "+misses+"/"+PITY_START_AFTER_MISSES+" lượt hụt.";
  }
- target.textContent="Tỉ lệ hiện tại: "+odds.join(" · ")+". "+hint;
+ target.textContent="Tỉ lệ: "+odds.join(" · ")+" · "+hint;
 }
 function weightedRandom(){
  if(!characters.length)return null;const available=getPityAdjustedRarityWeights(),total=available.reduce((sum,item)=>sum+item.weight,0);if(!total)return null;

@@ -72,3 +72,13 @@
   .film-set .mini-info{padding:8px 7px 10px;}
   .film-set .mini-art{height:108px;}
 }
+
+
+/* V11.8 — global rarity totals for the complete card catalog. */
+.collection-global-rarity{grid-column:1/-1;display:grid;gap:9px;margin-top:2px;padding:12px;border:1px solid #d8bb8628;border-radius:12px;background:linear-gradient(120deg,#d8bb8609,#c18aff08);}
+.collection-global-rarity-title{color:#d8c49f;font-size:9px;letter-spacing:1.1px;}
+.collection-global-rarity-list{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;}
+.collection-global-rarity-item{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;padding:8px 4px;border:1px solid color-mix(in srgb,var(--rarity,#aab5c9) 30%,transparent);border-radius:8px;background:#ffffff05;}
+.collection-global-rarity-item strong{color:var(--rarity,#d8bb86);font-size:11px;}
+.collection-global-rarity-item small{color:var(--muted);font-size:9px;white-space:nowrap;}
+@media(max-width:650px){.collection-global-rarity{padding:9px;}.collection-global-rarity-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}}

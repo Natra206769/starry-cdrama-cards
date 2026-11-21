@@ -1,4 +1,4 @@
-/* gacha.js — Vé quay tự cộng mỗi giờ, không giới hạn số dư. */
+/* gacha.js — Tự cộng 3 vé mỗi giờ, không giới hạn số dư. */
 
 const TICKET_STATE_KEY = "starry-cdrama-ticket-state-v1";
 const TICKET_INTERVAL_MS = 60 * 60 * 1000;
@@ -70,7 +70,7 @@ function accrueHourlyTickets(now=Date.now()){
   const elapsed=Math.max(0,now-ticketState.lastAccrualAt);
   const due=Math.floor(elapsed/TICKET_INTERVAL_MS);
   if(due>0){
-    const earned=due;
+    const earned=due*3;
     ticketState.tickets+=earned;
     ticketState.earnedToday+=earned;
     ticketState.lastAccrualAt+=due*TICKET_INTERVAL_MS;
@@ -97,7 +97,7 @@ function updateDrawControls(){
   if(status){
     let text="Vé hiện có: "+tickets+" · Hôm nay đã nhận "+(ticketState?.earnedToday||0)+" vé";
     if(drawAnimationInProgress)text+=" · Đang mở thẻ…";
-    else text+=" · Vé tiếp theo sau "+formatTicketTime(nextTicketRemaining());
+    else text+=" · +3 vé mỗi giờ · Vé tiếp theo sau "+formatTicketTime(nextTicketRemaining());
     status.textContent=text;
     status.classList.toggle("is-cooldown",tickets===0);
   }

@@ -24,6 +24,11 @@ function renderCollectionOverview(){
   {label:"Tiến độ sưu tầm",value:completion+"%"}
  ];
  overview.replaceChildren();for(const item of stats){const card=document.createElement("div");card.className="collection-stat-card";const label=document.createElement("span");label.textContent=item.label;const value=document.createElement("strong");value.textContent=String(item.value);card.append(label,value);overview.appendChild(card);}
+ const raritySummary=document.createElement("div");raritySummary.className="collection-global-rarity";raritySummary.setAttribute("aria-label","Số lượng thẻ từng độ hiếm trên toàn hệ thống");
+ const rarityHeading=document.createElement("strong");rarityHeading.className="collection-global-rarity-title";rarityHeading.textContent="SỐ THẺ THEO ĐỘ HIẾM · TOÀN HỆ THỐNG";raritySummary.appendChild(rarityHeading);
+ const rarityCounts=document.createElement("div");rarityCounts.className="collection-global-rarity-list";
+ for(const rarity of Object.keys(rarityInfo)){const item=document.createElement("span");item.className="collection-global-rarity-item rarity-"+rarityCssKey(rarity);const tier=document.createElement("strong");tier.textContent=rarity;const quantity=document.createElement("small");quantity.textContent=String(characters.filter(card=>String(card.rarity||"R").toUpperCase()===rarity).length)+" thẻ";item.append(tier,quantity);rarityCounts.appendChild(item);}
+ raritySummary.appendChild(rarityCounts);overview.appendChild(raritySummary);
 }
 function animateCollectionCard(article,afterAnimation){
  if(!article||article.dataset.tapBusy==="1")return;article.dataset.tapBusy="1";article.classList.remove("is-tapped");void article.offsetWidth;article.classList.add("is-tapped");
@@ -37,16 +42,16 @@ function renderCollection(){
  let visibleCount=0,visibleMovies=0;
  for(const {movie,cards:allCards} of movieGroups){
   const cards=allCards.filter(collectionMatchesFilter).sort((a,b)=>(rarityOrder[a.rarity]??99)-(rarityOrder[b.rarity]??99)||compareVietnamese(a.name,b.name));if(!cards.length)continue;
-  visibleCount+=cards.length;visibleMovies++;const ownedUnique=allCards.filter(card=>(Number(state.owned[card.id])||0)>0).length,missingUnique=allCards.length-ownedUnique;
+  visibleCount+=cards.length;visibleMovies++;const ownedUnique=allCards.filter(card=>(Number(state.owned[card.id])||0)>0).length;
   const set=document.createElement("section");set.className="film-set";const head=document.createElement("div");head.className="film-set-heading";
   const titleWrap=document.createElement("div");titleWrap.className="film-set-title-wrap";const eyebrow=document.createElement("p");eyebrow.className="film-set-eyebrow";eyebrow.textContent="DRAMA COLLECTION";
   const titleRow=document.createElement("div");titleRow.className="film-title-row";const title=document.createElement("h3");title.textContent=movie;
   const openMovieBtn=document.createElement("button");openMovieBtn.type="button";openMovieBtn.className="film-open-profile";openMovieBtn.textContent="Chi tiết ↗";openMovieBtn.setAttribute("aria-label","Mở trang phim "+movie);openMovieBtn.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();openMovieProfile(movie);});
-  titleRow.append(title,openMovieBtn);const count=document.createElement("p");count.className="film-set-count";count.textContent=ownedUnique+" / "+allCards.length+" thẻ đã sưu tầm · "+missingUnique+" thẻ còn thiếu";titleWrap.append(eyebrow,titleRow,count);
+  titleRow.append(title,openMovieBtn);const count=document.createElement("p");count.className="film-set-count";count.textContent=ownedUnique+" thẻ đã sưu tầm";titleWrap.append(eyebrow,titleRow,count);
   const progress=document.createElement("div");progress.className="film-progress";progress.setAttribute("role","progressbar");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax",String(allCards.length));progress.setAttribute("aria-valuenow",String(ownedUnique));progress.setAttribute("aria-label","Tiến độ "+movie);
   const fill=document.createElement("span");fill.style.width=(allCards.length?ownedUnique/allCards.length*100:0)+"%";progress.appendChild(fill);head.append(titleWrap,progress);set.appendChild(head);
-  const stats=document.createElement("div");stats.className="film-rarity-stats";stats.setAttribute("aria-label","Thống kê đã có và còn thiếu theo độ hiếm của "+movie);
-  for(const rarity of Object.keys(rarityInfo)){const tierCards=allCards.filter(card=>card.rarity===rarity);if(!tierCards.length)continue;const ownedTier=tierCards.filter(card=>(Number(state.owned[card.id])||0)>0).length;const stat=document.createElement("span");stat.className="film-rarity-stat rarity-"+rarityCssKey(rarity);const tier=document.createElement("strong");tier.textContent=rarity;const quantity=document.createElement("small");quantity.textContent=ownedTier+" có / "+(tierCards.length-ownedTier)+" thiếu";stat.append(tier,quantity);stats.appendChild(stat);}
+  const stats=document.createElement("div");stats.className="film-rarity-stats";stats.setAttribute("aria-label","Số thẻ đã sở hữu theo độ hiếm của "+movie);
+  for(const rarity of Object.keys(rarityInfo)){const tierCards=allCards.filter(card=>card.rarity===rarity);if(!tierCards.length)continue;const ownedTier=tierCards.filter(card=>(Number(state.owned[card.id])||0)>0).length;const stat=document.createElement("span");stat.className="film-rarity-stat rarity-"+rarityCssKey(rarity);const tier=document.createElement("strong");tier.textContent=rarity;const quantity=document.createElement("small");quantity.textContent=ownedTier+" có";stat.append(tier,quantity);stats.appendChild(stat);}
   set.appendChild(stats);const grid=document.createElement("div");grid.className="collection-grid";
   for(const card of cards){
    const owned=(Number(state.owned[card.id])||0)>0,info=rarityInfo[card.rarity]||rarityInfo.R,article=document.createElement("article");article.className="mini-card rarity-"+rarityCssKey(card.rarity||"SR")+(owned?"":" is-locked");

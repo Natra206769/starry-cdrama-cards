@@ -35,10 +35,10 @@ function buildActorRankingData(){
     actor.filmCount=actor.movies.size;
     actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+rarityPoints(card),0);
     actor.cardCount=actor.systemCards.length;
-    // Bonus per distinct film scales with the actor’s catalog breadth. Single-film actors still receive no film bonus.
-    actor.filmBonusPerFilm=actor.filmCount>=10?1.25:actor.filmCount>=5?1.2:1;
-    // Beauty score = P / N + N × multiplier (N=1 deliberately receives no film bonus).
-    actor.beautyScore=actor.filmCount>1?(actor.catalogCardPoints/actor.filmCount)+(actor.filmCount*actor.filmBonusPerFilm):actor.filmCount===1?actor.catalogCardPoints:0;
+    // Bonus per film: 1–2 films = 0; 3–4 = 0.5; 5–9 = 0.75; 10+ = 1.
+    actor.filmBonusPerFilm=actor.filmCount>=10?1:actor.filmCount>=5?0.75:actor.filmCount>=3?0.5:0;
+    // Beauty score = P for one film; otherwise P / N + N × the applicable per-film bonus.
+    actor.beautyScore=actor.filmCount===1?actor.catalogCardPoints:actor.filmCount>1?(actor.catalogCardPoints/actor.filmCount)+(actor.filmCount*actor.filmBonusPerFilm):0;
     return actor;
   });
 }

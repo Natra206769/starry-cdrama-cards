@@ -121,7 +121,7 @@ function renderLeaderboard(){
   const sorted=matches.slice(0,MAX_LEADERBOARD_ENTRIES);
   $("leaderboardActorCount").textContent=String(sorted.length);
   $("leaderboardCountLabel").textContent="diễn viên · top 100";
-  $("leaderboardRules").textContent="Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×hệ số (1–4 phim: 1; 5–9: 1,2; từ 10: 1,25). P = tổng điểm thẻ, N = số phim. Điểm thẻ: R 3 · SR 5 · SSR 8 · SSR+ 11 · UR 15 · SP 20.";
+  $("leaderboardRules").textContent="Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×điểm cộng mỗi phim (1–2 phim: 0; 3–4: 0,5; 5–9: 0,75; từ 10: 1). P = tổng điểm thẻ, N = số phim. Điểm thẻ: R 3 · SR 5 · SSR 8 · SSR+ 11 · UR 15 · SP 20.";
   empty.hidden=sorted.length>0;
   if(!sorted.length){
     $("leaderboardEmptyTitle").textContent=query?"Không tìm thấy kết quả phù hợp":"Chưa có dữ liệu diễn viên để tính điểm";

@@ -27,7 +27,7 @@ function renderCollectionOverview(){
  const raritySummary=document.createElement("div");raritySummary.className="collection-global-rarity";raritySummary.setAttribute("aria-label","Số lượng thẻ từng độ hiếm trên toàn hệ thống");
  const rarityHeading=document.createElement("strong");rarityHeading.className="collection-global-rarity-title";rarityHeading.textContent="SỐ THẺ THEO ĐỘ HIẾM · TOÀN HỆ THỐNG";raritySummary.appendChild(rarityHeading);
  const rarityCounts=document.createElement("div");rarityCounts.className="collection-global-rarity-list";
- for(const rarity of Object.keys(rarityInfo)){const item=document.createElement("span");item.className="collection-global-rarity-item rarity-"+rarityCssKey(rarity);const tier=document.createElement("strong");tier.textContent=rarity;const quantity=document.createElement("small");quantity.textContent=String(characters.filter(card=>String(card.rarity||"R").toUpperCase()===rarity).length)+" thẻ";item.append(tier,quantity);rarityCounts.appendChild(item);}
+ for(const rarity of Object.keys(rarityInfo)){const item=document.createElement("span");item.className="collection-global-rarity-item rarity-"+rarityCssKey(rarity);item.style.setProperty("--rarity",rarityInfo[rarity].color);const tier=document.createElement("strong");tier.textContent=rarity;const quantity=document.createElement("small");quantity.textContent=String(characters.filter(card=>String(card.rarity||"R").toUpperCase()===rarity).length)+" thẻ";item.append(tier,quantity);rarityCounts.appendChild(item);}
  raritySummary.appendChild(rarityCounts);overview.appendChild(raritySummary);
 }
 function animateCollectionCard(article,afterAnimation){

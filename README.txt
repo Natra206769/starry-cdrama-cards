@@ -1,18 +1,24 @@
-STARRY C-DRAMA CARDS — V11.8.0
+STARRY C-DRAMA CARDS — V11.9.0
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
-- Mở 1 hoặc 3 thẻ thuộc sáu cấp R / SR / SSR / SSR+ / UR / SP; N cũ tự chuyển thành R.
-- Bảo hiểm thẻ hiếm: sau 10 lượt liên tiếp không ra SSR trở lên, xác suất tăng dần; lượt thứ 20 liên tiếp được bảo đảm SSR trở lên nếu kho có thẻ hiếm.
+- Mở 1 hoặc 3 thẻ thuộc sáu bậc thường R / SR / SSR / UR / LR / MR; SP là cấp đặc biệt riêng, không nằm trong lượt rút thường. N cũ tự chuyển thành R.
+- Bảo hiểm thẻ hiếm: sau 10 lượt liên tiếp không ra SSR trở lên, xác suất tăng dần; lượt thứ 20 liên tiếp được bảo đảm thẻ hiếm nếu kho có thẻ phù hợp.
 - Một lượt mở tự động mỗi 60 phút; có thể tích lũy lượt, và hoàn thành đủ thẻ của một phim được thưởng thêm 15 lượt.
 - Bộ sưu tập có hai chế độ: Thư viện của tôi và Khám phá kho thẻ; công cụ tìm kiếm là thanh tìm kiếm duy nhất.
 - Hồ sơ phim và diễn viên được tổng hợp trực tiếp từ các thẻ trong kho; xem các phiên bản thẻ còn thiếu và mối liên kết bạn diễn.
-- Yêu thích thẻ, nâng sao 1★–5★, level, hiệu ứng holographic và xếp hạng diễn viên toàn kho.
+- Yêu thích thẻ, nâng sao 1★–5★; giới hạn level theo sao: 1★ Lv.10, 2★ Lv.20, 3★ Lv.30, 4★ Lv.40, 5★ Lv.50.
 - Top 3 có hiệu ứng riêng; nhóm 4–10 được nhấn mạnh; tối đa 100 diễn viên.
-- Điểm thẻ: R 3 · SR 5 · SSR 8 · SSR+ 11 · UR 15 · SP 20.
+- Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20. SP nhận điểm bằng bậc thông thường cao nhất của diễn viên; mặc định 20 nếu diễn viên chưa có thẻ thường.
 - Quản lý thẻ mẫu/thẻ tự thêm; nhập hàng loạt CSV/TSV hoặc dán bảng với xem trước, xác thực và bỏ qua thẻ trùng mặc định.
 - Sao lưu/khôi phục JSON V5; tùy chỉnh bảng màu, mật độ hiển thị; hỗ trợ bàn phím và giảm chuyển động.
 - Không còn giao diện Kệ phim, Quản lý dữ liệu phim hoặc trường mô tả riêng cho từng nhân vật.
+
+ĐỘ HIẾM & CHUYỂN ĐỔI DỮ LIỆU
+- Thứ tự bậc thường: R → SR → SSR → UR → LR → MR. SP là nhánh đặc biệt độc lập.
+- Thẻ cũ được chuyển một lần: SSR+ → UR, UR → LR, SP → MR. Tiến độ sở hữu, số bản sao, yêu thích, level/sao và ảnh được giữ nguyên.
+- SP mới được giữ là SP; việc chuyển dữ liệu cũ được đánh dấu phiên bản để không áp dụng lại ở những lần tải sau.
+- LR dùng khung đỏ ruby; MR dùng khung bạc/trắng ánh xanh; UR dùng tông thạch anh tím.
 
 MÃ NGUỒN
 - index.html: giao diện và bố cục.
@@ -37,15 +43,23 @@ DỮ LIỆU & AN TOÀN
 PHÁT HÀNH
 Triển khai index.html, css/, js/ đang được sử dụng, data/, service-worker.js, manifest.webmanifest, favicon và icons/ lên GitHub Pages.
 
+V11.9.0 — Cập nhật hệ độ hiếm và nâng cấp
+- Loại bỏ SSR+ khỏi hệ mới; thêm LR và MR, giữ SP làm cấp đặc biệt.
+- Chuyển dữ liệu cũ một lần theo ánh xạ SSR+ → UR, UR → LR, SP → MR.
+- Giới hạn level tăng theo sao từ Lv.10 đến Lv.50.
+- Cập nhật điểm thẻ và điểm động của SP; bổ sung màu khung và hiệu ứng mới cho UR/LR/MR.
+- Cập nhật nhập CSV/TSV, thứ tự thư viện và bộ nhớ đệm ứng dụng.
+- Cache service worker tăng lên v54.
+
+V11.8.0 — Cập nhật điểm thẻ và tinh gọn giao diện
+- Điểm xếp hạng cũ: R 3, SR 5, SSR 8, SSR+ 11, UR 15, SP 20.
+- Rút gọn mô tả lặp lại ở các mục; giữ lại xác nhận tiêu hao, cảnh báo và thông tin thao tác cần thiết.
+- Loại bỏ nội dung hướng dẫn dài; giữ trang Cài đặt và ghi công ảnh mẫu.
+- Cache service worker tăng lên v51.
+
 V11.7.0 — Bảo hiểm may mắn và giao diện tinh gọn
 - Tăng dần tỉ lệ SSR trở lên sau 10 lượt hụt liên tiếp; bảo đảm SSR trở lên ở lượt thứ 20 nếu kho có thẻ hiếm.
 - Bộ sưu tập chỉ còn thanh tìm kiếm và hai chế độ thư viện/khám phá; bỏ bộ lọc phụ và kệ phim.
 - Gỡ giao diện quản lý metadata phim/TMDB và mô tả riêng của từng nhân vật; hồ sơ phim vẫn được tổng hợp từ thẻ.
 - Tách biệt Top 3 khỏi nhóm Top 10; giữ hiệu ứng riêng cho hạng 1, 2 và 3.
 - Giữ nguyên các khóa dữ liệu người chơi; cache service worker tăng lên v50.
-
-V11.8.0 — Cập nhật điểm thẻ và tinh gọn giao diện
-- Điểm xếp hạng mới: R 3, SR 5, SSR 8, SSR+ 11, UR 15, SP 20.
-- Rút gọn mô tả lặp lại ở các mục; giữ lại xác nhận tiêu hao, cảnh báo và thông tin thao tác cần thiết.
-- Loại bỏ nội dung hướng dẫn dài; giữ trang Cài đặt và ghi công ảnh mẫu.
-- Cache service worker tăng lên v51.

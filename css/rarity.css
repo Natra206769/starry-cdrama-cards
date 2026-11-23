@@ -315,3 +315,29 @@
 @keyframes starry-lr-flare{0%{opacity:0;transform:rotate(-35deg) scale(.3)}42%{opacity:1;transform:rotate(135deg) scale(1.25)}72%{opacity:1;transform:rotate(260deg) scale(1.05)}100%{opacity:.92;transform:rotate(360deg) scale(1)}}
 @keyframes starry-mr-celestial{0%{opacity:0;transform:rotate(0) scale(.2);filter:brightness(.6)}38%{opacity:1;transform:rotate(150deg) scale(1.25);filter:brightness(2)}68%{opacity:1;transform:rotate(275deg) scale(1.05);filter:brightness(1.2)}100%{opacity:.92;transform:rotate(405deg) scale(1);filter:brightness(1)}}
 @media(prefers-reduced-motion:reduce){.character-card.rarity-lr .rarity-overlay::after,.character-card.rarity-mr .rarity-overlay::after,.stage.opening-rarity-ur::before,.stage.opening-rarity-lr::before,.stage.opening-rarity-mr::before{animation:none!important}}
+
+
+/* V12.0 — restore UR's gold identity and give MR a clear blue identity. */
+:root {}
+.character-card.rarity-ur{--rarity:#ffca75!important;border-color:#ffdf9a!important;box-shadow:inset 0 0 26px #ffca7530,0 0 21px #ffca7588,0 12px 35px #0008!important}
+.character-card.rarity-ur .rarity-overlay::before,.batch-card.rarity-ur::before,.detail-visual.rarity-ur::before,.spotlight-art.rarity-ur::before{border:2px solid #ffe4a6!important;outline:1px solid #ffca75aa!important;outline-offset:3px;box-shadow:inset 0 0 25px #ffca7555,0 0 22px #ffca75bb!important}
+.mini-card.rarity-ur{--rarity:#ffca75!important;border-color:#ffca75!important;box-shadow:0 0 0 1px #ffca7530,0 0 18px #ffca7566!important;background-image:radial-gradient(ellipse at 50% 0%,#ffca7540,transparent 72%),linear-gradient(150deg,var(--art1,#292f46),#111522 75%)!important}
+.batch-card.rarity-ur{--rarity:#ffca75!important;box-shadow:inset 0 0 30px #ffca7530,0 0 22px #ffca7588,0 10px 30px #0006!important}
+.spotlight-art.rarity-ur{--rarity:#ffca75!important}
+.stage.opening-rarity-ur::before{border-color:#ffe4a6!important;box-shadow:0 0 30px #ffca75bb,inset 0 0 32px #ffca7566,0 0 78px #ffca7555!important}
+.stage.opening-rarity-ur .stage-glow{background:radial-gradient(circle,#fff5d8 0%,#ffca75 30%,#a56bff 72%,transparent 100%)!important}
+.stage.opening-rarity-ur .card-back{border-color:#ffe4a6!important;box-shadow:0 0 0 1px #fff8,0 0 32px #ffca75dd,0 0 78px #ffca7599!important}
+.stage.opening-rarity-ur .back-border{border-color:#ffe8b8!important;box-shadow:inset 0 0 34px #ffca7566!important}
+.stage.opening-rarity-ur .back-seal{color:#fff3ca!important;text-shadow:0 0 16px #fff,0 0 36px #ffca75,0 0 60px #ffca75!important}
+.character-card.rarity-mr{--rarity:#4b9dff!important;border-color:#9bcaff!important;box-shadow:inset 0 0 32px #4b9dff35,0 0 24px #4b9dff99,0 12px 35px #0008!important}
+.character-card.rarity-mr .rarity-overlay::before,.batch-card.rarity-mr::before,.detail-visual.rarity-mr::before,.spotlight-art.rarity-mr::before{border:2px double #d5eaff!important;outline:1px solid #4b9dff!important;outline-offset:3px;box-shadow:inset 0 0 28px #4b9dff77,0 0 24px #4b9dffcc!important}
+.character-card.rarity-mr .rarity-overlay::after{background-image:radial-gradient(circle at 16% 18%,#fff 0 1.4px,transparent 2px),radial-gradient(circle at 77% 32%,#8ac7ff 0 1.5px,transparent 2.5px),radial-gradient(circle at 42% 78%,#4b9dff 0 1px,transparent 2px),linear-gradient(125deg,transparent 35%,#fff9 49%,transparent 62%)!important}
+.mini-card.rarity-mr{--rarity:#4b9dff!important;border:1.5px solid #75baff!important;box-shadow:inset 0 0 0 1px #4b9dff55,0 0 20px #4b9dff88!important;background-image:radial-gradient(ellipse at 50% 0%,#4b9dff55,transparent 72%),linear-gradient(150deg,var(--art1,#292f46),#111522 75%)!important}
+.batch-card.rarity-mr{--rarity:#4b9dff!important;box-shadow:inset 0 0 34px #4b9dff55,0 0 26px #4b9dffbb,0 10px 30px #0006!important}
+.batch-card.rarity-mr::after{background:linear-gradient(115deg,transparent 18%,#fff9 46%,#8ac7ff 52%,transparent 68%)!important}
+.spotlight-art.rarity-mr{--rarity:#4b9dff!important}
+.stage.opening-rarity-mr::before{border-color:#d5eaff!important;box-shadow:0 0 38px #4b9dff,inset 0 0 42px #4b9dff99,0 0 94px #2584ffbb!important}
+.stage.opening-rarity-mr .stage-glow{background:radial-gradient(circle,#fff 0%,#8ac7ff 28%,#2879d4 64%,transparent 100%)!important}
+.stage.opening-rarity-mr .card-back{border-color:#d5eaff!important;box-shadow:0 0 0 1px #fff9,0 0 38px #4b9dff,0 0 86px #2584ff!important}
+.stage.opening-rarity-mr .back-border{border-color:#d5eaff!important;box-shadow:inset 0 0 42px #4b9dff99!important}
+.stage.opening-rarity-mr .back-seal{color:#fff!important;text-shadow:0 0 16px #fff,0 0 38px #4b9dff,0 0 70px #2584ff!important}

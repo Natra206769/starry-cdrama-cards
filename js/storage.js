@@ -4,6 +4,13 @@
 
 // IndexedDB stores custom cards, modified built-in cards, visibility and deleted built-ins.
 function normalizeStoredRarity(card){if(card&&typeof card==="object"&&String(card.rarity||"").toUpperCase()==="N")card.rarity="R";return card;}
+function migrateLegacyRarity(card){
+  if(!card||typeof card!=="object")return card;
+  const oldRarity=String(card.rarity||"").toUpperCase();
+  const migrated={ "SSR+":"UR", UR:"LR", SP:"MR" }[oldRarity];
+  if(migrated)card.rarity=migrated;
+  return normalizeStoredRarity(card);
+}
 function openDatabase(){
   if(dbPromise)return dbPromise;
   dbPromise=new Promise((resolve,reject)=>{
@@ -17,7 +24,16 @@ async function dbGet(key){const database=await openDatabase();return new Promise
 async function dbPut(key,value){const database=await openDatabase();return new Promise((resolve,reject)=>{const tx=database.transaction(DB_STORE,"readwrite");tx.objectStore(DB_STORE).put(value,key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error("Không thể lưu dữ liệu"));tx.onabort=()=>reject(tx.error||new Error("Đã hủy lưu dữ liệu"));});}
 function normalizeManagerData(saved){
   const raw=saved&&typeof saved==="object"?saved:{};
-  const overrides=raw.overrides&&typeof raw.overrides==="object"?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>{const clean=normalizeStoredRarity(normalizeSavedNameFields({...card}));delete clean.costume;delete clean.quote;return [id,clean];})):{};
+  const needsRarityMigration=Number(raw.raritySchemaVersion||0)<RARITY_SCHEMA_VERSION;
+  const normalizeManagedCard=card=>{
+    const clean=normalizeSavedNameFields({...card});
+    if(needsRarityMigration)migrateLegacyRarity(clean);
+    else normalizeStoredRarity(clean);
+    delete clean.costume;delete clean.quote;
+    return clean;
+  };
+  const overrides=raw.overrides&&typeof raw.overrides==="object"
+    ?Object.fromEntries(Object.entries(raw.overrides).map(([id,card])=>[id,normalizeManagedCard(card)])):{};
   const movieMetadata=raw.movieMetadata&&typeof raw.movieMetadata==="object"&&!Array.isArray(raw.movieMetadata)?raw.movieMetadata:{};
   const rawPreferences=raw.moviePreferences&&typeof raw.moviePreferences==="object"&&!Array.isArray(raw.moviePreferences)?raw.moviePreferences:{};
   const moviePreferences=Object.fromEntries(Object.entries(rawPreferences).map(([key,value])=>[String(key),{
@@ -26,23 +42,23 @@ function normalizeManagerData(saved){
   const collectionPresets=Array.isArray(raw.collectionPresets)?raw.collectionPresets.filter(item=>item&&typeof item==="object"&&String(item.name||"").trim()&&item.settings&&typeof item.settings==="object").slice(0,50).map(item=>({
     id:String(item.id||""),name:String(item.name).trim().slice(0,60),settings:item.settings
   })):[];
-  return {custom:Array.isArray(raw.custom)?raw.custom.map(card=>normalizeCard(card)):[],overrides,hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[],movieMetadata,moviePreferences,collectionPresets};
+  return {
+    raritySchemaVersion:RARITY_SCHEMA_VERSION,
+    custom:Array.isArray(raw.custom)?raw.custom.map(normalizeManagedCard):[],
+    overrides,hidden:Array.isArray(raw.hidden)?raw.hidden:[],deleted:Array.isArray(raw.deleted)?raw.deleted:[],
+    movieMetadata,moviePreferences,collectionPresets
+  };
 }
 async function readManagerData(){
   try{
     const saved=await dbGet("managerData");
     if(!saved||typeof saved!=="object")return normalizeManagerData(saved);
-    // Migrate only the three requested display-name fields. All other user data, including photos,
-    // IDs, ownership, favorites, hidden/deleted flags and custom metadata, stays intact.
-    const migrated=JSON.parse(JSON.stringify(saved));
-    if(Array.isArray(migrated.custom))migrated.custom.forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);delete card.quote;});
-    if(migrated.overrides&&typeof migrated.overrides==="object")Object.values(migrated.overrides).forEach(card=>{normalizeSavedNameFields(card);normalizeStoredRarity(card);delete card.quote;});
-    const changed=JSON.stringify(migrated)!==JSON.stringify(saved);
-    if(changed){
+    const migrated=normalizeManagerData(saved);
+    if(JSON.stringify(migrated)!==JSON.stringify(saved)){
       try{await dbPut("managerData",migrated);}
-      catch(migrationError){console.warn("Không thể lưu chuẩn hóa chữ hoa; sẽ dùng bản đã chuẩn hóa trong phiên này:",migrationError);}
+      catch(migrationError){console.warn("Không thể lưu chuẩn hóa dữ liệu thẻ:",migrationError);}
     }
-    return normalizeManagerData(migrated);
+    return migrated;
   }
   catch(error){console.warn("Không đọc được IndexedDB:",error);showToast("Không đọc được ảnh/hồ sơ đã lưu. Hãy mở bằng Chrome/Edge hoặc localhost.");return normalizeManagerData(null);}
 }

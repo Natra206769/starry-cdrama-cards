@@ -11,22 +11,20 @@ const DB_NAME="starry-cbiz-manager-db";
 const DB_VERSION=1;
 const DB_STORE="appData";
 
-// ---- Độ hiếm: nhãn, màu, trọng số rút thẻ (tổng 1000), thời gian lật thẻ ----
-/* Single source for tier order, labels, collection/reveal palettes and gacha weights.
-   R absorbs the retired N tier. SSR+ shares the SSR visual frame but has a distinct tier key.
-   Configured weights total 1000; when SP exists, its chance remains exactly 0.3%. */
+const RARITY_SCHEMA_VERSION = 2;
 const rarityInfo = {
-  R:   {label:"R · RARE",        shortLabel:"Hiếm",       color:"#aab5c9", weight:685, luck:25,  revealDelay:700,  effect:"r",   toastPrefix:"✧ HIẾM! ",        art:["#67513f","#1c1a1b","#e6c69c"]},
-  SR:  {label:"SR · SUPER RARE", shortLabel:"Siêu hiếm",  color:"#72b6ff", weight:180, luck:50,  revealDelay:980,  effect:"sr",  toastPrefix:"✦ SIÊU HIẾM! ",   art:["#214b57","#101a25","#6ec6c2"]},
-  SSR: {label:"SSR · SUPER RARE",shortLabel:"Siêu hiếm",  color:"#c18aff", weight:80,  luck:78,  revealDelay:1320, effect:"ssr", toastPrefix:"✦ SIÊU HIẾM! ",   art:["#45415e","#171526","#b7a9ef"]},
-  "SSR+":{label:"SSR+ · SUPER RARE+",shortLabel:"Siêu hiếm+",color:"#c18aff",weight:22,luck:88,revealDelay:1450,effect:"ssr",toastPrefix:"✦ SIÊU HIẾM+! ",art:["#45415e","#171526","#b7a9ef"]},
-  UR:  {label:"UR · ULTRA RARE",  shortLabel:"Cực hiếm",   color:"#ffca75", weight:30,  luck:94,  revealDelay:1750, effect:"ur",  toastPrefix:"✨ HUYỀN THOẠI! ", art:["#5a3d29","#1b1520","#ffca75"]},
-  SP:  {label:"SP · SPECIAL",     shortLabel:"Đặc biệt",   color:"#ff85d4", weight:3,   luck:100, revealDelay:2300, effect:"sp",  toastPrefix:"🌟 ĐẶC BIỆT! ",    art:["#682a67","#190f2b","#ff85d4"]}
+  R:  {label:"R · RARE",           shortLabel:"Hiếm",          color:"#aab5c9", weight:685, luck:25,  revealDelay:700,  effect:"r",  toastPrefix:"✧ HIẾM! ",        art:["#67513f","#1c1a1b","#e6c69c"]},
+  SR: {label:"SR · SUPER RARE",    shortLabel:"Siêu hiếm",     color:"#72b6ff", weight:180, luck:50,  revealDelay:980,  effect:"sr", toastPrefix:"✦ SIÊU HIẾM! ",   art:["#214b57","#101a25","#6ec6c2"]},
+  SSR:{label:"SSR · SUPER RARE",   shortLabel:"Rất hiếm",      color:"#c18aff", weight:80,  luck:78,  revealDelay:1320, effect:"ssr",toastPrefix:"✦ RẤT HIẾM! ",    art:["#45415e","#171526","#b7a9ef"]},
+  UR: {label:"UR · ULTRA RARE",    shortLabel:"Cực hiếm",      color:"#bd8cff", weight:22,  luck:88,  revealDelay:1450, effect:"ur", toastPrefix:"✨ HUYỀN THOẠI! ", art:["#4c3567","#171326","#d8b8ff"]},
+  LR: {label:"LR · LEGENDARY RARE",shortLabel:"Huyền thoại",   color:"#ff5b6e", weight:30,  luck:94,  revealDelay:1750, effect:"lr", toastPrefix:"🔥 HUYỀN THOẠI! ", art:["#5e2736","#1b111c","#ff8493"]},
+  MR: {label:"MR · MYTHIC RARE",   shortLabel:"Thần thoại",    color:"#e3edff", weight:3,   luck:99,  revealDelay:2300, effect:"mr", toastPrefix:"❄️ THẦN THOẠI! ",  art:["#45556d","#101827","#e3efff"]},
+  SP: {label:"SP · SPECIAL",       shortLabel:"Đặc biệt",      color:"#ff85d4", weight:0,   luck:100, revealDelay:2700, effect:"sp", toastPrefix:"🌟 ĐẶC BIỆT! ",    art:["#682a67","#190f2b","#ff85d4"]}
 };
-// Tổng trọng số danh nghĩa. SP được giữ đúng rarityInfo.SP.weight / TOTAL_RARITY_WEIGHT khi kho có SP.
+// Tổng trọng số của sáu bậc thông thường là 1000. SP là nhánh đặc biệt, không nằm trong lượt rút thường.
 const TOTAL_RARITY_WEIGHT = 1000;
 
-// Pity: raise SSR+ odds after 10 misses; the 20th consecutive pull is guaranteed rare.
+// Pity: tăng tỉ lệ từ bậc SSR trở lên sau 10 lượt hụt; lượt hụt thứ 20 được bảo hiểm.
 const PITY_START_AFTER_MISSES = 10;
 const PITY_GUARANTEE_AFTER_MISSES = 20;
 
@@ -38,15 +36,17 @@ const starUpgradeRules = {
   3:{rate:40,cost:4,next:4},
   4:{rate:25,cost:6,next:5}
 };
-const levelExpByRarity = {R:20,SR:40,SSR:80,"SSR+":100,UR:150,SP:250};
-const levelExpRequirements = [30,50,75,100,140,180,230,290,360];
-const MAX_CARD_LEVEL = 10;
+const levelExpByRarity = {R:20,SR:40,SSR:80,UR:100,LR:150,MR:250,SP:250};
+// Giữ nguyên EXP các cấp Lv.1–10; từ Lv.10 trở đi tăng thêm 50 EXP cho mỗi cấp.
+const levelExpRequirements = Array.from({length:49},(_,index)=>index<9?[30,50,75,100,140,180,230,290,360][index]:360+(index-8)*50);
+const MAX_CARD_LEVEL = 50;
+function getMaxCardLevel(stars){return Math.max(1,Math.min(5,Math.floor(Number(stars)||1)))*10;}
 
 // ---- Điểm Nhan sắc theo độ hiếm của mỗi biến thể thẻ trong bảng xếp hạng ----
-const leaderboardRarityPoints = {R:3,SR:5,SSR:8,"SSR+":11,UR:15,SP:20};
+const leaderboardRarityPoints = {R:3,SR:5,SSR:8,UR:11,LR:15,MR:20};
 
 // ---- Thời gian (ms) giữ màn hình khi mở x10: thẻ chính sau khi lật, và màn spotlight ----
-const BATCH_REVEAL_HOLD_MS = {R:800,SR:1000,SSR:1320,"SSR+":1450,UR:1750,SP:2050};
+const BATCH_REVEAL_HOLD_MS = {R:800,SR:1000,SSR:1320,UR:1450,LR:1750,MR:2050,SP:2400};
 const BATCH_REVEAL_HOLD_DEFAULT_MS = 1100;
-const BATCH_SPOTLIGHT_HOLD_MS = {SSR:2050,"SSR+":2050,UR:2300,SP:2600};
+const BATCH_SPOTLIGHT_HOLD_MS = {SSR:2050,UR:2150,LR:2300,MR:2600,SP:2900};
 const BATCH_SPOTLIGHT_HOLD_DEFAULT_MS = 1750;

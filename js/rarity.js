@@ -1,4 +1,4 @@
-/* rarity.js — Rarity weights and SSR+ pity protection. */
+/* rarity.js — Rarity weights and high-tier pity protection. */
 const PITY_RARITIES=new Set(["SSR","UR","LR","MR","SP"]);
 function isPityRarity(rarity){return PITY_RARITIES.has(String(rarity||"").toUpperCase());}
 function renderRarityControls(){

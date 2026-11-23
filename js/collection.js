@@ -38,7 +38,7 @@ function renderCollection(){
  const container=$("collectionSets");if(!container)return;container.replaceChildren();syncCollectionControls();renderCollectionOverview();
  const grouped=new Map();
  for(const card of characters){const movie=String(card.movie||"Bộ sưu tập chân dung").trim().replace(/\s+/g," ")||"Bộ sưu tập chân dung";const key=normalizedSearchKey(movie);if(!grouped.has(key))grouped.set(key,{movie,cards:[]});grouped.get(key).cards.push(card);}
- const rarityOrder={SP:0,UR:1,"SSR+":2,SSR:3,SR:4,R:5},movieGroups=[...grouped.values()].sort((a,b)=>compareVietnamese(a.movie,b.movie));
+ const rarityOrder={SP:0,MR:1,LR:2,UR:3,SSR:4,SR:5,R:6},movieGroups=[...grouped.values()].sort((a,b)=>compareVietnamese(a.movie,b.movie));
  let visibleCount=0,visibleMovies=0;
  for(const {movie,cards:allCards} of movieGroups){
   const cards=allCards.filter(collectionMatchesFilter).sort((a,b)=>(rarityOrder[a.rarity]??99)-(rarityOrder[b.rarity]??99)||compareVietnamese(a.name,b.name));if(!cards.length)continue;

@@ -18,7 +18,7 @@ TÍNH NĂNG
 - Thứ tự bậc thường: R → SR → SSR → UR → LR → MR. SP là nhánh đặc biệt độc lập.
 - Thẻ cũ được chuyển một lần: SSR+ → UR, UR → LR, SP → MR. Tiến độ sở hữu, số bản sao, yêu thích, level/sao và ảnh được giữ nguyên.
 - SP mới được giữ là SP; việc chuyển dữ liệu cũ được đánh dấu phiên bản để không áp dụng lại ở những lần tải sau.
-- LR dùng khung đỏ ruby; UR giữ màu vàng chủ đạo; MR dùng màu xanh blue.
+- LR dùng khung đỏ ruby; UR giữ màu vàng chủ đạo; MR dùng màu xanh lục emerald.
 
 MÃ NGUỒN
 - index.html: giao diện và bố cục.
@@ -43,13 +43,16 @@ DỮ LIỆU & AN TOÀN
 PHÁT HÀNH
 Triển khai index.html, css/, js/ đang được sử dụng, data/, service-worker.js, manifest.webmanifest, favicon và icons/ lên GitHub Pages.
 
+V12.1.0 — Chuyển MR sang bảng màu xanh lục
+- MR chuyển sang xanh lục emerald để tách biệt rõ với SR xanh dương; cập nhật khung thẻ, hiệu ứng mở thẻ, bảng xếp hạng và màu nghệ thuật.
+
 V12.0.0 — Hoàn thiện điểm SP và bảng màu độ hiếm
 - Loại bỏ SSR+ khỏi hệ mới; thêm LR và MR, giữ SP làm cấp đặc biệt.
 - Chuyển dữ liệu cũ một lần theo ánh xạ SSR+ → UR, UR → LR, SP → MR.
 - Giới hạn level tăng theo sao từ Lv.10 đến Lv.50.
-- SP cố định 20 điểm; mỗi thẻ SP được cộng thêm 2 điểm sau công thức xếp hạng. UR giữ màu vàng, MR dùng màu xanh blue.
+- SP cố định 20 điểm; mỗi thẻ SP được cộng thêm 2 điểm sau công thức xếp hạng. UR giữ màu vàng, MR dùng màu xanh lục emerald.
 - Cập nhật nhập CSV/TSV, thứ tự thư viện và bộ nhớ đệm ứng dụng.
-- Cache service worker tăng lên v56.
+- Cache service worker tăng lên v57.
 
 V11.8.0 — Cập nhật điểm thẻ và tinh gọn giao diện
 - Điểm xếp hạng cũ: R 3, SR 5, SSR 8, SSR+ 11, UR 15, SP 20.

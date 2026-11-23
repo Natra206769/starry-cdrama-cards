@@ -17,7 +17,11 @@ function leaderboardDistinctCards(cards){
   });
   return [...map.values()];
 }
-function rarityPoints(card){return leaderboardRarityPoints[String(card.rarity||"R").toUpperCase()]??3;}
+function rarityPoints(card,highestOrdinaryPoints=0){
+  const rarity=String(card.rarity||"R").toUpperCase();
+  if(rarity==="SP")return highestOrdinaryPoints>0?highestOrdinaryPoints:20;
+  return leaderboardRarityPoints[rarity]??3;
+}
 
 function buildActorRankingData(){
   const byName=new Map();
@@ -33,7 +37,11 @@ function buildActorRankingData(){
     for(const card of actor.systemCards)if(card.gender==="male"||card.gender==="female")actor.genderCounts[card.gender]++;
     actor.gender=actor.genderCounts.female>actor.genderCounts.male?"female":actor.genderCounts.male>actor.genderCounts.female?"male":(actor.systemCards.find(card=>card.gender==="male"||card.gender==="female")?.gender||"other");
     actor.filmCount=actor.movies.size;
-    actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+rarityPoints(card),0);
+    actor.highestOrdinaryRarityPoints=actor.systemCards.reduce((highest,card)=>{
+      const rarity=String(card.rarity||"R").toUpperCase();
+      return rarity==="SP"?highest:Math.max(highest,rarityPoints(card));
+    },0);
+    actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+rarityPoints(card,actor.highestOrdinaryRarityPoints),0);
     actor.cardCount=actor.systemCards.length;
     // Bonus per film: 1–2 films = 0; 3–4 = 0.5; 5–9 = 0.75; 10+ = 1.
     actor.filmBonusPerFilm=actor.filmCount>=10?1:actor.filmCount>=5?0.75:actor.filmCount>=3?0.5:0;
@@ -45,11 +53,11 @@ function buildActorRankingData(){
 
 function compareVietnamese(a,b){return String(a).localeCompare(String(b),"vi",{sensitivity:"base"});}
 function leaderboardRarityColor(rarity){
-  const colors={R:"#aab5c9",SR:"#72b6ff",SSR:"#c18aff","SSR+":"#c18aff",UR:"#ffca75",SP:"#ff85d4"};
+  const colors={R:"#aab5c9",SR:"#72b6ff",SSR:"#c18aff",UR:"#bd8cff",LR:"#ff5b6e",MR:"#e3edff",SP:"#ff85d4"};
   return colors[String(rarity||"R").toUpperCase()]||colors.R;
 }
 function leaderboardAvatarSource(item){
-  const rarityOrder={SP:6,UR:5,"SSR+":4,SSR:3,SR:2,R:1};
+  const rarityOrder={SP:7,MR:6,LR:5,UR:4,SSR:3,SR:2,R:1};
   const card=[...(item.systemCards||item.cards||[])].sort((a,b)=>(rarityOrder[String(b.rarity||"R").toUpperCase()]||0)-(rarityOrder[String(a.rarity||"R").toUpperCase()]||0)||compareVietnamese(a.movie,b.movie))[0];
   return card?{src:card.photo||"",alt:"Ảnh đại diện thẻ của "+item.name,accent:leaderboardRarityColor(card.rarity),initials:card.initials||makeInitials(card.chinese,item.name),fallback:card.photoFallback||""}:{src:"",alt:"",accent:leaderboardRarityColor("R"),initials:makeInitials("",item.name),fallback:""};
 }
@@ -121,7 +129,7 @@ function renderLeaderboard(){
   const sorted=matches.slice(0,MAX_LEADERBOARD_ENTRIES);
   $("leaderboardActorCount").textContent=String(sorted.length);
   $("leaderboardCountLabel").textContent="diễn viên · top 100";
-  $("leaderboardRules").textContent="Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×điểm cộng mỗi phim (1–2 phim: 0; 3–4: 0,5; 5–9: 0,75; từ 10: 1). P = tổng điểm thẻ, N = số phim. Điểm thẻ: R 3 · SR 5 · SSR 8 · SSR+ 11 · UR 15 · SP 20.";
+  $("leaderboardRules").textContent="Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×điểm cộng mỗi phim (1–2 phim: 0; 3–4: 0,5; 5–9: 0,75; từ 10: 1). P = tổng điểm thẻ, N = số phim. Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20 · SP bằng bậc thông thường cao nhất của diễn viên (mặc định 20 nếu chưa có thẻ thường).";
   empty.hidden=sorted.length>0;
   if(!sorted.length){
     $("leaderboardEmptyTitle").textContent=query?"Không tìm thấy kết quả phù hợp":"Chưa có dữ liệu diễn viên để tính điểm";

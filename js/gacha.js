@@ -208,7 +208,7 @@ function openThreeCards(){
   if(!pulled.length){buttons.forEach(button=>{if(button)button.disabled=false;});$("summonKicker").hidden=true;$("skipBatchBtn").hidden=true;updateDrawControls();return;}
   if(!consumeTickets(3)){drawAnimationInProgress=false;updateDrawControls();return;}
   drawAnimationInProgress=true;updateDrawControls();
-  const rarityRank={R:1,SR:2,SSR:3,"SSR+":4,UR:5,SP:6};
+  const rarityRank={R:1,SR:2,SSR:3,UR:4,LR:5,MR:6,SP:7};
   const orderedPulled=pulled.map((card,index)=>({card,index})).sort((a,b)=>rarityRank[b.card.rarity]-rarityRank[a.card.rarity]||a.index-b.index).map(item=>item.card);
   const highlight=orderedPulled[0],seen=new Map();
   const results=orderedPulled.map(card=>{

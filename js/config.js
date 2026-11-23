@@ -16,9 +16,9 @@ const rarityInfo = {
   R:  {label:"R · RARE",           shortLabel:"Hiếm",          color:"#aab5c9", weight:685, luck:25,  revealDelay:700,  effect:"r",  toastPrefix:"✧ HIẾM! ",        art:["#67513f","#1c1a1b","#e6c69c"]},
   SR: {label:"SR · SUPER RARE",    shortLabel:"Siêu hiếm",     color:"#72b6ff", weight:180, luck:50,  revealDelay:980,  effect:"sr", toastPrefix:"✦ SIÊU HIẾM! ",   art:["#214b57","#101a25","#6ec6c2"]},
   SSR:{label:"SSR · SUPER RARE",   shortLabel:"Rất hiếm",      color:"#c18aff", weight:80,  luck:78,  revealDelay:1320, effect:"ssr",toastPrefix:"✦ RẤT HIẾM! ",    art:["#45415e","#171526","#b7a9ef"]},
-  UR: {label:"UR · ULTRA RARE",    shortLabel:"Cực hiếm",      color:"#bd8cff", weight:22,  luck:88,  revealDelay:1450, effect:"ur", toastPrefix:"✨ HUYỀN THOẠI! ", art:["#4c3567","#171326","#d8b8ff"]},
+  UR: {label:"UR · ULTRA RARE",    shortLabel:"Cực hiếm",      color:"#ffca75", weight:22,  luck:88,  revealDelay:1450, effect:"ur", toastPrefix:"✨ HUYỀN THOẠI! ", art:["#5a3d29","#1b1520","#ffca75"]},
   LR: {label:"LR · LEGENDARY RARE",shortLabel:"Huyền thoại",   color:"#ff5b6e", weight:30,  luck:94,  revealDelay:1750, effect:"lr", toastPrefix:"🔥 HUYỀN THOẠI! ", art:["#5e2736","#1b111c","#ff8493"]},
-  MR: {label:"MR · MYTHIC RARE",   shortLabel:"Thần thoại",    color:"#e3edff", weight:3,   luck:99,  revealDelay:2300, effect:"mr", toastPrefix:"❄️ THẦN THOẠI! ",  art:["#45556d","#101827","#e3efff"]},
+  MR: {label:"MR · MYTHIC RARE",   shortLabel:"Thần thoại",    color:"#4b9dff", weight:3,   luck:99,  revealDelay:2300, effect:"mr", toastPrefix:"❄️ THẦN THOẠI! ",  art:["#244b78","#101a2d","#8ac7ff"]},
   SP: {label:"SP · SPECIAL",       shortLabel:"Đặc biệt",      color:"#ff85d4", weight:0,   luck:100, revealDelay:2700, effect:"sp", toastPrefix:"🌟 ĐẶC BIỆT! ",    art:["#682a67","#190f2b","#ff85d4"]}
 };
 // Tổng trọng số của sáu bậc thông thường là 1000. SP là nhánh đặc biệt, không nằm trong lượt rút thường.

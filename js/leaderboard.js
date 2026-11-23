@@ -41,15 +41,23 @@ function buildActorRankingData(){
     actor.cardCount=actor.systemCards.length;
     // Bonus per film: 1–2 films = 0; 3–4 = 0.5; 5–9 = 0.75; 10+ = 1.
     actor.filmBonusPerFilm=actor.filmCount>=10?1:actor.filmCount>=5?0.75:actor.filmCount>=3?0.5:0;
-    // Beauty score = P for one film; otherwise P / N + N × the applicable per-film bonus.
-    actor.beautyScore=actor.filmCount===1?actor.catalogCardPoints:actor.filmCount>1?(actor.catalogCardPoints/actor.filmCount)+(actor.filmCount*actor.filmBonusPerFilm):0;
+    actor.spCardCount=actor.systemCards.filter(card=>String(card.rarity||"R").toUpperCase()==="SP").length;
+    actor.spBonusPoints=actor.spCardCount*2;
+    // Base score = P for one film; otherwise P / N + N × the applicable per-film bonus.
+    // Add +2 for every SP card only after the base actor formula has been calculated.
+    const baseBeautyScore=actor.filmCount===1
+      ?actor.catalogCardPoints
+      :actor.filmCount>1
+        ?(actor.catalogCardPoints/actor.filmCount)+(actor.filmCount*actor.filmBonusPerFilm)
+        :0;
+    actor.beautyScore=baseBeautyScore+actor.spBonusPoints;
     return actor;
   });
 }
 
 function compareVietnamese(a,b){return String(a).localeCompare(String(b),"vi",{sensitivity:"base"});}
 function leaderboardRarityColor(rarity){
-  const colors={R:"#aab5c9",SR:"#72b6ff",SSR:"#c18aff",UR:"#bd8cff",LR:"#ff5b6e",MR:"#e3edff",SP:"#ff85d4"};
+  const colors={R:"#aab5c9",SR:"#72b6ff",SSR:"#c18aff",UR:"#ffca75",LR:"#ff5b6e",MR:"#4b9dff",SP:"#ff85d4"};
   return colors[String(rarity||"R").toUpperCase()]||colors.R;
 }
 function leaderboardAvatarSource(item){
@@ -125,7 +133,7 @@ function renderLeaderboard(){
   const sorted=matches.slice(0,MAX_LEADERBOARD_ENTRIES);
   $("leaderboardActorCount").textContent=String(sorted.length);
   $("leaderboardCountLabel").textContent="diễn viên · top 100";
-  $("leaderboardRules").textContent="Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×điểm cộng mỗi phim (1–2 phim: 0; 3–4: 0,5; 5–9: 0,75; từ 10: 1). P = tổng điểm thẻ, N = số phim. Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20 · SP bằng bậc thông thường cao nhất của diễn viên (mặc định 20 nếu chưa có thẻ thường).";
+  $("leaderboardRules").textContent="Điểm diễn viên: 1 phim = P; từ 2 phim = P/N + N×điểm cộng mỗi phim (1–2 phim: 0; 3–4: 0,5; 5–9: 0,75; từ 10: 1). P = tổng điểm thẻ, N = số phim. Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20 · SP 20. Sau công thức điểm diễn viên, mỗi thẻ SP được cộng thêm 2 điểm thưởng.";
   empty.hidden=sorted.length>0;
   if(!sorted.length){
     $("leaderboardEmptyTitle").textContent=query?"Không tìm thấy kết quả phù hợp":"Chưa có dữ liệu diễn viên để tính điểm";

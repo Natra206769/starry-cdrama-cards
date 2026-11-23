@@ -15,7 +15,7 @@ function getCardProgress(id){
   state.cardProgress[id]=progress;
   return progress;
 }
-function requiredLevelExp(level){return level>=MAX_CARD_LEVEL?0:(levelExpRequirements[level-1]||0);}
+function requiredLevelExp(level,stars=5){return level>=getMaxCardLevel(stars)?0:(levelExpRequirements[level-1]||0);}
 function renderUpgradePreview(card){
   const preview=$("upgradePreviewCard");
   if(!preview||!card)return;
@@ -65,7 +65,7 @@ function renderCardUpgradePanel(card){
   const progress=getCardProgress(card.id);
   $("upgradeStarsDisplay").textContent="★".repeat(progress.stars)+"☆".repeat(5-progress.stars)+` (${progress.stars}/5)`;
   $("upgradeLevelDisplay").textContent=`Lv.${progress.level}`;
-  const needed=requiredLevelExp(progress.level);
+  const needed=requiredLevelExp(progress.level,progress.stars);
   $("upgradeLevelExp").textContent=progress.level>=getMaxCardLevel(progress.stars)?"Đã đạt level tối đa":`${progress.exp} / ${needed} EXP`;
   $("upgradeExpFill").style.width=needed?`${Math.min(100,progress.exp/needed*100)}%`:"100%";
   const starRule=starUpgradeRules[progress.stars];
@@ -154,7 +154,7 @@ function updateLevelUpgradeSummary(){
   const card=characters.find(item=>item.id===currentUpgradeId);
   const progress=card?getCardProgress(card.id):{level:1,exp:0};
   const maxed=progress.level>=getMaxCardLevel(progress.stars);
-  const needed=requiredLevelExp(progress.level);
+  const needed=requiredLevelExp(progress.level,progress.stars);
   const button=$("upgradeLevelBtn");button.disabled=maxed||totalExp<1||upgradeAttemptInProgress;
   $("upgradeLevelSummary").textContent=maxed?"Thẻ đã đạt level tối đa.":totalExp<1?`Cần thêm ${Math.max(0,needed-progress.exp)} EXP để lên Lv.${progress.level+1}.`:`Có thể nhận ${totalExp} EXP; cần ${Math.max(0,needed-progress.exp)} EXP để lên level tiếp.`;
 }
@@ -223,7 +223,7 @@ $("upgradeLevelBtn")?.addEventListener("click",()=>{
   for(const item of selected){if((Number(state.owned[item.id])||0)-item.count<1){showToast("Số lượng phôi đã thay đổi; chưa có thẻ nào bị tiêu hao.");renderUpgradePage(id);return;}}
   for(const item of selected)state.owned[item.id]=(Number(state.owned[item.id])||0)-item.count;
   progress.exp+=totalExp;
-  const maxLevel=getMaxCardLevel(progress.stars),oldLevel=progress.level;while(progress.level<maxLevel){const needed=requiredLevelExp(progress.level);if(!needed||progress.exp<needed)break;progress.exp-=needed;progress.level++;}
+  const maxLevel=getMaxCardLevel(progress.stars),oldLevel=progress.level;while(progress.level<maxLevel){const needed=requiredLevelExp(progress.level,progress.stars);if(!needed||progress.exp<needed)break;progress.exp-=needed;progress.level++;}
   if(progress.level>=getMaxCardLevel(progress.stars))progress.exp=0;const leveled=progress.level-oldLevel;
   saveState();renderCollection();updateStats();renderUpgradePage(id);
   setUpgradeAnimation("idle",progress.stars,"Đã nạp EXP thành công",`+${totalExp} EXP · ${leveled?`đã lên ${leveled} level`:"tiến độ EXP đã cập nhật"}.`);

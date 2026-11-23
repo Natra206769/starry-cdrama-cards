@@ -341,3 +341,18 @@
 .stage.opening-rarity-mr .card-back{border-color:#d5eaff!important;box-shadow:0 0 0 1px #fff9,0 0 38px #4b9dff,0 0 86px #2584ff!important}
 .stage.opening-rarity-mr .back-border{border-color:#d5eaff!important;box-shadow:inset 0 0 42px #4b9dff99!important}
 .stage.opening-rarity-mr .back-seal{color:#fff!important;text-shadow:0 0 16px #fff,0 0 38px #4b9dff,0 0 70px #2584ff!important}
+
+
+/* V12.1 — MR emerald green identity, clearly separated from SR blue. */
+.character-card.rarity-mr{--rarity:#35d399!important;border-color:#a7f3d0!important;box-shadow:inset 0 0 32px #35d39935,0 0 24px #35d39999,0 12px 35px #0008!important}
+.character-card.rarity-mr .rarity-overlay::before,.batch-card.rarity-mr::before,.detail-visual.rarity-mr::before,.spotlight-art.rarity-mr::before{border:2px double #d1fae5!important;outline:1px solid #35d399!important;outline-offset:3px;box-shadow:inset 0 0 28px #35d39977,0 0 24px #35d399cc!important}
+.character-card.rarity-mr .rarity-overlay::after{background-image:radial-gradient(circle at 16% 18%,#fff 0 1.4px,transparent 2px),radial-gradient(circle at 77% 32%,#a7f3d0 0 1.5px,transparent 2.5px),radial-gradient(circle at 42% 78%,#35d399 0 1px,transparent 2px),linear-gradient(125deg,transparent 35%,#fff9 49%,transparent 62%)!important}
+.mini-card.rarity-mr{--rarity:#35d399!important;border:1.5px solid #6ee7b7!important;box-shadow:inset 0 0 0 1px #35d39955,0 0 20px #35d39988!important;background-image:radial-gradient(ellipse at 50% 0%,#35d39955,transparent 72%),linear-gradient(150deg,var(--art1,#292f46),#111522 75%)!important}
+.batch-card.rarity-mr{--rarity:#35d399!important;box-shadow:inset 0 0 34px #35d39955,0 0 26px #35d399bb,0 10px 30px #0006!important}
+.batch-card.rarity-mr::after{background:linear-gradient(115deg,transparent 18%,#fff9 46%,#a7f3d0 52%,transparent 68%)!important}
+.spotlight-art.rarity-mr{--rarity:#35d399!important}
+.stage.opening-rarity-mr::before{border-color:#d1fae5!important;box-shadow:0 0 38px #35d399,inset 0 0 42px #35d39999,0 0 94px #087f5bbb!important}
+.stage.opening-rarity-mr .stage-glow{background:radial-gradient(circle,#fff 0%,#a7f3d0 28%,#087f5b 64%,transparent 100%)!important}
+.stage.opening-rarity-mr .card-back{border-color:#d1fae5!important;box-shadow:0 0 0 1px #fff9,0 0 38px #35d399,0 0 86px #087f5b!important}
+.stage.opening-rarity-mr .back-border{border-color:#d1fae5!important;box-shadow:inset 0 0 42px #35d39999!important}
+.stage.opening-rarity-mr .back-seal{color:#fff!important;text-shadow:0 0 16px #fff,0 0 38px #35d399,0 0 70px #087f5b!important}

@@ -57,7 +57,7 @@ function buildActorRankingData(){
 
 function compareVietnamese(a,b){return String(a).localeCompare(String(b),"vi",{sensitivity:"base"});}
 function leaderboardRarityColor(rarity){
-  const colors={R:"#aab5c9",SR:"#72b6ff",SSR:"#c18aff",UR:"#ffca75",LR:"#ff5b6e",MR:"#4b9dff",SP:"#ff85d4"};
+  const colors={R:"#aab5c9",SR:"#72b6ff",SSR:"#c18aff",UR:"#ffca75",LR:"#ff5b6e",MR:"#35d399",SP:"#ff85d4"};
   return colors[String(rarity||"R").toUpperCase()]||colors.R;
 }
 function leaderboardAvatarSource(item){

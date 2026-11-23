@@ -9,7 +9,7 @@ TÍNH NĂNG
 - Hồ sơ phim và diễn viên được tổng hợp trực tiếp từ các thẻ trong kho; xem các phiên bản thẻ còn thiếu và mối liên kết bạn diễn.
 - Yêu thích thẻ, nâng sao 1★–5★; giới hạn level theo sao: 1★ Lv.10, 2★ Lv.20, 3★ Lv.30, 4★ Lv.40, 5★ Lv.50.
 - Top 3 có hiệu ứng riêng; nhóm 4–10 được nhấn mạnh; tối đa 100 diễn viên.
-- Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20. SP nhận điểm bằng bậc thông thường cao nhất của diễn viên; mặc định 20 nếu diễn viên chưa có thẻ thường.
+- Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20. SP cố định 20 điểm; sau khi tính điểm diễn viên theo công thức, cộng thêm thưởng SP +2 theo quy tắc đã chốt.
 - Quản lý thẻ mẫu/thẻ tự thêm; nhập hàng loạt CSV/TSV hoặc dán bảng với xem trước, xác thực và bỏ qua thẻ trùng mặc định.
 - Sao lưu/khôi phục JSON V5; tùy chỉnh bảng màu, mật độ hiển thị; hỗ trợ bàn phím và giảm chuyển động.
 - Không còn giao diện Kệ phim, Quản lý dữ liệu phim hoặc trường mô tả riêng cho từng nhân vật.
@@ -18,7 +18,7 @@ TÍNH NĂNG
 - Thứ tự bậc thường: R → SR → SSR → UR → LR → MR. SP là nhánh đặc biệt độc lập.
 - Thẻ cũ được chuyển một lần: SSR+ → UR, UR → LR, SP → MR. Tiến độ sở hữu, số bản sao, yêu thích, level/sao và ảnh được giữ nguyên.
 - SP mới được giữ là SP; việc chuyển dữ liệu cũ được đánh dấu phiên bản để không áp dụng lại ở những lần tải sau.
-- LR dùng khung đỏ ruby; MR dùng khung bạc/trắng ánh xanh; UR dùng tông thạch anh tím.
+- LR dùng khung đỏ ruby; UR giữ màu vàng chủ đạo; MR dùng màu xanh blue.
 
 MÃ NGUỒN
 - index.html: giao diện và bố cục.
@@ -47,7 +47,7 @@ V11.9.0 — Cập nhật hệ độ hiếm và nâng cấp
 - Loại bỏ SSR+ khỏi hệ mới; thêm LR và MR, giữ SP làm cấp đặc biệt.
 - Chuyển dữ liệu cũ một lần theo ánh xạ SSR+ → UR, UR → LR, SP → MR.
 - Giới hạn level tăng theo sao từ Lv.10 đến Lv.50.
-- Cập nhật điểm thẻ và điểm động của SP; bổ sung màu khung và hiệu ứng mới cho UR/LR/MR.
+- SP cố định 20 điểm và có thưởng cộng thêm sau công thức xếp hạng; khôi phục UR màu vàng và chuyển MR sang xanh blue.
 - Cập nhật nhập CSV/TSV, thứ tự thư viện và bộ nhớ đệm ứng dụng.
 - Cache service worker tăng lên v54.
 

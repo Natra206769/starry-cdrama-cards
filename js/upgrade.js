@@ -7,8 +7,9 @@ function getCardProgress(id){
   if(!state.cardProgress||typeof state.cardProgress!=="object")state.cardProgress={};
   const saved=state.cardProgress[id]&&typeof state.cardProgress[id]==="object"?state.cardProgress[id]:{};
   const stars=Math.max(1,Math.min(5,Math.floor(Number(saved.stars)||1)));
-  const level=Math.max(1,Math.min(MAX_CARD_LEVEL,Math.floor(Number(saved.level)||1)));
-  const needed=level>=MAX_CARD_LEVEL?0:(levelExpRequirements[level-1]||0);
+  const maxLevel=getMaxCardLevel(stars);
+  const level=Math.max(1,Math.min(maxLevel,Math.floor(Number(saved.level)||1)));
+  const needed=level>=maxLevel?0:(levelExpRequirements[level-1]||0);
   const exp=needed?Math.max(0,Math.min(needed-1,Math.floor(Number(saved.exp)||0))):0;
   const progress={stars,level,exp};
   state.cardProgress[id]=progress;
@@ -65,7 +66,7 @@ function renderCardUpgradePanel(card){
   $("upgradeStarsDisplay").textContent="★".repeat(progress.stars)+"☆".repeat(5-progress.stars)+` (${progress.stars}/5)`;
   $("upgradeLevelDisplay").textContent=`Lv.${progress.level}`;
   const needed=requiredLevelExp(progress.level);
-  $("upgradeLevelExp").textContent=progress.level>=MAX_CARD_LEVEL?"Đã đạt level tối đa":`${progress.exp} / ${needed} EXP`;
+  $("upgradeLevelExp").textContent=progress.level>=getMaxCardLevel(progress.stars)?"Đã đạt level tối đa":`${progress.exp} / ${needed} EXP`;
   $("upgradeExpFill").style.width=needed?`${Math.min(100,progress.exp/needed*100)}%`:"100%";
   const starRule=starUpgradeRules[progress.stars];
   const starBtn=$("upgradeStarBtn");
@@ -152,7 +153,7 @@ function updateLevelUpgradeSummary(){
   $("upgradeSelectedExp").textContent=`${totalExp.toLocaleString("vi-VN")} EXP · ${totalCards} thẻ`;
   const card=characters.find(item=>item.id===currentUpgradeId);
   const progress=card?getCardProgress(card.id):{level:1,exp:0};
-  const maxed=progress.level>=MAX_CARD_LEVEL;
+  const maxed=progress.level>=getMaxCardLevel(progress.stars);
   const needed=requiredLevelExp(progress.level);
   const button=$("upgradeLevelBtn");button.disabled=maxed||totalExp<1||upgradeAttemptInProgress;
   $("upgradeLevelSummary").textContent=maxed?"Thẻ đã đạt level tối đa.":totalExp<1?`Cần thêm ${Math.max(0,needed-progress.exp)} EXP để lên Lv.${progress.level+1}.`:`Có thể nhận ${totalExp} EXP; cần ${Math.max(0,needed-progress.exp)} EXP để lên level tiếp.`;
@@ -215,15 +216,15 @@ $("upgradeLevelBtn")?.addEventListener("click",()=>{
     if(count>max){showToast(`Không đủ phôi ${fodder.name}; mỗi thẻ phải giữ lại ít nhất 1 bản.`);renderUpgradePage(id);return;}
     const exp=(levelExpByRarity[fodder.rarity]||10)*count;selected.push({id:fodderId,count,exp,name:fodder.name});totalExp+=exp;totalCards+=count;
   }
-  const progress=getCardProgress(id);if(progress.level>=MAX_CARD_LEVEL){showToast("Thẻ đã đạt level tối đa.");return;}
+  const progress=getCardProgress(id);if(progress.level>=getMaxCardLevel(progress.stars)){showToast("Thẻ đã đạt level tối đa.");return;}
   if(!totalCards){showToast("Hãy chọn ít nhất một thẻ làm phôi.");return;}
   const summary=selected.map(item=>`${item.name} ×${item.count}`).join("\n");
   if(!confirm(`Dùng ${totalCards} thẻ làm phôi để nhận ${totalExp} EXP?\n\n${summary}\n\nMỗi thẻ làm phôi sẽ được giữ lại tối thiểu 1 bản. Nâng level không trượt.`))return;
   for(const item of selected){if((Number(state.owned[item.id])||0)-item.count<1){showToast("Số lượng phôi đã thay đổi; chưa có thẻ nào bị tiêu hao.");renderUpgradePage(id);return;}}
   for(const item of selected)state.owned[item.id]=(Number(state.owned[item.id])||0)-item.count;
   progress.exp+=totalExp;
-  const oldLevel=progress.level;while(progress.level<MAX_CARD_LEVEL){const needed=requiredLevelExp(progress.level);if(!needed||progress.exp<needed)break;progress.exp-=needed;progress.level++;}
-  if(progress.level>=MAX_CARD_LEVEL)progress.exp=0;const leveled=progress.level-oldLevel;
+  const maxLevel=getMaxCardLevel(progress.stars),oldLevel=progress.level;while(progress.level<maxLevel){const needed=requiredLevelExp(progress.level);if(!needed||progress.exp<needed)break;progress.exp-=needed;progress.level++;}
+  if(progress.level>=getMaxCardLevel(progress.stars))progress.exp=0;const leveled=progress.level-oldLevel;
   saveState();renderCollection();updateStats();renderUpgradePage(id);
   setUpgradeAnimation("idle",progress.stars,"Đã nạp EXP thành công",`+${totalExp} EXP · ${leveled?`đã lên ${leveled} level`:"tiến độ EXP đã cập nhật"}.`);
   showToast(leveled?`⬆ Đã lên ${leveled} level, hiện tại Lv.${progress.level}.`:`Đã nạp ${totalExp} EXP; hiện tại Lv.${progress.level}.`);
@@ -242,8 +243,14 @@ $("upgradeLevelBtn")?.addEventListener("click",()=>{
  const art=document.getElementById("effectLabCardArt"),badge=document.getElementById("effectLabStarBadge");
  const tierLabel=document.getElementById("effectLabTierLabel"),cardName=document.getElementById("effectLabCardName");
  if(!raritySelect||!starsSelect||!summonButton||!upgradeButton||!status||!back||!card||!art)return;
+ const preferredTier=raritySelect.value;
+ raritySelect.replaceChildren();
+ for(const [tier,info] of Object.entries(rarityInfo)){
+  const option=document.createElement("option");option.value=tier;option.textContent=tier+" · "+info.shortLabel;raritySelect.appendChild(option);
+ }
+ raritySelect.value=rarityInfo[preferredTier]?preferredTier:"UR";
  const effectFor=tier=>(rarityInfo[tier]||rarityInfo.UR).effect;
- const stageClassFor=tier=>"opening-rarity-"+(tier==="SSR+"?"ssr":tier.toLowerCase());
+ const stageClassFor=tier=>"opening-rarity-"+rarityCssKey(tier);
  const stageClasses=[...new Set(Object.keys(rarityInfo).map(stageClassFor))];
  const cardClasses=[...new Set(Object.values(rarityInfo).map(info=>"rarity-"+info.effect))];
  let timer=null,runId=0;
@@ -258,7 +265,7 @@ $("upgradeLevelBtn")?.addEventListener("click",()=>{
   card.style.setProperty("--rarity",info.color);card.style.setProperty("--art1",info.art[0]);card.style.setProperty("--art2",info.art[1]);card.style.setProperty("--accent",info.art[2]);
   art.style.setProperty("--art1",info.art[0]);art.style.setProperty("--art2",info.art[1]);art.style.setProperty("--accent",info.art[2]);
   if(tierLabel)tierLabel.textContent=tier+" · "+info.shortLabel.toLocaleUpperCase("vi-VN");
-  if(cardName)cardName.textContent=tier==="SP"?"Ngôi Sao Đặc Biệt":tier==="UR"?"Thẻ Huyền Thoại":"Thẻ "+tier+" xem thử";
+  if(cardName)cardName.textContent=tier==="SP"?"Ngôi Sao Đặc Biệt":tier==="MR"?"Thẻ Thần Thoại":tier==="LR"?"Thẻ Ruby":tier==="UR"?"Thẻ Huyền Thoại":"Thẻ "+tier+" xem thử";
   if(badge)badge.textContent="★ 1/5";stage.dataset.labRarity=tier;stage.dataset.labPhase="idle";stage.dataset.labStars="1";
  }
  function showCardImmediately(tier){

@@ -17,9 +17,9 @@ function leaderboardDistinctCards(cards){
   });
   return [...map.values()];
 }
-function rarityPoints(card,highestOrdinaryPoints=0){
+function rarityPoints(card){
   const rarity=String(card.rarity||"R").toUpperCase();
-  if(rarity==="SP")return highestOrdinaryPoints>0?highestOrdinaryPoints:20;
+  if(rarity==="SP")return 20;
   return leaderboardRarityPoints[rarity]??3;
 }
 
@@ -37,11 +37,7 @@ function buildActorRankingData(){
     for(const card of actor.systemCards)if(card.gender==="male"||card.gender==="female")actor.genderCounts[card.gender]++;
     actor.gender=actor.genderCounts.female>actor.genderCounts.male?"female":actor.genderCounts.male>actor.genderCounts.female?"male":(actor.systemCards.find(card=>card.gender==="male"||card.gender==="female")?.gender||"other");
     actor.filmCount=actor.movies.size;
-    actor.highestOrdinaryRarityPoints=actor.systemCards.reduce((highest,card)=>{
-      const rarity=String(card.rarity||"R").toUpperCase();
-      return rarity==="SP"?highest:Math.max(highest,rarityPoints(card));
-    },0);
-    actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+rarityPoints(card,actor.highestOrdinaryRarityPoints),0);
+    actor.catalogCardPoints=actor.systemCards.reduce((sum,card)=>sum+rarityPoints(card),0);
     actor.cardCount=actor.systemCards.length;
     // Bonus per film: 1–2 films = 0; 3–4 = 0.5; 5–9 = 0.75; 10+ = 1.
     actor.filmBonusPerFilm=actor.filmCount>=10?1:actor.filmCount>=5?0.75:actor.filmCount>=3?0.5:0;

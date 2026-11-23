@@ -18,7 +18,7 @@ const rarityInfo = {
   SSR:{label:"SSR · SUPER RARE",   shortLabel:"Rất hiếm",      color:"#c18aff", weight:80,  luck:78,  revealDelay:1320, effect:"ssr",toastPrefix:"✦ RẤT HIẾM! ",    art:["#45415e","#171526","#b7a9ef"]},
   UR: {label:"UR · ULTRA RARE",    shortLabel:"Cực hiếm",      color:"#ffca75", weight:22,  luck:88,  revealDelay:1450, effect:"ur", toastPrefix:"✨ HUYỀN THOẠI! ", art:["#5a3d29","#1b1520","#ffca75"]},
   LR: {label:"LR · LEGENDARY RARE",shortLabel:"Huyền thoại",   color:"#ff5b6e", weight:30,  luck:94,  revealDelay:1750, effect:"lr", toastPrefix:"🔥 HUYỀN THOẠI! ", art:["#5e2736","#1b111c","#ff8493"]},
-  MR: {label:"MR · MYTHIC RARE",   shortLabel:"Thần thoại",    color:"#35d399", weight:3,   luck:99,  revealDelay:2300, effect:"mr", toastPrefix:"❄️ THẦN THOẠI! ",  art:["#145b49","#0d211d","#a7f3d0"]},
+  MR: {label:"MR · MYTHIC RARE",   shortLabel:"Thần thoại",    color:"#35d399", weight:3,   luck:99,  revealDelay:2300, effect:"mr", toastPrefix:"🌿 THẦN THOẠI! ",  art:["#145b49","#0d211d","#a7f3d0"]},
   SP: {label:"SP · SPECIAL",       shortLabel:"Đặc biệt",      color:"#ff85d4", weight:0,   luck:100, revealDelay:2700, effect:"sp", toastPrefix:"🌟 ĐẶC BIỆT! ",    art:["#682a67","#190f2b","#ff85d4"]}
 };
 // Tổng trọng số của sáu bậc thông thường là 1000. SP là nhánh đặc biệt, không nằm trong lượt rút thường.

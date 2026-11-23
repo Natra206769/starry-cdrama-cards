@@ -1,4 +1,4 @@
-STARRY C-DRAMA CARDS — V11.9.0
+STARRY C-DRAMA CARDS — V12.0.0
 Thư viện sưu tầm thẻ diễn viên C-Drama, chạy trên GitHub Pages và cài được như PWA.
 
 TÍNH NĂNG
@@ -9,7 +9,7 @@ TÍNH NĂNG
 - Hồ sơ phim và diễn viên được tổng hợp trực tiếp từ các thẻ trong kho; xem các phiên bản thẻ còn thiếu và mối liên kết bạn diễn.
 - Yêu thích thẻ, nâng sao 1★–5★; giới hạn level theo sao: 1★ Lv.10, 2★ Lv.20, 3★ Lv.30, 4★ Lv.40, 5★ Lv.50.
 - Top 3 có hiệu ứng riêng; nhóm 4–10 được nhấn mạnh; tối đa 100 diễn viên.
-- Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20. SP cố định 20 điểm; sau khi tính điểm diễn viên theo công thức, cộng thêm thưởng SP +2 theo quy tắc đã chốt.
+- Điểm thẻ: R 3 · SR 5 · SSR 8 · UR 11 · LR 15 · MR 20. SP cố định 20 điểm; sau khi tính xong công thức điểm diễn viên, cộng thêm 2 điểm cho mỗi thẻ SP.
 - Quản lý thẻ mẫu/thẻ tự thêm; nhập hàng loạt CSV/TSV hoặc dán bảng với xem trước, xác thực và bỏ qua thẻ trùng mặc định.
 - Sao lưu/khôi phục JSON V5; tùy chỉnh bảng màu, mật độ hiển thị; hỗ trợ bàn phím và giảm chuyển động.
 - Không còn giao diện Kệ phim, Quản lý dữ liệu phim hoặc trường mô tả riêng cho từng nhân vật.
@@ -43,13 +43,13 @@ DỮ LIỆU & AN TOÀN
 PHÁT HÀNH
 Triển khai index.html, css/, js/ đang được sử dụng, data/, service-worker.js, manifest.webmanifest, favicon và icons/ lên GitHub Pages.
 
-V11.9.0 — Cập nhật hệ độ hiếm và nâng cấp
+V12.0.0 — Hoàn thiện điểm SP và bảng màu độ hiếm
 - Loại bỏ SSR+ khỏi hệ mới; thêm LR và MR, giữ SP làm cấp đặc biệt.
 - Chuyển dữ liệu cũ một lần theo ánh xạ SSR+ → UR, UR → LR, SP → MR.
 - Giới hạn level tăng theo sao từ Lv.10 đến Lv.50.
-- SP cố định 20 điểm và có thưởng cộng thêm sau công thức xếp hạng; khôi phục UR màu vàng và chuyển MR sang xanh blue.
+- SP cố định 20 điểm; mỗi thẻ SP được cộng thêm 2 điểm sau công thức xếp hạng. UR giữ màu vàng, MR dùng màu xanh blue.
 - Cập nhật nhập CSV/TSV, thứ tự thư viện và bộ nhớ đệm ứng dụng.
-- Cache service worker tăng lên v54.
+- Cache service worker tăng lên v56.
 
 V11.8.0 — Cập nhật điểm thẻ và tinh gọn giao diện
 - Điểm xếp hạng cũ: R 3, SR 5, SSR 8, SSR+ 11, UR 15, SP 20.

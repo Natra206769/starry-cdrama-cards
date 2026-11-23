@@ -1,5 +1,5 @@
 /* rarity.js — Rarity weights and SSR+ pity protection. */
-const PITY_RARITIES=new Set(["SSR","SSR+","UR","SP"]);
+const PITY_RARITIES=new Set(["SSR","UR","LR","MR","SP"]);
 function isPityRarity(rarity){return PITY_RARITIES.has(String(rarity||"").toUpperCase());}
 function renderRarityControls(){
  const select=$("fieldRarity"),legend=$("rarityLegend");
@@ -10,6 +10,7 @@ renderRarityControls();
 function getAvailableRarityWeights(){
  const available=Object.entries(rarityInfo).filter(([rarity])=>characters.some(card=>card.rarity===rarity));if(!available.length)return [];
  const spAvailable=available.some(([rarity])=>rarity==="SP"),nonSp=available.filter(([rarity])=>rarity!=="SP"),nonSpTotal=nonSp.reduce((sum,[,info])=>sum+info.weight,0);
+ if(spAvailable&&nonSpTotal===0)return available.map(([rarity,info])=>({rarity,info,weight:rarity==="SP"?TOTAL_RARITY_WEIGHT:0}));
  if(spAvailable&&nonSpTotal>0)return available.map(([rarity,info])=>({rarity,info,weight:rarity==="SP"?rarityInfo.SP.weight:info.weight*(TOTAL_RARITY_WEIGHT-rarityInfo.SP.weight)/nonSpTotal}));
  const total=available.reduce((sum,[,info])=>sum+info.weight,0);return available.map(([rarity,info])=>({rarity,info,weight:total?info.weight*TOTAL_RARITY_WEIGHT/total:0}));
 }
